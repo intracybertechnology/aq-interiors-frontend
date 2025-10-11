@@ -124,7 +124,7 @@ const Footer: React.FC = () => {
                 <a href="mailto:info@alqethaa.ae"
                    className="text-base text-white/90 hover:text-white hover:underline underline-offset-4 transition-all duration-300"
                    style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>
-                  info@alqethaa.ae
+                  sales@aqdecor.com
                 </a>
               </li>
             </ul>
