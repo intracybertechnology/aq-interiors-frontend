@@ -149,7 +149,7 @@ const Contact: React.FC = () => {
     {
       icon: Mail,
       title: 'Email',
-      details: [locationData?.email || 'info@alqethaa.ae', 'Get in touch'],
+      details: [locationData?.email || 'sales@aqdecor.com', 'Get in touch'],
       href: `mailto:${locationData?.email || 'info@alqethaa.ae'}`,
       color: 'from-red-500 to-red-600',
       bgColor: 'bg-red-50'
@@ -304,7 +304,7 @@ const Contact: React.FC = () => {
                 </a>
 
                 <a
-                  href="mailto:info@alqethaa.ae"
+                  href="mailto:sales@aqdecor.com"
                   className="group flex items-center justify-center space-x-3 bg-gradient-to-r from-[#9B4F96] to-[#c96bb3] hover:from-[#8a4687] hover:to-[#b85ca4] text-white px-6 py-4 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-2xl"
                   style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}
                 >
