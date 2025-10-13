@@ -148,10 +148,14 @@ const Navbar: React.FC = () => {
                   src="/images/logo/aq-logo.png"
                   alt="AQ Decor"
                   className="h-14 sm:h-16 md:h-24 lg:h-28 w-auto object-contain transition-all duration-700 group-hover:scale-105"
-                  style={{ maxWidth: '350px', maxHeight: '100%' }}
+                  style={{ maxWidth: '350px', maxHeight: '100%' ,pointerEvents: 'none', userSelect:'none' }}
+                  draggable="false"
+                  onContextMenu={(e)=> e.preventDefault()}
                   onError={(e) => {
                     e.currentTarget.style.display = 'none';
                   }}
+                  data-no-visual-search="true"
+                  loading='eager'
                 />
 
                 {/* Company Name - Hidden on small mobile, visible from sm breakpoint */}

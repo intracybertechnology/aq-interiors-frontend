@@ -147,9 +147,11 @@ h5, h6 {
   /* Navigation */
   .navbar {
     @apply bg-white shadow-lg sticky top-0 z-50;
-    /* FIXED: Ensure navbar height is consistent */
     height: auto;
-    min-height: 80px; /* Adjust this based on your actual navbar height */
+    min-height: 90px; 
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 0;
   }
 
   /* DROPDOWN MENU FIX - High z-index for dropdown menus */
@@ -363,15 +365,17 @@ h5, h6 {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  height: 60px; /* Increased height to fit within navbar */
+  height: 70px; /* Increased height to fit within navbar */
   width: auto;
   padding: 0.5rem;
+  max-height: 70px;
 }
 
 .logo img {
   height: 100%;
   width: auto;
-  max-height: 60px; /* Constraint to prevent overflow */
+  max-height: 70px; 
+  max-width: 100%;
   object-fit: contain; /* Maintains aspect ratio */
   filter: brightness(1.1) contrast(1.15) saturate(1.2);
   image-rendering: -webkit-optimize-contrast;
