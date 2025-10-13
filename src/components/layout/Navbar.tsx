@@ -147,8 +147,8 @@ const Navbar: React.FC = () => {
                 <img
                   src="/images/logo/aq-logo.png"
                   alt="AQ Decor"
-                  className="h-12 sm:h-14 md:h-16 lg:h-20 w-auto object-contain transition-all duration-700 group-hover:scale-105"
-                  style={{ minWidth: '120px', maxWidth: '140px' }}
+                  className="h-12 sm:h-12 md:h-20 lg:h-22 w-auto object-contain transition-all duration-700 group-hover:scale-105"
+                  style={{  maxWidth: '120px', maxHeight: '100%' }}
                   onError={(e) => {
                     e.currentTarget.style.display = 'none';
                   }}
@@ -215,24 +215,24 @@ const Navbar: React.FC = () => {
                     triggerRef={dropdownTriggerRef}
                   >
                     <div 
-                      className="p-6"
+                      className="p-8"
                       onMouseEnter={() => setDropdownOpen(true)}
                       onMouseLeave={() => setDropdownOpen(false)}
                       onClick={(e) => e.stopPropagation()}
                     >
-                      <div className="grid grid-cols-3 gap-8">
+                      <div className="grid grid-cols-3 gap-x-12  gap-y-0">
                         <div>
-                          <ul className="space-y-3 min-w-[180px]">
+                          <ul className="space-y-3 min-full">
                             {servicesData.design.map((service, index) => (
-                              <li key={index} className="transform transition-all duration-300 hover:translate-x-2 flex items-start">
+                              <li key={index} className="transform transition-all duration-300 hover:translate-x-2 min-h-[28px]">
                                 <Link
                                   to="/services"
-                                  className="text-gray-700 text-sm hover:text-[#9B4F96] transition-all duration-300 block relative group/item"
+                                  className="text-gray-700 text-sm hover:text-[#9B4F96] transition-all duration-300 block relative group/item leading-tight"
                                   style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}
                                   onClick={() => setDropdownOpen(false)}
                                 >
-                                  <span className="inline-block w-2 h-2 bg-[#9B4F96]/30 rounded-full mr-3 mt-1.5 flex-shrink-0 group-hover/item:bg-[#9B4F96] group-hover/item:scale-125 transition-all duration-300"></span>
-                                  {service}
+                                  <span className="inline-block w-2 h-2 bg-[#9B4F96]/30 rounded-full mr-2.5 mt-[6px] flex-shrink-0 group-hover/item:bg-[#9B4F96] group-hover/item:scale-125 transition-all duration-300"></span>
+                                  <span className='flex-1'>{service}</span>
                                 </Link>
                               </li>
                             ))}
@@ -240,16 +240,16 @@ const Navbar: React.FC = () => {
                         </div>
 
                         <div>
-                          <ul className="space-y-3">
+                          <ul className="space-y-2.5 w-full">
                             {servicesData.develop.map((service, index) => (
                               <li key={index} className="transform transition-all duration-300 hover:translate-x-2">
                                 <Link
                                   to="/services"
-                                  className="text-gray-700 text-sm hover:text-[#9B4F96] transition-all duration-300 block relative group/item"
+                                   className="text-gray-700 text-sm hover:text-[#9B4F96] transition-all duration-300 block relative group/item leading-tight pl-4"
                                   style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}
                                   onClick={() => setDropdownOpen(false)}
                                 >
-                                  <span className="inline-block w-2 h-2 bg-[#9B4F96]/30 rounded-full mr-2 group-hover/item:bg-[#9B4F96] group-hover/item:scale-125 transition-all duration-300"></span>
+                                  <span className="absolute left-0 top-[6px] w-2 h-2 bg-[#9B4F96]/30 rounded-full group-hover/items:bg-[#9B4F96] group-hover/item:scale-125 transition-all duration-300 "></span>
                                   {service}
                                 </Link>
                               </li>
@@ -258,7 +258,7 @@ const Navbar: React.FC = () => {
                         </div>
 
                         <div>
-                          <ul className="space-y-3">
+                          <ul className="space-y-2.5 w-full">
                             {servicesData.deploy.map((service, index) => (
                               <li key={index} className="transform transition-all duration-300 hover:translate-x-2">
                                 <Link
