@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MapPin, Phone, Mail, Facebook, Instagram, Linkedin, Twitter } from 'lucide-react';
+import { MapPin, Phone, Mail, Facebook, Instagram, Linkedin } from 'lucide-react';
 
 const Footer: React.FC = () => {
   const navigate = useNavigate();
@@ -25,6 +25,12 @@ const Footer: React.FC = () => {
     ]
   };
 
+  const socialLinks = {
+    instagram: 'https://www.instagram.com/intracybertechnology/',
+    facebook: 'https://www.facebook.com/people/Intracybertechnology/61579414987983/',
+    linkedin: 'https://www.linkedin.com/company/intracybertechnologyllc/?viewAsMember=true'
+  };
+
   return (
     <footer className="text-white" style={{ backgroundColor: '#9B4F96' }}>
       <div className="container-max py-12 px-8 lg:px-16">
@@ -40,17 +46,32 @@ const Footer: React.FC = () => {
               Your trusted partner in fit-out and interior solutions since 2014. Quality craftsmanship backed by our in-house factory.
             </p>
             <div className="flex space-x-4">
-              <a href="#" className="text-white/70 hover:text-white transition-colors duration-300">
+              <a 
+                href={socialLinks.facebook}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-white/70 hover:text-white transition-colors duration-300 hover:scale-110 transform"
+                aria-label="Visit our Facebook page"
+              >
                 <Facebook size={20} />
               </a>
-              <a href="#" className="text-white/70 hover:text-white transition-colors duration-300">
+              <a 
+                href={socialLinks.instagram}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-white/70 hover:text-white transition-colors duration-300 hover:scale-110 transform"
+                aria-label="Visit our Instagram page"
+              >
                 <Instagram size={20} />
               </a>
-              <a href="#" className="text-white/70 hover:text-white transition-colors duration-300">
+              <a 
+                href={socialLinks.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-white/70 hover:text-white transition-colors duration-300 hover:scale-110 transform"
+                aria-label="Visit our LinkedIn page"
+              >
                 <Linkedin size={20} />
-              </a>
-              <a href="#" className="text-white/70 hover:text-white transition-colors duration-300">
-                <Twitter size={20} />
               </a>
             </div>
           </div>
@@ -121,7 +142,7 @@ const Footer: React.FC = () => {
               </li>
               <li className="flex items-start space-x-3">
                 <Mail className="text-white flex-shrink-0 mt-1" size={18} />
-                <a href="mailto:info@alqethaa.ae"
+                <a href="mailto:sales@aqdecor.com"
                    className="text-base text-white/90 hover:text-white hover:underline underline-offset-4 transition-all duration-300"
                    style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>
                   sales@aqdecor.com

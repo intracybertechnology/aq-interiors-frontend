@@ -11,6 +11,13 @@ const Navbar: React.FC = () => {
   const dropdownTriggerRef = useRef<HTMLButtonElement>(null);
   const location = useLocation();
 
+  // Social media links
+  const socialLinks = {
+    instagram: 'https://www.instagram.com/intracybertechnology/',
+    facebook: 'https://www.facebook.com/people/Intracybertechnology/61579414987983/',
+    linkedin: 'https://www.linkedin.com/company/intracybertechnologyllc/?viewAsMember=true'
+  };
+
   // Services data organized by categories
   const servicesData = {
     design: [
@@ -329,32 +336,32 @@ const Navbar: React.FC = () => {
                   <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#9B4F96] group-hover:w-full transition-all duration-500 z-10"></div>
                 </Link>
 
-                {/* Social Media */}
+                {/* Social Media - Desktop */}
                 <div className="flex items-center space-x-2 ml-4 pl-4 border-l border-gray-300">
                   <a
-                    href="https://facebook.com"
+                    href={socialLinks.facebook}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className={`p-2 rounded-full hover:bg-[#9B4F96] transition-all duration-300 ${getTextColor()} hover:text-white`}
-                    aria-label="Facebook"
+                    className={`p-2 rounded-full hover:bg-[#9B4F96] transition-all duration-300 ${getTextColor()} hover:text-white hover:scale-110 transform`}
+                    aria-label="Visit our Facebook page"
                   >
                     <Facebook size={18} />
                   </a>
                   <a
-                    href="https://instagram.com"
+                    href={socialLinks.instagram}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className={`p-2 rounded-full hover:bg-[#9B4F96] transition-all duration-300 ${getTextColor()} hover:text-white`}
-                    aria-label="Instagram"
+                    className={`p-2 rounded-full hover:bg-[#9B4F96] transition-all duration-300 ${getTextColor()} hover:text-white hover:scale-110 transform`}
+                    aria-label="Visit our Instagram page"
                   >
                     <Instagram size={18} />
                   </a>
                   <a
-                    href="https://linkedin.com"
+                    href={socialLinks.linkedin}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className={`p-2 rounded-full hover:bg-[#9B4F96] transition-all duration-300 ${getTextColor()} hover:text-white`}
-                    aria-label="LinkedIn"
+                    className={`p-2 rounded-full hover:bg-[#9B4F96] transition-all duration-300 ${getTextColor()} hover:text-white hover:scale-110 transform`}
+                    aria-label="Visit our LinkedIn page"
                   >
                     <Linkedin size={18} />
                   </a>
@@ -489,29 +496,29 @@ const Navbar: React.FC = () => {
           <div className="pt-4 sm:pt-6 border-t border-gray-200">
             <div className="flex justify-center space-x-4 mb-4">
               <a
-                href="https://facebook.com"
+                href={socialLinks.facebook}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-2.5 rounded-full bg-gray-100 hover:bg-[#9B4F96] text-gray-700 hover:text-white transition-all duration-300"
-                aria-label="Facebook"
+                className="p-2.5 rounded-full bg-gray-100 hover:bg-[#9B4F96] text-gray-700 hover:text-white transition-all duration-300 hover:scale-110 transform"
+                aria-label="Visit our Facebook page"
               >
                 <Facebook size={20} />
               </a>
               <a
-                href="https://instagram.com"
+                href={socialLinks.instagram}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-2.5 rounded-full bg-gray-100 hover:bg-[#9B4F96] text-gray-700 hover:text-white transition-all duration-300"
-                aria-label="Instagram"
+                className="p-2.5 rounded-full bg-gray-100 hover:bg-[#9B4F96] text-gray-700 hover:text-white transition-all duration-300 hover:scale-110 transform"
+                aria-label="Visit our Instagram page"
               >
                 <Instagram size={20} />
               </a>
               <a
-                href="https://linkedin.com"
+                href={socialLinks.linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-2.5 rounded-full bg-gray-100 hover:bg-[#9B4F96] text-gray-700 hover:text-white transition-all duration-300"
-                aria-label="LinkedIn"
+                className="p-2.5 rounded-full bg-gray-100 hover:bg-[#9B4F96] text-gray-700 hover:text-white transition-all duration-300 hover:scale-110 transform"
+                aria-label="Visit our LinkedIn page"
               >
                 <Linkedin size={20} />
               </a>
