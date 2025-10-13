@@ -78,10 +78,10 @@ const Navbar: React.FC = () => {
       const target = event.target as Element;
       const mobileMenuElement = document.querySelector('.mobile-menu');
       const mobileMenuButton = document.querySelector('.mobile-menu-button');
-      
-      if (mobileMenuOpen && 
-          !mobileMenuElement?.contains(target) && 
-          !mobileMenuButton?.contains(target)) {
+
+      if (mobileMenuOpen &&
+        !mobileMenuElement?.contains(target) &&
+        !mobileMenuButton?.contains(target)) {
         setMobileMenuOpen(false);
       }
     };
@@ -148,17 +148,17 @@ const Navbar: React.FC = () => {
                   src="/images/logo/aq-logo.png"
                   alt="AQ Decor"
                   className="h-12 sm:h-12 md:h-20 lg:h-22 w-auto object-contain transition-all duration-700 group-hover:scale-105"
-                  style={{  maxWidth: '120px', maxHeight: '100%' }}
+                  style={{ maxWidth: '250px', maxHeight: '100%' }}
                   onError={(e) => {
                     e.currentTarget.style.display = 'none';
                   }}
                 />
-                
+
                 {/* Company Name - Hidden on small mobile, visible from sm breakpoint */}
-                <div className="hidden sm:block ml-3 md:ml-4 lg:ml-4 px-3 md:px-6 py-1.5 md:py-2.5 rounded-lg shadow-md" style={{ backgroundColor: '#E5E7EB'}}>
-                  <span 
+                <div className="hidden sm:block ml-3 md:ml-4 lg:ml-4 px-3 md:px-6 py-1.5 md:py-2.5 rounded-lg shadow-md" style={{ backgroundColor: '#E5E7EB' }}>
+                  <span
                     className="font-bold text-xs sm:text-sm md:text-lg lg:text-xl whitespace-nowrap flex items-center h-full"
-                    style={{ 
+                    style={{
                       fontFamily: '"Lucida Bright", Georgia, serif',
                       color: '#1F2937'
                     }}
@@ -214,42 +214,26 @@ const Navbar: React.FC = () => {
                     isOpen={dropdownOpen}
                     triggerRef={dropdownTriggerRef}
                   >
-                    <div 
+             
+                    <div
                       className="p-8"
                       onMouseEnter={() => setDropdownOpen(true)}
                       onMouseLeave={() => setDropdownOpen(false)}
                       onClick={(e) => e.stopPropagation()}
                     >
-                      <div className="grid grid-cols-3 gap-x-12  gap-y-0">
-                        <div>
-                          <ul className="space-y-3 min-full">
-                            {servicesData.design.map((service, index) => (
-                              <li key={index} className="transform transition-all duration-300 hover:translate-x-2 min-h-[28px]">
-                                <Link
-                                  to="/services"
-                                  className="text-gray-700 text-sm hover:text-[#9B4F96] transition-all duration-300 block relative group/item leading-tight"
-                                  style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}
-                                  onClick={() => setDropdownOpen(false)}
-                                >
-                                  <span className="inline-block w-2 h-2 bg-[#9B4F96]/30 rounded-full mr-2.5 mt-[6px] flex-shrink-0 group-hover/item:bg-[#9B4F96] group-hover/item:scale-125 transition-all duration-300"></span>
-                                  <span className='flex-1'>{service}</span>
-                                </Link>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-
+                      <div className="grid grid-cols-3 gap-x-12 gap-y-0">
+                        {/* Column 1 - Design Services */}
                         <div>
                           <ul className="space-y-2.5 w-full">
-                            {servicesData.develop.map((service, index) => (
+                            {servicesData.design.map((service, index) => (
                               <li key={index} className="transform transition-all duration-300 hover:translate-x-2">
                                 <Link
                                   to="/services"
-                                   className="text-gray-700 text-sm hover:text-[#9B4F96] transition-all duration-300 block relative group/item leading-tight pl-4"
+                                  className="text-gray-700 text-sm hover:text-[#9B4F96] transition-all duration-300 block relative group/item leading-tight pl-4"
                                   style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}
                                   onClick={() => setDropdownOpen(false)}
                                 >
-                                  <span className="absolute left-0 top-[6px] w-2 h-2 bg-[#9B4F96]/30 rounded-full group-hover/items:bg-[#9B4F96] group-hover/item:scale-125 transition-all duration-300 "></span>
+                                  <span className="absolute left-0 top-[6px] w-2 h-2 bg-[#9B4F96]/30 rounded-full group-hover/item:bg-[#9B4F96] group-hover/item:scale-125 transition-all duration-300"></span>
                                   {service}
                                 </Link>
                               </li>
@@ -257,17 +241,37 @@ const Navbar: React.FC = () => {
                           </ul>
                         </div>
 
+                        {/* Column 2 - Develop Services */}
+                        <div>
+                          <ul className="space-y-2.5 w-full">
+                            {servicesData.develop.map((service, index) => (
+                              <li key={index} className="transform transition-all duration-300 hover:translate-x-2">
+                                <Link
+                                  to="/services"
+                                  className="text-gray-700 text-sm hover:text-[#9B4F96] transition-all duration-300 block relative group/item leading-tight pl-4"
+                                  style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}
+                                  onClick={() => setDropdownOpen(false)}
+                                >
+                                  <span className="absolute left-0 top-[6px] w-2 h-2 bg-[#9B4F96]/30 rounded-full group-hover/item:bg-[#9B4F96] group-hover/item:scale-125 transition-all duration-300"></span>
+                                  {service}
+                                </Link>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+
+                        {/* Column 3 - Deploy Services */}
                         <div>
                           <ul className="space-y-2.5 w-full">
                             {servicesData.deploy.map((service, index) => (
                               <li key={index} className="transform transition-all duration-300 hover:translate-x-2">
                                 <Link
                                   to="/services"
-                                  className="text-gray-700 text-sm hover:text-[#9B4F96] transition-all duration-300 block relative group/item"
+                                  className="text-gray-700 text-sm hover:text-[#9B4F96] transition-all duration-300 block relative group/item leading-tight pl-4"
                                   style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}
                                   onClick={() => setDropdownOpen(false)}
                                 >
-                                  <span className="inline-block w-2 h-2 bg-[#9B4F96]/30 rounded-full mr-2 group-hover/item:bg-[#9B4F96] group-hover/item:scale-125 transition-all duration-300"></span>
+                                  <span className="absolute left-0 top-[6px] w-2 h-2 bg-[#9B4F96]/30 rounded-full group-hover/item:bg-[#9B4F96] group-hover/item:scale-125 transition-all duration-300"></span>
                                   {service}
                                 </Link>
                               </li>
@@ -384,7 +388,7 @@ const Navbar: React.FC = () => {
       )}
 
       {/* Mobile Menu - Responsive width */}
-      <div 
+      <div
         className={`mobile-menu fixed top-16 sm:top-18 right-0 w-full xs:w-80 sm:w-96 h-[calc(100vh-4rem)] sm:h-[calc(100vh-4.5rem)] bg-white/98 backdrop-blur-lg shadow-2xl z-50 transform transition-all duration-300 ease-in-out lg:hidden overflow-y-auto ${mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}
         onClick={(e) => e.stopPropagation()}
       >
