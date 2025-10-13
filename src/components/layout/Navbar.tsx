@@ -220,18 +220,18 @@ const Navbar: React.FC = () => {
                       onMouseLeave={() => setDropdownOpen(false)}
                       onClick={(e) => e.stopPropagation()}
                     >
-                      <div className="grid grid-cols-3 gap-6">
+                      <div className="grid grid-cols-3 gap-8">
                         <div>
-                          <ul className="space-y-3">
+                          <ul className="space-y-3 min-w-[180px]">
                             {servicesData.design.map((service, index) => (
-                              <li key={index} className="transform transition-all duration-300 hover:translate-x-2">
+                              <li key={index} className="transform transition-all duration-300 hover:translate-x-2 flex items-start">
                                 <Link
                                   to="/services"
                                   className="text-gray-700 text-sm hover:text-[#9B4F96] transition-all duration-300 block relative group/item"
                                   style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}
                                   onClick={() => setDropdownOpen(false)}
                                 >
-                                  <span className="inline-block w-2 h-2 bg-[#9B4F96]/30 rounded-full mr-2 group-hover/item:bg-[#9B4F96] group-hover/item:scale-125 transition-all duration-300"></span>
+                                  <span className="inline-block w-2 h-2 bg-[#9B4F96]/30 rounded-full mr-3 mt-1.5 flex-shrink-0 group-hover/item:bg-[#9B4F96] group-hover/item:scale-125 transition-all duration-300"></span>
                                   {service}
                                 </Link>
                               </li>
