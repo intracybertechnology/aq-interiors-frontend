@@ -147,8 +147,8 @@ const Navbar: React.FC = () => {
                 <img
                   src="/images/logo/aq-logo.png"
                   alt="AQ Decor"
-                  className="h-12 sm:h-12 md:h-20 lg:h-22 w-auto object-contain transition-all duration-700 group-hover:scale-105"
-                  style={{ maxWidth: '250px', maxHeight: '100%' }}
+                  className="h-14 sm:h-16 md:h-24 lg:h-28 w-auto object-contain transition-all duration-700 group-hover:scale-105"
+                  style={{ maxWidth: '350px', maxHeight: '100%' }}
                   onError={(e) => {
                     e.currentTarget.style.display = 'none';
                   }}
