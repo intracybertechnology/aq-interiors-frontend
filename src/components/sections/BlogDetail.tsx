@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Calendar, Clock, User, Tag, ArrowLeft, Share2, AlertCircle, Loader } from 'lucide-react';
+import MetaTags from '../../seo/MetaTags';
+import StructuredData from '../../seo/StructuredData';
 
 interface BlogPost {
   _id: string;
@@ -87,224 +89,331 @@ const BlogDetail: React.FC = () => {
     }
   };
 
+  // Generate dynamic SEO for blog post
+  const generateBlogSEO = () => {
+    if (!blog) return null;
+
+    const title = `${blog.title} | AQ Decor Blog`;
+    const description = blog.excerpt.length > 155 
+      ? `${blog.excerpt.substring(0, 152)}...` 
+      : blog.excerpt;
+    const keywords = `${blog.category.toLowerCase()}, ${blog.tags.join(', ')}, commercial fitout blog dubai, interior design tips`;
+    const canonical = `https://www.aqdecor.com/blog/${blog.slug || blog._id}`;
+    const ogImage = blog.image.startsWith('http') 
+      ? blog.image 
+      : `${BASE_URL}${blog.image}`;
+
+    return { title, description, keywords, canonical, ogImage };
+  };
+
+  // Generate breadcrumbs for blog post
+  const generateBreadcrumbs = () => {
+    if (!blog) return [];
+    
+    return [
+      { name: 'Home', url: 'https://www.aqdecor.com/' },
+      { name: 'Blog', url: 'https://www.aqdecor.com/blogs' },
+      { name: blog.title, url: `https://www.aqdecor.com/blog/${blog.slug || blog._id}` }
+    ];
+  };
+
+  // Generate Article structured data
+  const generateArticleStructuredData = () => {
+    if (!blog) return null;
+
+    const imageUrl = blog.image.startsWith('http') 
+      ? blog.image 
+      : `${BASE_URL}${blog.image}`;
+
+    return {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": blog.title,
+      "description": blog.excerpt,
+      "image": imageUrl,
+      "datePublished": blog.createdAt,
+      "dateModified": blog.createdAt,
+      "author": {
+        "@type": "Person",
+        "name": blog.author
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "AQ Decor",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://www.aqdecor.com/images/logo/aq-logo.png"
+        }
+      },
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": `https://www.aqdecor.com/blog/${blog.slug || blog._id}`
+      },
+      "keywords": blog.tags.join(', '),
+      "articleSection": blog.category,
+      "wordCount": blog.content.split(' ').length
+    };
+  };
+
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <Loader className="inline-block w-12 h-12 text-[#9B4F96] animate-spin" />
-          <p className="mt-4 text-gray-600" style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>
-            Loading blog post...
-          </p>
+      <>
+        <MetaTags
+          title="Loading Blog Post... | AQ Decor"
+          description="Loading blog post from AQ Decor - Commercial Fit-out and Interior Design insights from Dubai."
+        />
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+          <div className="text-center">
+            <Loader className="inline-block w-12 h-12 text-[#9B4F96] animate-spin" />
+            <p className="mt-4 text-gray-600" style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>
+              Loading blog post...
+            </p>
+          </div>
         </div>
-      </div>
+      </>
     );
   }
 
   if (error || !blog) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
-        <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8 text-center">
-          <AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-gray-800 mb-2" style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>
-            Blog Not Found
-          </h2>
-          <p className="text-gray-600 mb-6" style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>
-            {error || 'The blog post you are looking for does not exist.'}
-          </p>
-          <button
-            onClick={() => navigate('/blog')}
-            className="bg-[#9B4F96] text-white px-6 py-3 rounded-lg hover:bg-[#8B4C87] transition-all"
-            style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}
-          >
-            Back to Blog
-          </button>
+      <>
+        <MetaTags
+          title="Blog Not Found | AQ Decor"
+          description="The blog post you're looking for doesn't exist. Browse our latest commercial fit-out and interior design articles."
+          canonical="https://www.aqdecor.com/blogs"
+        />
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+          <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8 text-center">
+            <AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
+            <h2 className="text-2xl font-bold text-gray-800 mb-2" style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>
+              Blog Not Found
+            </h2>
+            <p className="text-gray-600 mb-6" style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>
+              {error || 'The blog post you are looking for does not exist.'}
+            </p>
+            <button
+              onClick={() => navigate('/blogs')}
+              className="bg-[#9B4F96] text-white px-6 py-3 rounded-lg hover:bg-[#8B4C87] transition-all"
+              style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}
+            >
+              Back to Blog
+            </button>
+          </div>
         </div>
-      </div>
+      </>
     );
   }
 
+  const seoData = generateBlogSEO();
+
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Hero Section - Light background to match contact page */}
-      <div className="relative bg-white py-16 overflow-hidden">
-        <div className="container mx-auto px-4">
-          <button
-            onClick={() => navigate('/blog')}
-            className="flex items-center gap-2 text-[#9B4F96] mb-6 hover:text-[#8B4C87] transition-colors w-fit"
-          >
-            <ArrowLeft className="w-5 h-5" />
-            <span className="font-medium" style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>
-              Back to Blog
-            </span>
-          </button>
+    <>
+      {/* Dynamic SEO Meta Tags */}
+      {seoData && (
+        <MetaTags
+          title={seoData.title}
+          description={seoData.description}
+          keywords={seoData.keywords}
+          ogImage={seoData.ogImage}
+          ogType="article"
+          canonical={seoData.canonical}
+          author={blog.author}
+          publishedTime={blog.createdAt}
+          modifiedTime={blog.createdAt}
+        />
+      )}
 
-          <div className="max-w-4xl mx-auto text-center">
-            <span className="inline-block bg-[#9B4F96] text-white px-4 py-2 rounded-full text-sm font-medium mb-6">
-              {blog.category}
-            </span>
-            <h1 className="text-4xl md:text-5xl font-bold text-[#9B4F96] mb-6"
-              style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>
-              {blog.title}
-            </h1>
-            <div className="flex flex-wrap items-center justify-center gap-6 text-gray-600">
-              <div className="flex items-center gap-2">
-                <User className="w-5 h-5" />
-                <span style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>{blog.author}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Calendar className="w-5 h-5" />
-                <span style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>
-                  {new Date(blog.createdAt).toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
-                  })}
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Clock className="w-5 h-5" />
-                <span style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>{blog.readTime}</span>
-              </div>
-            </div>
-          </div>
-        </div>
+      {/* Breadcrumb Structured Data */}
+      <StructuredData type="Breadcrumb" breadcrumbs={generateBreadcrumbs()} />
 
-        {/* Decorative border */}
-        <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-gradient-to-r from-[#9B4F96] to-[#c96bb3] rounded-full"></div>
-      </div>
+      {/* Article Structured Data */}
+      {generateArticleStructuredData() && (
+        <StructuredData data={generateArticleStructuredData()} />
+      )}
 
-      {/* Featured Image */}
-      <div className="container mx-auto overflow-hidden rounded-xl shadow-xl">
-        <div className="max-w-4xl mx-auto">
-          <img
-            src={blog.image.startsWith('http') ? blog.image : `${BASE_URL}${blog.image}`}
-            alt={blog.title}
-            className="w-full h-96 object-cover"
-            style={ {objectPosition: 'center'}}
-          />
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-4xl mx-auto">
-          {/* Excerpt */}
-          <div className="bg-[#9B4F96]/5 border-l-4 border-[#9B4F96] rounded-r-lg p-6 mb-8">
-            <p className="text-lg text-gray-700 italic leading-relaxed"
-              style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>
-              {blog.excerpt}
-            </p>
-          </div>
-
-          {/* Share Button */}
-          <div className="flex justify-end mb-8">
+      <div className="min-h-screen bg-gray-50">
+        {/* Hero Section - Light background to match contact page */}
+        <div className="relative bg-white py-16 overflow-hidden">
+          <div className="container mx-auto px-4">
             <button
-              onClick={handleShare}
-              className="flex items-center gap-2 bg-white px-4 py-2 rounded-lg shadow hover:shadow-lg transition-all border border-gray-200"
+              onClick={() => navigate('/blogs')}
+              className="flex items-center gap-2 text-[#9B4F96] mb-6 hover:text-[#8B4C87] transition-colors w-fit"
             >
-              <Share2 className="w-4 h-4 text-[#9B4F96]" />
-              <span className="text-gray-700 font-medium" style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>
-                Share
+              <ArrowLeft className="w-5 h-5" />
+              <span className="font-medium" style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>
+                Back to Blog
               </span>
             </button>
-          </div>
 
-          {/* Blog Content */}
-          <div className="bg-white rounded-2xl shadow-lg p-8 md:p-12 mb-8">
-            <div className="prose prose-lg max-w-none">
-              {blog.content.split('\n\n').map((paragraph, index) => (
-                <p key={index} className="text-gray-700 leading-relaxed mb-6"
-                  style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>
-                  {paragraph}
-                </p>
-              ))}
-            </div>
-          </div>
-
-          {/* Tags */}
-          {blog.tags.length > 0 && (
-            <div className="bg-white rounded-xl shadow p-6 mb-12">
-              <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2"
+            <div className="max-w-4xl mx-auto text-center">
+              <span className="inline-block bg-[#9B4F96] text-white px-4 py-2 rounded-full text-sm font-medium mb-6">
+                {blog.category}
+              </span>
+              <h1 className="text-4xl md:text-5xl font-bold text-[#9B4F96] mb-6"
                 style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>
-                <Tag className="w-5 h-5 text-[#9B4F96]" />
-                Tags
-              </h3>
-              <div className="flex flex-wrap gap-2">
-                {blog.tags.map((tag, index) => (
-                  <span
-                    key={index}
-                    className="bg-gray-100 text-gray-700 px-4 py-2 rounded-full text-sm hover:bg-[#9B4F96] hover:text-white transition-colors cursor-pointer"
-                    style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}
-                  >
-                    {tag}
+                {blog.title}
+              </h1>
+              <div className="flex flex-wrap items-center justify-center gap-6 text-gray-600">
+                <div className="flex items-center gap-2">
+                  <User className="w-5 h-5" />
+                  <span style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>{blog.author}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Calendar className="w-5 h-5" />
+                  <span style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>
+                    {new Date(blog.createdAt).toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric'
+                    })}
                   </span>
-                ))}
+                </div>
+                <div className="flex items-center gap-2">
+                  <Clock className="w-5 h-5" />
+                  <span style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>{blog.readTime}</span>
+                </div>
               </div>
             </div>
-          )}
+          </div>
 
-          {/* Related Blogs */}
-          {relatedBlogs.length > 0 && (
-            <div>
-              <h2 className="text-3xl font-bold text-[#9B4F96] mb-8"
+          {/* Decorative border */}
+          <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-gradient-to-r from-[#9B4F96] to-[#c96bb3] rounded-full"></div>
+        </div>
+
+        {/* Featured Image */}
+        <div className="container mx-auto overflow-hidden rounded-xl shadow-xl">
+          <div className="max-w-4xl mx-auto">
+            <img
+              src={blog.image.startsWith('http') ? blog.image : `${BASE_URL}${blog.image}`}
+              alt={`${blog.title} - ${blog.category}`}
+              className="w-full h-96 object-cover"
+              style={{ objectPosition: 'center' }}
+            />
+          </div>
+        </div>
+
+        {/* Main Content */}
+        <div className="container mx-auto px-4 py-8">
+          <div className="max-w-4xl mx-auto">
+            {/* Excerpt */}
+            <div className="bg-[#9B4F96]/5 border-l-4 border-[#9B4F96] rounded-r-lg p-6 mb-8">
+              <p className="text-lg text-gray-700 italic leading-relaxed"
                 style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>
-                Related Articles
-              </h2>
-              <div className="grid md:grid-cols-3 gap-6">
-                {relatedBlogs.map((relatedBlog) => (
-                  <div
-                    key={relatedBlog._id}
-                    onClick={() => navigate(`/blog/${relatedBlog.slug || relatedBlog._id}`)}
-                    className="bg-white rounded-xl shadow-lg overflow-hidden cursor-pointer hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2"
-                  >
-                    <img
-                      src={relatedBlog.image.startsWith('http') ? relatedBlog.image : `${BASE_URL}${relatedBlog.image}`}
-                      alt={relatedBlog.title}
-                      className="w-full h-48 object-cover"
-                    />
-                    <div className="p-4">
-                      <h3 className="font-bold text-gray-800 mb-2 line-clamp-2 hover:text-[#9B4F96] transition-colors"
-                        style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>
-                        {relatedBlog.title}
-                      </h3>
-                      <p className="text-sm text-gray-600 line-clamp-2 mb-3"
-                        style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>
-                        {relatedBlog.excerpt}
-                      </p>
-                      <div className="flex items-center justify-between text-xs text-gray-500">
-                        <span style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>
-                          {new Date(relatedBlog.createdAt).toLocaleDateString()}
-                        </span>
-                        <span style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>
-                          {relatedBlog.readTime}
-                        </span>
+                {blog.excerpt}
+              </p>
+            </div>
+
+            {/* Share Button */}
+            <div className="flex justify-end mb-8">
+              <button
+                onClick={handleShare}
+                className="flex items-center gap-2 bg-white px-4 py-2 rounded-lg shadow hover:shadow-lg transition-all border border-gray-200"
+              >
+                <Share2 className="w-4 h-4 text-[#9B4F96]" />
+                <span className="text-gray-700 font-medium" style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>
+                  Share
+                </span>
+              </button>
+            </div>
+
+            {/* Blog Content */}
+            <div className="bg-white rounded-2xl shadow-lg p-8 md:p-12 mb-8">
+              <article className="prose prose-lg max-w-none">
+                {blog.content.split('\n\n').map((paragraph, index) => (
+                  <p key={index} className="text-gray-700 leading-relaxed mb-6"
+                    style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>
+                    {paragraph}
+                  </p>
+                ))}
+              </article>
+            </div>
+
+            {/* Tags */}
+            {blog.tags.length > 0 && (
+              <div className="bg-white rounded-xl shadow p-6 mb-12">
+                <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2"
+                  style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>
+                  <Tag className="w-5 h-5 text-[#9B4F96]" />
+                  Tags
+                </h3>
+                <div className="flex flex-wrap gap-2">
+                  {blog.tags.map((tag, index) => (
+                    <span
+                      key={index}
+                      className="bg-gray-100 text-gray-700 px-4 py-2 rounded-full text-sm hover:bg-[#9B4F96] hover:text-white transition-colors cursor-pointer"
+                      style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Related Blogs */}
+            {relatedBlogs.length > 0 && (
+              <div>
+                <h2 className="text-3xl font-bold text-[#9B4F96] mb-8"
+                  style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>
+                  Related Articles
+                </h2>
+                <div className="grid md:grid-cols-3 gap-6">
+                  {relatedBlogs.map((relatedBlog) => (
+                    <div
+                      key={relatedBlog._id}
+                      onClick={() => navigate(`/blog/${relatedBlog.slug || relatedBlog._id}`)}
+                      className="bg-white rounded-xl shadow-lg overflow-hidden cursor-pointer hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2"
+                    >
+                      <img
+                        src={relatedBlog.image.startsWith('http') ? relatedBlog.image : `${BASE_URL}${relatedBlog.image}`}
+                        alt={`${relatedBlog.title} - Related Article`}
+                        className="w-full h-48 object-cover"
+                        loading="lazy"
+                      />
+                      <div className="p-4">
+                        <h3 className="font-bold text-gray-800 mb-2 line-clamp-2 hover:text-[#9B4F96] transition-colors"
+                          style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>
+                          {relatedBlog.title}
+                        </h3>
+                        <p className="text-sm text-gray-600 line-clamp-2 mb-3"
+                          style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>
+                          {relatedBlog.excerpt}
+                        </p>
+                        <div className="flex items-center justify-between text-xs text-gray-500">
+                          <span style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>
+                            {new Date(relatedBlog.createdAt).toLocaleDateString()}
+                          </span>
+                          <span style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>
+                            {relatedBlog.readTime}
+                          </span>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
-      </div>
 
-      <style>{`
-        .line-clamp-2 {
-          display: -webkit-box;
-          -webkit-line-clamp: 2;
-          -webkit-box-orient: vertical;
-          overflow: hidden;
-        }
-        
-        .prose p {
-          margin-bottom: 1.5rem;
-        }
-        
-        .prose p:last-child {
-          margin-bottom: 0;
-        }
-      `}</style>
-    </div>
+        <style>{`
+          .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+          }
+          
+          .prose p {
+            margin-bottom: 1.5rem;
+          }
+          
+          .prose p:last-child {
+            margin-bottom: 0;
+          }
+        `}</style>
+      </div>
+    </>
   );
 };
 

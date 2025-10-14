@@ -3,9 +3,13 @@ import Hero from '../components/sections/Hero';
 import Projects from '../components/sections/Projects';
 import Contact from '../components/sections/Contact';
 import { clients } from '../data/clients';
+import MetaTags from '../seo/MetaTags';
+import StructuredData from '../seo/StructuredData';
+import { getPageSEO } from '../seo/seoConfig';
 
 const Home: React.FC = () => {
   const [activeIndex, setActiveIndex] = useState(0);
+  const homeSEO = getPageSEO('home');
 
   const processes = [
     {
@@ -53,8 +57,49 @@ const Home: React.FC = () => {
     setActiveIndex(index);
   };
 
+  // Breadcrumb data for structured data
+  const breadcrumbs = [
+    { name: 'Home', url: 'https://www.aqdecor.com/' }
+  ];
+
   return (
     <>
+      {/* SEO Meta Tags */}
+      <MetaTags
+        title={homeSEO.title}
+        description={homeSEO.description}
+        keywords={homeSEO.keywords}
+        ogImage={homeSEO.ogImage}
+        ogType={homeSEO.ogType}
+        canonical={homeSEO.canonical}
+      />
+
+      {/* Structured Data - Organization */}
+      <StructuredData type="Organization" />
+
+      {/* Structured Data - Local Business */}
+      <StructuredData type="LocalBusiness" />
+
+      {/* Structured Data - Breadcrumb */}
+      <StructuredData type="Breadcrumb" breadcrumbs={breadcrumbs} />
+
+      {/* Structured Data - Services */}
+      <StructuredData 
+        type="Service" 
+        data={{
+          name: "Interior Design and Fit-out Services",
+          description: "Comprehensive interior design, fit-out, and exhibition solutions in Dubai",
+          offers: {
+            "@type": "Offer",
+            "availability": "https://schema.org/InStock",
+            "areaServed": {
+              "@type": "City",
+              "name": "Dubai"
+            }
+          }
+        }}
+      />
+
       <Hero />
 
       {/* What We Do Section - Enhanced with Auto-Cycling */}

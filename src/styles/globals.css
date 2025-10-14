@@ -147,8 +147,8 @@ h5, h6 {
   /* Navigation */
   .navbar {
     @apply bg-white shadow-lg sticky top-0 z-50;
-    height: auto;
-    min-height: 90px; 
+    height: 90px;
+   
     display: flex;
     align-items: center;
     padding: 0.5rem
@@ -362,17 +362,17 @@ h5, h6 {
   }
   /* Logo styling - FIXED */
 .logo {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: center;
-  height: 70px; /* Increased height to fit within navbar */
+  height: 100px; /* Increased height to fit within navbar */
   width: auto;
-  padding: 0.5rem;
-  max-height: 70px;
+  padding: 0.75rem 0.5rem;
+ 
 }
 
 .logo img {
-  height: 100%;
+  height: 70px;
   width: auto;
   max-height: 70px; 
   max-width: 100%;

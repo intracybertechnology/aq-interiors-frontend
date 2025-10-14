@@ -26,9 +26,9 @@ const Footer: React.FC = () => {
   };
 
   const socialLinks = {
-    instagram: 'https://www.instagram.com/intracybertechnology/',
-    facebook: 'https://www.facebook.com/people/Intracybertechnology/61579414987983/',
-    linkedin: 'https://www.linkedin.com/company/intracybertechnologyllc/?viewAsMember=true'
+    instagram: 'https://www.instagram.com/aqdecor/',
+    facebook: 'https://www.facebook.com/people/AQ-DECOR/61579449876941/',
+    linkedin: 'https://www.linkedin.com/company/aqdecor'
   };
 
   return (

@@ -3,6 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { projects } from '../data/projects';
 import ImageGallery from '../components/common/ImageGallery';
 import { ArrowLeft, Calendar, MapPin, Tag, Image as ImageIcon } from 'lucide-react';
+import MetaTags from '../seo/MetaTags';
+import StructuredData from '../seo/StructuredData';
 import type { Project } from '../types';
 
 const ProjectDetail: React.FC = () => {
@@ -25,37 +27,136 @@ const ProjectDetail: React.FC = () => {
     setSelectedImageIndex(index);
     setIsGalleryOpen(true);
   };
+// Generate dynamic SEO data
+const generateProjectSEO = () => {
+  if (!project) return null;
+
+  // Better title focusing on commercial/service aspect
+  const title = `${project.title} - ${project.category} Fit-out Project | AQ Decor Dubai`;
+  const description = `${project.description.substring(0, 150)}... Professional ${project.category.toLowerCase()} fit-out and interior design project by AQ Decor in ${project.location || 'Dubai'}.`;
+  const keywords = `${project.category.toLowerCase()} fitout dubai, ${project.title.toLowerCase()}, commercial fitout ${project.location?.toLowerCase() || 'dubai'}, retail interior design, ${project.category.toLowerCase()} contractor dubai`;
+  const canonical = `https://www.aqdecor.com/project/${project.id}`;
+  const ogImage = project.images[0] || 'https://www.aqdecor.com/og-image.jpg';
+
+  return { title, description, keywords, canonical, ogImage };
+};
+ 
+  // Generate breadcrumbs
+  const generateBreadcrumbs = () => {
+    if (!project) return [];
+    
+    return [
+      { name: 'Home', url: 'https://www.aqdecor.com/' },
+      { name: 'Projects', url: 'https://www.aqdecor.com/projects' },
+      { name: project.title, url: `https://www.aqdecor.com/project/${project.id}` }
+    ];
+  };
+
+  // Generate structured data for the project
+  const generateProjectStructuredData = () => {
+    if (!project) return null;
+
+    return {
+      "@context": "https://schema.org",
+      "@type": "CreativeWork",
+      "name": project.title,
+      "description": project.description,
+      "image": project.images,
+      "creator": {
+        "@type": "Organization",
+        "name": "AQ Decor",
+        "url": "https://www.aqdecor.com"
+      },
+      "dateCreated": project.year,
+      "locationCreated": {
+        "@type": "Place",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": project.location || "Dubai",
+          "addressCountry": "AE"
+        }
+      },
+      "genre": project.category,
+      "url": `https://www.aqdecor.com/project/${project.id}`
+    };
+  };
 
   if (!project) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center p-8">
-          <div className="mb-6">
-            <div className="w-24 h-24 mx-auto bg-gradient-to-r from-[#9B4F96] to-[#c96bb3] rounded-full flex items-center justify-center">
-              <ImageIcon className="text-white" size={40} />
+      <>
+        <MetaTags
+          title="Project Not Found | AQ Decor"
+          description="The project you're looking for doesn't exist. Browse our portfolio of interior design and fit-out projects in Dubai."
+          canonical="https://www.aqdecor.com/projects"
+        />
+        
+        <div className="min-h-screen flex items-center justify-center bg-gray-50">
+          <div className="text-center p-8">
+            <div className="mb-6">
+              <div className="w-24 h-24 mx-auto bg-gradient-to-r from-[#9B4F96] to-[#c96bb3] rounded-full flex items-center justify-center">
+                <ImageIcon className="text-white" size={40} />
+              </div>
             </div>
+            <h2 className="text-3xl font-bold text-gray-800 mb-4" style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>
+              Project Not Found
+            </h2>
+            <p className="text-gray-600 mb-6" style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>
+              The project you're looking for doesn't exist or has been removed.
+            </p>
+            <button
+              onClick={() => navigate('/projects')}
+              className="px-8 py-3 bg-gradient-to-r from-[#9B4F96] to-[#c96bb3] text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 inline-flex items-center space-x-2"
+              style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}
+            >
+              <ArrowLeft size={20} />
+              <span>Back to Projects</span>
+            </button>
           </div>
-          <h2 className="text-3xl font-bold text-gray-800 mb-4" style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>
-            Project Not Found
-          </h2>
-          <p className="text-gray-600 mb-6" style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>
-            The project you're looking for doesn't exist or has been removed.
-          </p>
-          <button
-            onClick={() => navigate('/projects')}
-            className="px-8 py-3 bg-gradient-to-r from-[#9B4F96] to-[#c96bb3] text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 inline-flex items-center space-x-2"
-            style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}
-          >
-            <ArrowLeft size={20} />
-            <span>Back to Projects</span>
-          </button>
         </div>
-      </div>
+      </>
     );
   }
 
+  const seoData = generateProjectSEO();
+
   return (
     <>
+      {/* Dynamic SEO Meta Tags */}
+      {seoData && (
+        <MetaTags
+          title={seoData.title}
+          description={seoData.description}
+          keywords={seoData.keywords}
+          ogImage={seoData.ogImage}
+          ogType="article"
+          canonical={seoData.canonical}
+        />
+      )}
+
+      {/* Breadcrumb Structured Data */}
+      <StructuredData type="Breadcrumb" breadcrumbs={generateBreadcrumbs()} />
+
+      {/* Project Structured Data */}
+      {generateProjectStructuredData() && (
+        <StructuredData data={generateProjectStructuredData()} />
+      )}
+
+      {/* Image Gallery Structured Data */}
+      <StructuredData
+        data={{
+          "@context": "https://schema.org",
+          "@type": "ImageGallery",
+          "name": `${project.title} Gallery`,
+          "description": project.description,
+          "image": project.images.map((img, index) => ({
+            "@type": "ImageObject",
+            "contentUrl": img,
+            "name": `${project.title} - Image ${index + 1}`,
+            "description": `${project.category} project image ${index + 1}`
+          }))
+        }}
+      />
+
       <div className="min-h-screen bg-gray-50">
         {/* Header Section */}
         <div className="bg-gradient-to-r from-[#9B4F96] to-[#c96bb3] text-white py-12">
@@ -132,8 +233,9 @@ const ProjectDetail: React.FC = () => {
                 >
                   <img
                     src={image}
-                    alt={`${project.title} - Image ${index + 1}`}
+                    alt={`${project.title} - ${project.category} - Image ${index + 1}`}
                     className="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110"
+                    loading={index < 3 ? "eager" : "lazy"}
                     onError={(e) => {
                       e.currentTarget.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDQwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0xNzUgMTI1SDE2NS41VjEzNUgxNzVWMTI1WiIgZmlsbD0iIzlCNEY5NiIvPgo8cGF0aCBkPSJNMjI1IDEyNUgyMTUuNVYxMzVIMjI1VjEyNVoiIGZpbGw9IiM5QjRGOTYiLz4K';
                     }}

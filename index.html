@@ -1,17 +1,194 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="AQ Decor - Interior Design, Fit-out & Exhibition Solutions in Dubai. Dream It, We Built It!" />
-    <title>AQ Decor - Interior Design & Fit-out Solutions Dubai</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+
+  <!-- Viewport -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Primary Meta Tags -->
+  <meta name="title" content="AQ Decor - Commercial Fit-out & Interior Solutions Dubai" />
+  <meta name="description"
+    content="AQ Decor specializes in commercial fit-out, retail interior design, exhibition stands, shop front signage, MEP, and complete turnkey solutions in Dubai. Dream It, We Built It!" />
+  <meta name="keywords"
+    content="commercial fitout dubai, retail fitout, shop fitout, exhibition stand dubai, MEP contractor dubai, office fitout, shop front signage, reception counter dubai, kiosk fabrication" />
+  <meta name="author" content="AQ Decor" />
+  <meta name="robots" content="index, follow" />
+
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://www.aqdecor.com/" />
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.aqdecor.com/" />
+  <meta property="og:title" content="AQ Decor - Interior Design & Fit-out Solutions Dubai" />
+  <meta property="og:description"
+    content="AQ Decor - Interior Design, Fit-out & Exhibition Solutions in Dubai. Dream It, We Built It!" />
+  <meta property="og:image" content="https://www.aqdecor.com/og-image.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:site_name" content="AQ Decor" />
+  <meta property="og:locale" content="en_US" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:url" content="https://www.aqdecor.com/" />
+  <meta name="twitter:title" content="AQ Decor - Interior Design & Fit-out Solutions Dubai" />
+  <meta name="twitter:description"
+    content="AQ Decor - Interior Design, Fit-out & Exhibition Solutions in Dubai. Dream It, We Built It!" />
+  <meta name="twitter:image" content="https://www.aqdecor.com/og-image.jpg" />
+
+  <!-- Geo Tags (Dubai specific) -->
+  <meta name="geo.region" content="AE-DU" />
+  <meta name="geo.placename" content="Dubai" />
+  <meta name="geo.position" content="25.2048;55.2708" />
+  <meta name="ICBM" content="25.2048, 55.2708" />
+
+  <!-- Theme Color - Using your brand color -->
+  <meta name="theme-color" content="#9B4F96" />
+  <meta name="msapplication-TileColor" content="#9B4F96" />
+  
+  <!-- ✅ NEW: Apple Mobile Web App Meta Tags -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="AQ Decor" />
+
+  <!-- Preconnect for Performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+  <!-- ✅ NEW: DNS Prefetch -->
+  <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+
+  <title>AQ Decor - Interior Design & Fit-out Solutions Dubai</title>
+
+  <!-- Structured Data - Organization -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "AQ Decor",
+  "alternateName": "AL QETHAA AL QADEEMA",
+  "url": "https://www.aqdecor.com",
+  "logo": "https://www.aqdecor.com/images/logo/aq-logo.png",
+  "description": "Commercial Fit-out, Interior Design, Exhibition Stands, and MEP Solutions in Dubai",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Dubai",
+    "addressCountry": "AE"
+  },
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "telephone": "+971-56-100-1190",
+    "contactType": "Customer Service",
+    "email": "sales@aqdecor.com",
+    "areaServed": "AE",
+    "availableLanguage": ["English", "Arabic"]
+  },
+  "sameAs": [
+    "https://www.facebook.com/aqdecor",
+    "https://www.instagram.com/aqdecor",
+    "https://www.linkedin.com/company/aqdecor"
+  ],
+  "serviceArea": {
+    "@type": "GeoCircle",
+    "geoMidpoint": {
+      "@type": "GeoCoordinates",
+      "latitude": "25.2048",
+      "longitude": "55.2708"
+    }
+  },
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": "Commercial Fit-out Services",
+    "itemListElement": [
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Commercial Fit-out"
+        }
+      },
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Retail Interior Design"
+        }
+      },
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Exhibition Stand Design"
+        }
+      },
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "MEP Contracting"
+        }
+      },
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Shop Front Solutions"
+        }
+      }
+    ]
+  }
+}
+</script>
+
+  <!-- ✅ NEW: Structured Data - WebSite with SearchAction -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "AQ Decor",
+  "url": "https://www.aqdecor.com",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": "https://www.aqdecor.com/search?q={search_term_string}"
+    },
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
+
+  <!-- ✅ NEW: Structured Data - BreadcrumbList -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://www.aqdecor.com/"
+    }
+  ]
+}
+</script>
+
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.tsx"></script>
+</body>
+
 </html>
