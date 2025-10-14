@@ -159,7 +159,7 @@ const Navbar: React.FC = () => {
                 />
 
                 {/* Company Name - Hidden on small mobile, visible from sm breakpoint */}
-                <div className="hidden sm:block ml-3 md:ml-4 lg:ml-4 px-3 md:px-6 py-1.5 md:py-2.5 rounded-lg shadow-md" style={{ backgroundColor: '#E5E7EB' }}>
+                <div className="hidden sm:block ml-3 md:ml-4 lg:ml-4 px-3 md:px-6 py-1.5 md:py-2.5 rounded-lg shadow-md" style={{ backgroundColor: '#B5B9BD' }}>
                   <span
                     className="font-bold text-xs sm:text-sm md:text-lg lg:text-xl whitespace-nowrap flex items-center h-full"
                     style={{
