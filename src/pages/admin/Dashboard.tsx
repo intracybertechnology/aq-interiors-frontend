@@ -10,9 +10,11 @@ import {
   MessageSquare,
   Clock,
   FileText,
-  FolderKanban
+  FolderKanban,
+  Users
 } from 'lucide-react';
 import adminApiService from '../../services/adminApi';
+import { clientApi } from '../../services/clientApi';
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -22,6 +24,9 @@ const AdminDashboard = () => {
     newEnquiries: 0,
     monthlyEnquiries: 0,
     weeklyEnquiries: 0
+  });
+  const [clientStats, setClientStats] = useState({
+    totalClients: 0
   });
   const [recentEnquiries, setRecentEnquiries] = useState<any[]>([]);
   const [adminName, setAdminName] = useState('AQ Admin');
@@ -40,12 +45,16 @@ const AdminDashboard = () => {
   const fetchDashboardData = async () => {
     try {
       setLoading(true);
-      const [statsData, enquiriesData] = await Promise.all([
+      const [statsData, enquiriesData, clientsData] = await Promise.all([
         adminApiService.getDashboardStats(),
-        adminApiService.getEnquiries({ limit: 5, sortBy: 'createdAt', sortOrder: 'desc' })
+        adminApiService.getEnquiries({ limit: 5, sortBy: 'createdAt', sortOrder: 'desc' }),
+        clientApi.getClients({ limit: 1 })
       ]);
 
       setStats(statsData.overview);
+      setClientStats({
+        totalClients: clientsData.pagination.totalClients || 0
+      });
       setRecentEnquiries(enquiriesData.enquiries.map((enq: any) => ({
         id: enq._id,
         name: enq.fullName,
@@ -128,6 +137,13 @@ const AdminDashboard = () => {
               <FolderKanban size={20} />
               <span className="font-medium" style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>Projects</span>
             </Link>
+            <Link
+              to="/admin/clients"
+              className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-gray-100 transition-colors mt-2 text-gray-700"
+            >
+              <Users size={20} />
+              <span className="font-medium" style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>Clients</span>
+            </Link>
           </nav>
 
           <div className="p-4 border-t">
@@ -186,7 +202,7 @@ const AdminDashboard = () => {
             </div>
           ) : (
             <>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
                 <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
                   <div className="flex items-center justify-between mb-4">
                     <div className="p-3 rounded-lg" style={{ backgroundColor: '#9B4F96' }}>
@@ -206,7 +222,7 @@ const AdminDashboard = () => {
                     </div>
                     <span className="text-2xl font-bold text-gray-800">{stats.newEnquiries}</span>
                   </div>
-                  <h3 className="text-gray-600 font-medium">New Enquiries</h3>
+                  <h3 className="text-gray-600 font-medium" style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>New Enquiries</h3>
                 </div>
 
                 <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
@@ -216,7 +232,7 @@ const AdminDashboard = () => {
                     </div>
                     <span className="text-2xl font-bold text-gray-800">{stats.monthlyEnquiries}</span>
                   </div>
-                  <h3 className="text-gray-600 font-medium">This Month</h3>
+                  <h3 className="text-gray-600 font-medium" style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>This Month</h3>
                 </div>
 
                 <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
@@ -226,7 +242,17 @@ const AdminDashboard = () => {
                     </div>
                     <span className="text-2xl font-bold text-gray-800">{stats.weeklyEnquiries}</span>
                   </div>
-                  <h3 className="text-gray-600 font-medium">This Week</h3>
+                  <h3 className="text-gray-600 font-medium" style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>This Week</h3>
+                </div>
+
+                <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="p-3 rounded-lg bg-purple-500">
+                      <Users className="text-white" size={24} />
+                    </div>
+                    <span className="text-2xl font-bold text-gray-800">{clientStats.totalClients}</span>
+                  </div>
+                  <h3 className="text-gray-600 font-medium" style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>Total Clients</h3>
                 </div>
               </div>
 

@@ -17,6 +17,8 @@ import AdminBlogs from './pages/admin/Blogs';
 import AdminBlogForm from './pages/admin/BlogForm';
 import AdminProjectForm from './pages/admin/ProjectForm';
 import AdminProjects from './pages/admin/Projects';
+import AdminClientForm from './pages/admin/ClientForm';
+import AdminClients from './pages/admin/Clients';
 
 function App() {
   return (
@@ -33,6 +35,9 @@ function App() {
           <Route path="/admin/projects" element={<AdminProjects />} />
           <Route path="/admin/projects/create" element={<AdminProjectForm />} />
           <Route path="/admin/projects/edit/:id" element={<AdminProjectForm />} />
+          <Route path="/admin/clients" element={<AdminClients />} />
+          <Route path="/admin/clients/create" element={<AdminClientForm />} />
+          <Route path="/admin/clients/edit/:id" element={<AdminClientForm />} />
           
           {/* Public routes - WITH Layout */}
           <Route path="/*" element={
