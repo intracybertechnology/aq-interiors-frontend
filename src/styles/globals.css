@@ -147,7 +147,7 @@ h5, h6 {
   /* Navigation */
   .navbar {
     @apply bg-white shadow-lg sticky top-0 z-50;
-    height: 90px;
+    height: 110px;
    
     display: flex;
     align-items: center;

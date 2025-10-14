@@ -139,7 +139,7 @@ const Navbar: React.FC = () => {
 
       <nav className={`fixed top-0 left-0 right-0 z-50 w-full transition-all duration-700 ease-in-out ${getNavbarClasses()}`}>
         {/* Mobile: h-16, Tablet: h-18, Desktop: h-20 */}
-        <div className="h-16 sm:h-18 lg:h-20 px-4 sm:px-6 lg:px-16 flex items-center">
+        <div className="h-16 sm:h-20 lg:h-24 px-4 sm:px-6 lg:px-16 flex items-center">
           <div className="max-w-full w-full mx-auto flex items-center justify-between">
             {/* Logo - Responsive sizing */}
             <div className="flex items-center flex-shrink-0 overflow-hidden max-w-[65%] sm:max-w-[75%] lg:max-w-none">
@@ -147,7 +147,7 @@ const Navbar: React.FC = () => {
                 <img
                   src="/images/logo/aq-logo.png"
                   alt="AQ Decor"
-                  className="h-14 sm:h-16 md:h-24 lg:h-28 w-auto object-contain transition-all duration-700 group-hover:scale-105"
+                  className="h-14 sm:h-16 md:h-24 lg:h-24 w-auto object-contain transition-all duration-700 group-hover:scale-105"
                   style={{ maxWidth: '350px', maxHeight: '100%' ,pointerEvents: 'none', userSelect:'none' }}
                   draggable="false"
                   onContextMenu={(e)=> e.preventDefault()}
@@ -393,7 +393,7 @@ const Navbar: React.FC = () => {
 
       {/* Mobile Menu - Responsive width */}
       <div
-        className={`mobile-menu fixed top-16 sm:top-18 right-0 w-full xs:w-80 sm:w-96 h-[calc(100vh-4rem)] sm:h-[calc(100vh-4.5rem)] bg-white/98 backdrop-blur-lg shadow-2xl z-50 transform transition-all duration-300 ease-in-out lg:hidden overflow-y-auto ${mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}
+        className={`mobile-menu fixed top-16 sm:top-20 lg:top-30 right-0 w-full xs:w-80 sm:w-96 h-[calc(100vh-4rem)] sm:h-[calc(100vh-4.5rem)] bg-white/98 backdrop-blur-lg shadow-2xl z-50 transform transition-all duration-300 ease-in-out lg:hidden overflow-y-auto ${mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
