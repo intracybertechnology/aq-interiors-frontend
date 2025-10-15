@@ -6,7 +6,10 @@ import {
 } from '../types/blog.types';
 import { ApiResponse } from '../types';
 
-const API_BASE_URL = `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api`;
+// FIXED: Ensure consistent API URL construction
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+const API_ENDPOINT = `${API_BASE_URL}/api`;
+
 class BlogApi {
   async getBlogs(params: BlogPaginationParams = {}): Promise<BlogsResponse> {
     const queryParams = new URLSearchParams();
@@ -17,7 +20,15 @@ class BlogApi {
     if (params.search) queryParams.append('search', params.search);
     if (params.featured) queryParams.append('featured', 'true');
 
-    const response = await fetch(`${API_BASE_URL}/blogs?${queryParams}`);
+    const url = `${API_ENDPOINT}/blogs?${queryParams}`;
+
+
+    const response = await fetch(url);
+    
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: Failed to fetch blogs`);
+    }
+
     const data: ApiResponse<BlogsResponse> = await response.json();
     
     if (!data.success) {
@@ -35,12 +46,20 @@ class BlogApi {
     if (params.category && params.category !== 'All') queryParams.append('category', params.category);
     if (params.search) queryParams.append('search', params.search);
 
-    const response = await fetch(`${API_BASE_URL}/blogs/admin/all?${queryParams}`, {
+    const url = `${API_ENDPOINT}/blogs/admin/all?${queryParams}`;
+
+
+    const response = await fetch(url, {
       headers: {
-        'Authorization': `Bearer ${token}`
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
       }
     });
     
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: Failed to fetch admin blogs`);
+    }
+
     const data: ApiResponse<BlogsResponse> = await response.json();
     
     if (!data.success) {
@@ -51,7 +70,18 @@ class BlogApi {
   }
 
   async getBlogById(id: string): Promise<Blog> {
-    const response = await fetch(`${API_BASE_URL}/blogs/${id}`);
+    const url = `${API_ENDPOINT}/blogs/${id}`;
+
+
+    const response = await fetch(url);
+    
+    if (!response.ok) {
+      if (response.status === 404) {
+        throw new Error('Blog not found');
+      }
+      throw new Error(`HTTP ${response.status}: Failed to fetch blog`);
+    }
+
     const data: ApiResponse<Blog> = await response.json();
     
     if (!data.success) {
@@ -62,7 +92,15 @@ class BlogApi {
   }
 
   async getFeaturedBlogs(limit: number = 3): Promise<Blog[]> {
-    const response = await fetch(`${API_BASE_URL}/blogs/featured?limit=${limit}`);
+    const url = `${API_ENDPOINT}/blogs/featured?limit=${limit}`;
+
+
+    const response = await fetch(url);
+    
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: Failed to fetch featured blogs`);
+    }
+
     const data: ApiResponse<Blog[]> = await response.json();
     
     if (!data.success) {
@@ -73,7 +111,15 @@ class BlogApi {
   }
 
   async getCategories(): Promise<BlogCategoriesResponse> {
-    const response = await fetch(`${API_BASE_URL}/blogs/categories`);
+    const url = `${API_ENDPOINT}/blogs/categories`;
+  
+
+    const response = await fetch(url);
+    
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: Failed to fetch categories`);
+    }
+
     const data: ApiResponse<BlogCategoriesResponse> = await response.json();
     
     if (!data.success) {
@@ -84,14 +130,23 @@ class BlogApi {
   }
 
   async createBlog(blogData: FormData, token: string): Promise<Blog> {
-    const response = await fetch(`${API_BASE_URL}/blogs`, {
+    const url = `${API_ENDPOINT}/blogs`;
+    console.log('📡 Creating blog at:', url);
+
+    const response = await fetch(url, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`
+        // NOTE: Don't set Content-Type for FormData - browser sets it automatically with boundary
       },
       body: blogData
     });
     
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || `HTTP ${response.status}: Failed to create blog`);
+    }
+
     const data: ApiResponse<Blog> = await response.json();
     
     if (!data.success) {
@@ -102,14 +157,23 @@ class BlogApi {
   }
 
   async updateBlog(id: string, blogData: FormData, token: string): Promise<Blog> {
-    const response = await fetch(`${API_BASE_URL}/blogs/${id}`, {
+    const url = `${API_ENDPOINT}/blogs/${id}`;
+    console.log('📡 Updating blog at:', url);
+
+    const response = await fetch(url, {
       method: 'PUT',
       headers: {
         'Authorization': `Bearer ${token}`
+        // NOTE: Don't set Content-Type for FormData
       },
       body: blogData
     });
     
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || `HTTP ${response.status}: Failed to update blog`);
+    }
+
     const data: ApiResponse<Blog> = await response.json();
     
     if (!data.success) {
@@ -120,13 +184,22 @@ class BlogApi {
   }
 
   async deleteBlog(id: string, token: string): Promise<{ deletedId: string; title: string }> {
-    const response = await fetch(`${API_BASE_URL}/blogs/${id}`, {
+    const url = `${API_ENDPOINT}/blogs/${id}`;
+    console.log('📡 Deleting blog at:', url);
+
+    const response = await fetch(url, {
       method: 'DELETE',
       headers: {
-        'Authorization': `Bearer ${token}`
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
       }
     });
     
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || `HTTP ${response.status}: Failed to delete blog`);
+    }
+
     const data: ApiResponse<{ deletedId: string; title: string }> = await response.json();
     
     if (!data.success) {
@@ -135,6 +208,14 @@ class BlogApi {
     
     return data.data;
   }
+
+  // Utility method to get the base URL for image construction
+  getBaseUrl(): string {
+    return API_BASE_URL;
+  }
 }
 
 export const blogApi = new BlogApi();
+
+// Export for use in components that need to construct image URLs
+export { API_BASE_URL };

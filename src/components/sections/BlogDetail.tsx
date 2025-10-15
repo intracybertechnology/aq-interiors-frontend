@@ -3,30 +3,15 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Calendar, Clock, User, Tag, ArrowLeft, Share2, AlertCircle, Loader } from 'lucide-react';
 import MetaTags from '../../seo/MetaTags';
 import StructuredData from '../../seo/StructuredData';
-
-interface BlogPost {
-  _id: string;
-  title: string;
-  excerpt: string;
-  content: string;
-  author: string;
-  createdAt: string;
-  category: string;
-  tags: string[];
-  image: string;
-  readTime: string;
-  featured: boolean;
-  slug: string;
-}
-
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
-const BASE_URL = API_BASE_URL.replace('/api', '');
+import { blogApi, API_BASE_URL } from '../../services/blogApi';
+import { Blog } from '../../types/blog.types';
 
 const BlogDetail: React.FC = () => {
+  
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const [blog, setBlog] = useState<BlogPost | null>(null);
-  const [relatedBlogs, setRelatedBlogs] = useState<BlogPost[]>([]);
+  const [blog, setBlog] = useState<Blog | null>(null);
+  const [relatedBlogs, setRelatedBlogs] = useState<Blog[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -41,18 +26,17 @@ const BlogDetail: React.FC = () => {
     setError(null);
 
     try {
-      const response = await fetch(`${API_BASE_URL}/blogs/${id}`);
-      const data = await response.json();
-
-      if (data.success) {
-        setBlog(data.data);
-        fetchRelatedBlogs(data.data.category);
-      } else {
-        setError(data.message || 'Blog not found');
+      // Use centralized API
+      const blogData = await blogApi.getBlogById(id!);
+      setBlog(blogData);
+      
+      // Fetch related blogs
+      if (blogData.category) {
+        fetchRelatedBlogs(blogData.category);
       }
-    } catch (err) {
-      setError('Failed to load blog post. Please try again.');
-      console.error('Fetch blog error:', err);
+    } catch (err: any) {
+      console.error('❌ Fetch blog error:', err);
+      setError(err.message || 'Failed to load blog post. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -60,15 +44,16 @@ const BlogDetail: React.FC = () => {
 
   const fetchRelatedBlogs = async (category: string) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/blogs?category=${category}&limit=3`);
-      const data = await response.json();
-
-      if (data.success) {
-        const filtered = data.data.blogs.filter((b: BlogPost) => b._id !== id);
-        setRelatedBlogs(filtered.slice(0, 3));
-      }
+      const response = await blogApi.getBlogs({ 
+        category, 
+        limit: 4 // Get 4 to filter out current blog
+      });
+      
+      // Filter out current blog and limit to 3
+      const filtered = response.blogs.filter((b: Blog) => b._id !== id);
+      setRelatedBlogs(filtered.slice(0, 3));
     } catch (err) {
-      console.error('Fetch related blogs error:', err);
+      console.error('❌ Fetch related blogs error:', err);
     }
   };
 
@@ -89,6 +74,14 @@ const BlogDetail: React.FC = () => {
     }
   };
 
+  // Helper to construct full image URL
+  const getImageUrl = (imagePath: string): string => {
+    if (imagePath.startsWith('http')) {
+      return imagePath;
+    }
+    return `${API_BASE_URL}${imagePath}`;
+  };
+
   // Generate dynamic SEO for blog post
   const generateBlogSEO = () => {
     if (!blog) return null;
@@ -99,9 +92,7 @@ const BlogDetail: React.FC = () => {
       : blog.excerpt;
     const keywords = `${blog.category.toLowerCase()}, ${blog.tags.join(', ')}, commercial fitout blog dubai, interior design tips`;
     const canonical = `https://www.aqdecor.com/blog/${blog.slug || blog._id}`;
-    const ogImage = blog.image.startsWith('http') 
-      ? blog.image 
-      : `${BASE_URL}${blog.image}`;
+    const ogImage = getImageUrl(blog.image);
 
     return { title, description, keywords, canonical, ogImage };
   };
@@ -121,18 +112,14 @@ const BlogDetail: React.FC = () => {
   const generateArticleStructuredData = () => {
     if (!blog) return null;
 
-    const imageUrl = blog.image.startsWith('http') 
-      ? blog.image 
-      : `${BASE_URL}${blog.image}`;
-
     return {
       "@context": "https://schema.org",
       "@type": "Article",
       "headline": blog.title,
       "description": blog.excerpt,
-      "image": imageUrl,
+      "image": getImageUrl(blog.image),
       "datePublished": blog.createdAt,
-      "dateModified": blog.createdAt,
+      "dateModified": blog.updatedAt || blog.createdAt,
       "author": {
         "@type": "Person",
         "name": blog.author
@@ -188,8 +175,11 @@ const BlogDetail: React.FC = () => {
             <h2 className="text-2xl font-bold text-gray-800 mb-2" style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>
               Blog Not Found
             </h2>
-            <p className="text-gray-600 mb-6" style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>
+            <p className="text-gray-600 mb-2" style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>
               {error || 'The blog post you are looking for does not exist.'}
+            </p>
+            <p className="text-sm text-gray-500 mb-6" style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>
+              Check the console for more details.
             </p>
             <button
               onClick={() => navigate('/blogs')}
@@ -219,7 +209,7 @@ const BlogDetail: React.FC = () => {
           canonical={seoData.canonical}
           author={blog.author}
           publishedTime={blog.createdAt}
-          modifiedTime={blog.createdAt}
+          modifiedTime={blog.updatedAt || blog.createdAt}
         />
       )}
 
@@ -232,7 +222,7 @@ const BlogDetail: React.FC = () => {
       )}
 
       <div className="min-h-screen bg-gray-50">
-        {/* Hero Section - Light background to match contact page */}
+        {/* Hero Section */}
         <div className="relative bg-white py-16 overflow-hidden">
           <div className="container mx-auto px-4">
             <button
@@ -281,10 +271,10 @@ const BlogDetail: React.FC = () => {
         </div>
 
         {/* Featured Image */}
-        <div className="container mx-auto overflow-hidden rounded-xl shadow-xl">
-          <div className="max-w-4xl mx-auto">
+        <div className="container mx-auto px-4 -mt-8 mb-8">
+          <div className="max-w-4xl mx-auto overflow-hidden rounded-xl shadow-xl">
             <img
-              src={blog.image.startsWith('http') ? blog.image : `${BASE_URL}${blog.image}`}
+              src={getImageUrl(blog.image)}
               alt={`${blog.title} - ${blog.category}`}
               className="w-full h-96 object-cover"
               style={{ objectPosition: 'center' }}
@@ -329,7 +319,7 @@ const BlogDetail: React.FC = () => {
             </div>
 
             {/* Tags */}
-            {blog.tags.length > 0 && (
+            {blog.tags && blog.tags.length > 0 && (
               <div className="bg-white rounded-xl shadow p-6 mb-12">
                 <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2"
                   style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>
@@ -365,7 +355,7 @@ const BlogDetail: React.FC = () => {
                       className="bg-white rounded-xl shadow-lg overflow-hidden cursor-pointer hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2"
                     >
                       <img
-                        src={relatedBlog.image.startsWith('http') ? relatedBlog.image : `${BASE_URL}${relatedBlog.image}`}
+                        src={getImageUrl(relatedBlog.image)}
                         alt={`${relatedBlog.title} - Related Article`}
                         className="w-full h-48 object-cover"
                         loading="lazy"

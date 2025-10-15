@@ -39,23 +39,17 @@ function App() {
           <Route path="/admin/clients/create" element={<AdminClientForm />} />
           <Route path="/admin/clients/edit/:id" element={<AdminClientForm />} />
           
-          {/* Public routes - WITH Layout */}
-          <Route path="/*" element={
-            <Layout>
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/services" element={<Services />} />
-                <Route path="/projects" element={<Projects />} />
-                <Route path="/projects/:id" element={<ProjectDetail />} /> 
-                <Route path="/contact" element={<Contact />} />
-                <Route path="/company" element={<Company />} />
-                <Route path="/blogs" element={<Blog />} />
-                <Route path="/blog/:id" element={<BlogDetail />} />
-                <Route path="/gallery" element={<div>Gallery page coming soon</div>} />
-              </Routes>
-            </Layout>
-          } />
+          {/* Public routes - WITH Layout - Use Layout as wrapper component */}
+          <Route path="/" element={<Layout><Home /></Layout>} />
+          <Route path="/about" element={<Layout><About /></Layout>} />
+          <Route path="/services" element={<Layout><Services /></Layout>} />
+          <Route path="/projects" element={<Layout><Projects /></Layout>} />
+          <Route path="/projects/:id" element={<Layout><ProjectDetail /></Layout>} />
+          <Route path="/contact" element={<Layout><Contact /></Layout>} />
+          <Route path="/company" element={<Layout><Company /></Layout>} />
+          <Route path="/blogs" element={<Layout><Blog /></Layout>} />
+          <Route path="/blog/:id" element={<Layout><BlogDetail /></Layout>} />
+          <Route path="/gallery" element={<Layout><div>Gallery page coming soon</div></Layout>} />
         </Routes>
       </div>
     </AdminAuthProvider>
