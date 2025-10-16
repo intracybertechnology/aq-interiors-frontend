@@ -1,4 +1,3 @@
-// Location entity (already in locationApi.ts, but should be here)
 export interface Location {
   name: string;
   address: string;

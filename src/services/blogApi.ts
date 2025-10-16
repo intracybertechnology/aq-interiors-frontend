@@ -158,7 +158,7 @@ class BlogApi {
 
   async updateBlog(id: string, blogData: FormData, token: string): Promise<Blog> {
     const url = `${API_ENDPOINT}/blogs/${id}`;
-    console.log('📡 Updating blog at:', url);
+    console.log('Updating blog at:', url);
 
     const response = await fetch(url, {
       method: 'PUT',
@@ -185,7 +185,7 @@ class BlogApi {
 
   async deleteBlog(id: string, token: string): Promise<{ deletedId: string; title: string }> {
     const url = `${API_ENDPOINT}/blogs/${id}`;
-    console.log('📡 Deleting blog at:', url);
+    console.log(' Deleting blog at:', url);
 
     const response = await fetch(url, {
       method: 'DELETE',

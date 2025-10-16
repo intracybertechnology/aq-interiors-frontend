@@ -259,8 +259,8 @@ const Blog: React.FC = () => {
                     key={category}
                     onClick={() => handleCategoryChange(category)}
                     className={`px-4 py-2 rounded-full text-sm font-medium transition-all transform hover:scale-105 ${selectedCategory === category
-                        ? 'bg-[#9B4F96] text-white shadow-lg'
-                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                      ? 'bg-[#9B4F96] text-white shadow-lg'
+                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                       }`}
                     style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}
                   >
@@ -304,8 +304,8 @@ const Blog: React.FC = () => {
                       key={post._id}
                       data-post-id={post._id}
                       className={`group bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 cursor-pointer ${visiblePosts.includes(post._id)
-                          ? 'opacity-100 translate-y-0'
-                          : 'opacity-0 translate-y-8'
+                        ? 'opacity-100 translate-y-0'
+                        : 'opacity-0 translate-y-8'
                         }`}
                       onClick={() => navigateToBlog(post)}
                     >
@@ -427,9 +427,9 @@ const Blog: React.FC = () => {
                           </div>
                           <button
                             onClick={() => navigateToBlog(post)}
-                            className="bg-[#9B4F96] text-white px-6 py-3 rounded-lg hover:bg-[#8B4C87] transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
+                            className="flex items-center gap-1 text-[#9B4F96] hover:gap-2 transition-all duration-300 font-medium"
                           >
-                            Read Full Article
+                            Read More <ChevronRight className="w-4 h-4" />
                           </button>
                         </div>
                       </div>
@@ -446,8 +446,8 @@ const Blog: React.FC = () => {
                     onClick={() => handlePageChange(currentPage - 1)}
                     disabled={!pagination.hasPrev}
                     className={`px-4 py-2 rounded-lg font-medium transition-all ${pagination.hasPrev
-                        ? 'bg-[#9B4F96] text-white hover:bg-[#8B4C87]'
-                        : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                      ? 'bg-[#9B4F96] text-white hover:bg-[#8B4C87]'
+                      : 'bg-gray-200 text-gray-400 cursor-not-allowed'
                       }`}
                   >
                     Previous
@@ -458,8 +458,8 @@ const Blog: React.FC = () => {
                         key={page}
                         onClick={() => handlePageChange(page)}
                         className={`px-4 py-2 rounded-lg font-medium transition-all ${currentPage === page
-                            ? 'bg-[#9B4F96] text-white'
-                            : 'bg-white text-gray-600 hover:bg-gray-100'
+                          ? 'bg-[#9B4F96] text-white'
+                          : 'bg-white text-gray-600 hover:bg-gray-100'
                           }`}
                       >
                         {page}
@@ -470,8 +470,8 @@ const Blog: React.FC = () => {
                     onClick={() => handlePageChange(currentPage + 1)}
                     disabled={!pagination.hasNext}
                     className={`px-4 py-2 rounded-lg font-medium transition-all ${pagination.hasNext
-                        ? 'bg-[#9B4F96] text-white hover:bg-[#8B4C87]'
-                        : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                      ? 'bg-[#9B4F96] text-white hover:bg-[#8B4C87]'
+                      : 'bg-gray-200 text-gray-400 cursor-not-allowed'
                       }`}
                   >
                     Next

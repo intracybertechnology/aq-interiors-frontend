@@ -35,7 +35,7 @@ const BlogDetail: React.FC = () => {
         fetchRelatedBlogs(blogData.category);
       }
     } catch (err: any) {
-      console.error('❌ Fetch blog error:', err);
+      console.error(' Fetch blog error:', err);
       setError(err.message || 'Failed to load blog post. Please try again.');
     } finally {
       setLoading(false);
@@ -46,14 +46,14 @@ const BlogDetail: React.FC = () => {
     try {
       const response = await blogApi.getBlogs({ 
         category, 
-        limit: 4 // Get 4 to filter out current blog
+        limit: 8
       });
       
       // Filter out current blog and limit to 3
       const filtered = response.blogs.filter((b: Blog) => b._id !== id);
       setRelatedBlogs(filtered.slice(0, 3));
     } catch (err) {
-      console.error('❌ Fetch related blogs error:', err);
+      console.error(' Fetch related blogs error:', err);
     }
   };
 
