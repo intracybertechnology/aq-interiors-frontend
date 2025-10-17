@@ -19,6 +19,8 @@ import AdminProjectForm from './pages/admin/ProjectForm';
 import AdminProjects from './pages/admin/Projects';
 import AdminClientForm from './pages/admin/ClientForm';
 import AdminClients from './pages/admin/Clients';
+import HeroImageForm from './pages/admin/HeroForm';
+
 
 function App() {
   return (
@@ -38,6 +40,7 @@ function App() {
           <Route path="/admin/clients" element={<AdminClients />} />
           <Route path="/admin/clients/create" element={<AdminClientForm />} />
           <Route path="/admin/clients/edit/:id" element={<AdminClientForm />} />
+           <Route path="/admin/hero-images" element={<HeroImageForm />} />
           
           {/* Public routes - WITH Layout - Use Layout as wrapper component */}
           <Route path="/" element={<Layout><Home /></Layout>} />

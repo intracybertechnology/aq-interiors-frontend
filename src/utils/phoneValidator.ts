@@ -4,29 +4,18 @@ export interface PhoneValidationResult {
   formatted?: string;
 }
 
-/**
- * Validates UAE phone numbers
- * Accepts formats:
- * - Mobile: 05X XXX XXXX (9 digits starting with 05)
- * - Landline: 0X XXX XXXX (8-9 digits starting with 02-09)
- * - International: +971 5X XXX XXXX or +971 X XXX XXXX
- */
 export const validateUAEPhone = (phone: string): PhoneValidationResult => {
   if (!phone || phone.trim() === '') {
     return {
-      isValid: true, // Optional field
+      isValid: true,
       message: '',
     };
   }
-
-  // Remove spaces, dashes, parentheses, and other formatting
   const cleaned = phone.replace(/[\s\-\(\)\.]/g, '');
 
-  // Check for international format: +971XXXXXXXXX
   if (cleaned.startsWith('+971')) {
     const number = cleaned.substring(4);
-    
-    // Mobile numbers: 50-58 followed by 7 digits (total 9 digits after +971)
+
     if (/^5[0-8][0-9]{7}$/.test(number)) {
       return {
         isValid: true,
@@ -34,8 +23,7 @@ export const validateUAEPhone = (phone: string): PhoneValidationResult => {
         formatted: `+971 ${number.substring(0, 2)} ${number.substring(2, 5)} ${number.substring(5)}`,
       };
     }
-    
-    // Landline numbers: 2-9 followed by 6-7 digits (total 7-8 digits after +971)
+
     if (/^[2-9][0-9]{6,7}$/.test(number)) {
       return {
         isValid: true,
@@ -50,10 +38,8 @@ export const validateUAEPhone = (phone: string): PhoneValidationResult => {
     };
   }
 
-  // Check for local format with leading 0
   if (cleaned.startsWith('0')) {
-    // Mobile: 05X XXX XXXX (9 digits total)
-    // Valid mobile prefixes: 050, 052, 054, 055, 056, 058
+
     if (/^05[0-8][0-9]{7}$/.test(cleaned)) {
       return {
         isValid: true,
@@ -62,8 +48,7 @@ export const validateUAEPhone = (phone: string): PhoneValidationResult => {
       };
     }
 
-    // Landline: 0X XXX XXXX (7-8 digits after 0)
-    // Valid area codes: 02 (Abu Dhabi), 03 (Al Ain), 04 (Dubai), 06 (Sharjah), 07 (RAK), 09 (Fujairah)
+
     if (/^0[2-9][0-9]{6,7}$/.test(cleaned)) {
       return {
         isValid: true,
@@ -78,8 +63,7 @@ export const validateUAEPhone = (phone: string): PhoneValidationResult => {
     };
   }
 
-  // Check for format without country code or leading 0
-  // Mobile without leading 0: 5X XXX XXXX (9 digits)
+
   if (/^5[0-8][0-9]{7}$/.test(cleaned)) {
     return {
       isValid: true,
@@ -88,7 +72,7 @@ export const validateUAEPhone = (phone: string): PhoneValidationResult => {
     };
   }
 
-  // If it's just digits but doesn't match any format
+
   if (/^\d+$/.test(cleaned)) {
     return {
       isValid: false,
@@ -102,17 +86,13 @@ export const validateUAEPhone = (phone: string): PhoneValidationResult => {
   };
 };
 
-/**
- * Format UAE phone number for display
- */
+
 export const formatUAEPhone = (phone: string): string => {
   const result = validateUAEPhone(phone);
   return result.formatted || phone;
 };
 
-/**
- * Get example phone numbers for placeholder
- */
+
 export const getPhoneExample = (): string => {
   return '050 123 4567 or +971 50 123 4567';
 };

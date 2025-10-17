@@ -191,6 +191,7 @@ const AdminBlogForm = () => {
                             <FolderKanban size={20} />
                             <span className="font-medium" style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>Projects</span>
                         </Link>
+                        
                     </nav>
 
                     <div className="p-4 border-t">

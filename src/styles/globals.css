@@ -11,11 +11,11 @@
   
   html {
     scroll-behavior: smooth;
-    scroll-padding-top: 100px;
+    scroll-padding-top: 100px; /* Increased from previous value */
   }
   
   body {
-    font-family: "Lucida Bright", Georgia, serif;
+    font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
     line-height: 1.6;
     color: #1f2937;
     background-color: #ffffff;
@@ -23,43 +23,51 @@
     -moz-osx-font-smoothing: grayscale;
   }
   
-  h1, h2, h3, h4, h5, h6 {
-    color: #9B4F96 !important;
-    font-weight: 600 !important;
-  }
+/* FORCE ALL HEADINGS TO BE PURPLE - GLOBAL OVERRIDE */
+h1, h2, h3, h4, h5, h6,
+.title, .heading, .header,
+[class*="title"], [class*="heading"], [class*="header"] {
+  color: #9B4F96 !important;
+  font-weight: 600 !important;
+}
 
-  h1 {
-    font-size: 2.5rem !important;
-    font-weight: 700 !important;
-    line-height: 1.2 !important;
-    margin-bottom: 1rem !important;
-  }
+/* Specific heading sizes with purple color */
+h1 {
+  color: #9B4F96 !important;
+  font-size: 2.5rem !important;
+  font-weight: 700 !important;
+  line-height: 1.2 !important;
+  margin-bottom: 1rem !important;
+}
 
-  h2 {
-    font-size: 2rem !important;
-    font-weight: 600 !important;
-    line-height: 1.3 !important;
-    margin-bottom: 0.75rem !important;
-  }
+h2 {
+  color: #9B4F96 !important;
+  font-size: 2rem !important;
+  font-weight: 600 !important;
+  line-height: 1.3 !important;
+  margin-bottom: 0.75rem !important;
+}
 
-  h3 {
-    font-size: 1.5rem !important;
-    font-weight: 600 !important;
-    line-height: 1.4 !important;
-    margin-bottom: 0.5rem !important;
-  }
+h3 {
+  color: #9B4F96 !important;
+  font-size: 1.5rem !important;
+  font-weight: 600 !important;
+  line-height: 1.4 !important;
+  margin-bottom: 0.5rem !important;
+}
 
-  h4 {
-    font-size: 1.25rem !important;
-    font-weight: 500 !important;
-    line-height: 1.4 !important;
-    margin-bottom: 0.5rem !important;
-  }
+h4 {
+  color: #9B4F96 !important;
+  font-size: 1.25rem !important;
+  font-weight: 500 !important;
+  line-height: 1.4 !important;
+  margin-bottom: 0.5rem !important;
+}
 
-  h5, h6 {
-    color: #7B4278 !important;
-    font-weight: 500 !important;
-  }
+h5, h6 {
+  color: #7B4278 !important;
+  font-weight: 500 !important;
+}
   
   img {
     max-width: 100%;
@@ -69,40 +77,62 @@
 }
 
 @layer components {
+  /* Container */
   .container {
     @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
   }
 
-  section,
+  /* FIXED: Better section offset for smooth scrolling */
+  section {
+    scroll-margin-top: 100px; /* Matches html scroll-padding-top */
+  }
+
+  /* FIXED: Specifically target main content sections with proper offset */
   #hero,
   #about,
   #services,
   #projects,
   #contact,
   #blog,
-  #what-we-do,
+  #what-we-do {
+    scroll-margin-top: 100px; /* Consistent with navbar height */
+  }
+
+  /* ADDITIONAL FIX: Target sections by class names too */
   .hero-section,
   .about-section,
   .services-section,
   .projects-section,
   .contact-section,
-  .blog-section,
-  [id] {
+  .blog-section {
     scroll-margin-top: 100px;
   }
 
-  /* Buttons */
+  /* Buttons with your purple theme */
   .btn {
     @apply inline-flex items-center justify-center px-6 py-3 text-base font-semibold rounded-lg transition-all duration-300 cursor-pointer focus:outline-none focus:ring-4;
   }
   
   .btn-primary {
-    @apply bg-[#9B4F96] text-white hover:bg-[#8B4C87] hover:-translate-y-1;
+    background-color: #9B4F96;
+    color: white;
+  }
+  
+  .btn-primary:hover {
+    background-color: #8B4C87;
+    transform: translateY(-1px);
     box-shadow: 0 10px 25px rgba(155, 79, 150, 0.3);
   }
   
   .btn-secondary {
-    @apply bg-transparent text-[#9B4F96] border-2 border-[#9B4F96] hover:bg-[#9B4F96] hover:text-white;
+    background-color: transparent;
+    color: #9B4F96;
+    border: 2px solid #9B4F96;
+  }
+  
+  .btn-secondary:hover {
+    background-color: #9B4F96;
+    color: white;
   }
   
   .btn-white {
@@ -116,17 +146,51 @@
   
   /* Navigation */
   .navbar {
-    @apply bg-white shadow-lg sticky top-0 z-50 flex items-center;
+    @apply bg-white shadow-lg sticky top-0 z-50;
     height: 110px;
-    padding: 0.5rem;
+   
+    display: flex;
+    align-items: center;
+    padding: 0.5rem
   }
 
+  /* DROPDOWN MENU FIX - High z-index for dropdown menus */
+  .dropdown-menu,
+  .nav-dropdown,
+  [class*="dropdown"],
+  [class*="menu"] {
+    z-index: 9999 !important;
+    position: absolute !important;
+    background: white !important;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15) !important;
+    border-radius: 0.5rem !important;
+  }
+
+  /* Specific dropdown styling */
+  .what-we-do-dropdown {
+    position: absolute !important;
+    top: 100% !important;
+    left: 0 !important;
+    z-index: 9999 !important;
+    background: white !important;
+    min-width: 600px !important;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15) !important;
+    border-radius: 1rem !important;
+    padding: 2rem !important;
+    margin-top: 0.5rem !important;
+  }
+  
   .nav-link {
-    @apply text-gray-700 hover:text-[#9B4F96] font-medium transition-colors duration-300 px-4 py-2;
+    @apply text-gray-700 hover:text-primary-500 font-medium transition-colors duration-300 px-4 py-2;
+  }
+  
+  .nav-link:hover {
+    color: #9B4F96;
   }
   
   .nav-link-active {
-    @apply text-[#9B4F96] font-semibold;
+    color: #9B4F96;
+    font-weight: 600;
   }
   
   /* Hero section */
@@ -136,7 +200,7 @@
   }
   
   .hero-overlay {
-    @apply absolute inset-0 bg-black/40;
+    @apply absolute inset-0 bg-black bg-opacity-40;
   }
   
   .hero-content {
@@ -144,54 +208,138 @@
   }
   
   .hero-title {
-    @apply text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight mb-6 text-white;
-    font-size: 3rem;
+    @apply text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight mb-6;
   }
   
   .hero-subtitle {
-    @apply text-lg sm:text-xl leading-relaxed mb-8 max-w-2xl mx-auto opacity-90 text-white;
+    @apply text-lg sm:text-xl leading-relaxed mb-8 max-w-2xl mx-auto opacity-90;
   }
   
-  /* Section titles */
+  /* Section titles with purple theme */
   .section-title {
-    @apply text-4xl font-bold text-center mb-4 text-[#9B4F96];
+    color: #9B4F96;
+    font-size: 2.5rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 1rem;
   }
   
   .section-subtitle {
-    @apply text-lg text-center text-gray-600 mb-12 max-w-2xl mx-auto;
+    color: #6b7280;
+    font-size: 1.125rem;
+    text-align: center;
+    margin-bottom: 3rem;
+    max-width: 48rem;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  /* Hero titles with purple theme */
+  .hero-title {
+    color: white;
+    font-size: 3rem;
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+  }
+  
+  .hero-subtitle {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1.25rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    max-width: 42rem;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  /* Content headings - ALL in purple theme */
+  .content-title,
+  .page-title,
+  .main-heading {
+    color: #9B4F96 !important;
+    font-weight: 700;
+  }
+  
+  .content-subtitle,
+  .section-heading {
+    color: #9B4F96 !important;
+    font-weight: 600;
+  }
+  
+  .feature-heading,
+  .service-heading,
+  .project-heading {
+    color: #9B4F96 !important;
+    font-weight: 600;
+    font-size: 1.25rem;
+  }
+  
+  /* Force ALL headings in content areas to be purple */
+  .content h1,
+  .content h2,
+  .content h3,
+  .content h4,
+  .content h5,
+  .content h6,
+  main h1,
+  main h2,
+  main h3,
+  main h4,
+  main h5,
+  main h6,
+  article h1,
+  article h2,
+  article h3,
+  article h4,
+  article h5,
+  article h6,
+  section h1,
+  section h2,
+  section h3,
+  section h4,
+  section h5,
+  section h6 {
+    color: #9B4F96 !important;
   }
   
   /* Purple accent elements */
   .accent-purple {
-    @apply text-[#9B4F96];
+    color: #9B4F96;
   }
   
   .text-primary {
-    @apply text-[#9B4F96];
+    color: #9B4F96;
   }
   
   .text-primary-dark {
-    @apply text-[#7B4278];
+    color: #7B4278;
   }
   
   .bg-purple-light {
-    @apply bg-purple-50;
+    background-color: #fdf4ff;
   }
   
   .bg-purple-gradient {
     background: linear-gradient(135deg, #9B4F96 0%, #7B4278 100%);
   }
   
+  /* Important text styling */
   .highlight-text {
-    @apply text-[#9B4F96] font-semibold;
+    color: #9B4F96;
+    font-weight: 600;
   }
   
   .feature-title {
-    @apply text-xl font-semibold mb-2 text-[#9B4F96];
+    color: #9B4F96;
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
   }
   
   .feature-description {
-    @apply text-gray-600 leading-relaxed;
+    color: #6b7280;
+    line-height: 1.6;
   }
   
   /* Stats */
@@ -200,7 +348,8 @@
   }
   
   .stat-number {
-    @apply text-4xl sm:text-5xl font-bold mb-2 text-[#9B4F96];
+    @apply text-4xl sm:text-5xl font-bold mb-2;
+    color: #9B4F96;
   }
   
   .stat-label {
@@ -211,44 +360,79 @@
   .grid-responsive {
     @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8;
   }
+  /* Logo styling - FIXED */
+.logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100px; /* Increased height to fit within navbar */
+  width: auto;
+  padding: 0.75rem 0.5rem;
+ 
+}
 
-  /* Logo styling */
-  .logo {
-    @apply flex items-center justify-center h-auto w-auto p-3;
-  }
+.logo img {
+  height: 70px;
+  width: auto;
+  max-height: 70px; 
+  max-width: 100%;
+  object-fit: contain; /* Maintains aspect ratio */
+  filter: brightness(1.1) contrast(1.15) saturate(1.2);
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+}
 
-  .logo img {
-    @apply h-16 w-auto max-w-xs object-contain;
-    filter: brightness(1.1) contrast(1.15) saturate(1.2);
-  }
+.logo:hover img {
+  filter: brightness(1.2) contrast(1.2) saturate(1.3);
+}
 
-  .logo:hover img {
-    filter: brightness(1.2) contrast(1.2) saturate(1.3);
-  }
 
-  /* Clients section */
+  /* CLIENTS SECTION STYLING - NEW */
   .clients-section {
-    @apply py-20;
+    font-family: 'Inter', system-ui, sans-serif;
+    padding: 5rem 0;
     background: linear-gradient(135deg, #fafafa 0%, #ffffff 100%);
   }
 
   .clients-section h2 {
-    @apply text-4xl font-bold text-[#9B4F96] mb-4;
+    font-family: 'Poppins', system-ui, sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    text-shadow: 0 2px 4px rgba(155, 79, 150, 0.1);
+    font-size: 2.75rem;
+    margin-bottom: 1rem;
   }
 
   .clients-section .section-subtitle {
-    @apply text-lg text-gray-600 mb-12;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+    font-size: 1.2rem;
+    color: #64748b;
+    margin-bottom: 4rem;
   }
 
   .client-card {
-    @apply bg-white rounded-lg p-6 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 relative overflow-hidden;
+    font-family: 'Inter', system-ui, sans-serif;
+    background: white;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e2e8f0;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
   }
 
   .client-card::before {
     content: '';
-    @apply absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#9B4F96] to-[#7B4278];
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #9B4F96, #7B4278);
     transform: scaleX(0);
-    transform-origin: left;
     transition: transform 0.3s ease;
   }
 
@@ -257,128 +441,455 @@
   }
 
   .client-card:hover {
-    @apply -translate-y-1 border-[#9B4F96];
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(155, 79, 150, 0.15);
+    border-color: #9B4F96;
   }
 
   .client-card h4 {
-    @apply text-base font-semibold text-gray-900 mb-2 transition-colors duration-300;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-weight: 600;
+    font-size: 1rem;
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+    transition: color 0.3s ease;
   }
 
   .client-card:hover h4 {
-    @apply text-[#9B4F96];
+    color: #9B4F96;
   }
 
   .client-card p {
-    @apply text-sm text-gray-600 leading-relaxed mb-3;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-weight: 400;
+    font-size: 0.875rem;
+    letter-spacing: 0.005em;
+    color: #64748b;
+    line-height: 1.4;
+    margin-bottom: 0.75rem;
   }
 
   .client-category-badge {
-    @apply inline-block text-xs font-semibold uppercase tracking-wider text-white bg-gradient-to-r from-[#9B4F96] to-[#7B4278] px-3 py-1 rounded-full transition-transform duration-300;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-weight: 500;
+    font-size: 0.75rem;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    background: linear-gradient(135deg, #9B4F96, #7B4278);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+    display: inline-block;
+    transition: all 0.3s ease;
   }
 
   .client-card:hover .client-category-badge {
-    @apply scale-105;
+    transform: scale(1.05);
     box-shadow: 0 4px 12px rgba(155, 79, 150, 0.3);
   }
 
+  /* Client grid responsive */
   .clients-grid {
-    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-12;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-top: 3rem;
   }
 
-  /* Mobile Menu */
-  .mobile-menu {
-    scrollbar-width: thin;
-    scrollbar-color: #9B4F96 transparent;
-  }
-
-  .mobile-menu::-webkit-scrollbar {
-    width: 4px;
-  }
-
-  .mobile-menu::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  .mobile-menu::-webkit-scrollbar-thumb {
-    @apply bg-[#9B4F96] rounded;
-  }
+  /* Animation delays for staggered effect */
+  .client-card:nth-child(1) { animation-delay: 0ms; }
+  .client-card:nth-child(2) { animation-delay: 100ms; }
+  .client-card:nth-child(3) { animation-delay: 200ms; }
+  .client-card:nth-child(4) { animation-delay: 300ms; }
+  .client-card:nth-child(5) { animation-delay: 400ms; }
+  .client-card:nth-child(6) { animation-delay: 500ms; }
 }
 
-/* Responsive typography and spacing */
+  /* ADDITIONAL FIX: Universal scroll offset for any element that might be a scroll target */
+[id] {
+  scroll-margin-top: 100px;
+}
+
+/* DROPDOWN Z-INDEX OVERRIDE - Ensure all dropdowns appear on top */
+.group > div[style*="zIndex"] {
+  z-index: 99999 !important;
+  position: absolute !important;
+}
+
+/* Force dropdown to always be on top */
+div[class*="backdrop-blur-lg"] {
+  z-index: 99999 !important;
+}
+
+/* ADDITIONAL FIX: Target any element with anchor links */
+*[id^="section-"],
+*[id$="-section"],
+.section,
+.page-section {
+  scroll-margin-top: 100px;
+}
+
+/* Responsive typography */
 @media (max-width: 640px) {
+  .hero-title {
+    font-size: 2.5rem;
+  }
+  
+  .section-title {
+    font-size: 2rem;
+  }
+
+  .clients-section h2 {
+    font-size: 2.25rem;
+  }
+
+  .clients-section .section-subtitle {
+    font-size: 1.1rem;
+  }
+
+  /* Mobile: Adjust scroll offset for smaller navbar */
   html {
     scroll-padding-top: 80px;
   }
 
   section,
+  #hero,
+  #about,
+  #services,
+  #projects,
+  #contact,
+  #blog,
+  #what-we-do,
   [id] {
     scroll-margin-top: 80px;
   }
+}
+/* Add these styles to your globals.css file for better mobile responsiveness */
 
-  .hero-title {
-    @apply text-3xl;
+/* Mobile Menu Enhancements */
+.mobile-menu {
+  /* Custom scrollbar for mobile menu */
+  scrollbar-width: thin;
+  scrollbar-color: #9B4F96 transparent;
+}
+
+.mobile-menu::-webkit-scrollbar {
+  width: 4px;
+}
+
+.mobile-menu::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.mobile-menu::-webkit-scrollbar-thumb {
+  background: #9B4F96;
+  border-radius: 2px;
+}
+
+/* Mobile Navigation Responsive Breakpoints */
+@media (max-width: 1024px) {
+  /* Tablet styles - show hamburger menu */
+  .lg\:hidden {
+    display: flex !important;
   }
   
-  .section-title {
-    @apply text-2xl;
+  .lg\:flex {
+    display: none !important;
   }
-
-  .clients-section h2 {
-    @apply text-2xl;
-  }
-
-  .btn {
-    @apply py-2 px-4 text-sm min-h-[44px];
-  }
-
-  .card {
-    @apply p-4;
+  
+  /* Adjust logo size for tablets */
+  nav img {
+    height: 4rem;
+    width: 350px;
+    min-width: 250px;
   }
 }
 
-/* Tablet and desktop responsive */
-@media (max-width: 1024px) {
-  .grid-responsive {
-    @apply grid-cols-1 sm:grid-cols-2;
+@media (max-width: 768px) {
+  /* Mobile styles */
+  nav {
+    padding: 0 1rem;
   }
-
-  .clients-grid {
-    @apply grid-cols-2;
+  
+  /* Mobile logo adjustments */
+  nav img {
+    height: 3.5rem;
+    width: 280px;
+    min-width: 200px;
   }
-}
-
-/* Touch device improvements */
-@media (hover: none) and (pointer: coarse) {
-  .mobile-menu-button,
-  .mobile-menu a,
-  .mobile-menu button {
-    @apply min-h-[44px];
-  }
-
-  .mobile-menu a,
-  .mobile-menu button {
-    @apply flex items-center;
-  }
-}
-
-/* Reduced motion support */
-@media (prefers-reduced-motion: reduce) {
-  * {
-    @apply !transition-none !animate-none;
-  }
-}
-
-/* Dark mode support */
-@media (prefers-color-scheme: dark) {
+  
+  /* Mobile menu positioning */
   .mobile-menu {
-    @apply bg-gray-900 text-white;
+    width: 100vw;
+    right: 0;
+    left: 0;
+  }
+  
+  /* Ensure mobile menu is full width on small screens */
+  .mobile-menu .space-y-4 {
+    padding: 0 0.5rem;
+  }
+}
+
+@media (max-width: 640px) {
+  /* Small mobile styles */
+  nav {
+    height: 4.5rem;
+    padding: 0 0.75rem;
+  }
+  
+  /* Extra small logo for mobile */
+  nav img {
+    height: 3rem;
+    width: 240px;
+    min-width: 180px;
+  }
+  
+  /* Mobile menu button spacing */
+  .mobile-menu-button {
+    padding: 0.5rem;
+  }
+  
+  /* Mobile menu full screen */
+  .mobile-menu {
+    top: 4.5rem;
+    height: calc(100vh - 4.5rem);
+    width: 100vw;
+  }
+  
+  /* Mobile menu content spacing */
+  .mobile-menu > div {
+    padding: 1.5rem 1rem;
+  }
+  
+  /* Mobile links styling */
+  .mobile-menu a {
+    padding: 1rem 0;
+    font-size: 1.125rem;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Extra small mobile styles */
+  nav {
+    height: 4rem;
+    padding: 0 0.5rem;
+  }
+  
+  /* Very small logo */
+  nav img {
+    height: 2.5rem;
+    width: 200px;
+    min-width: 150px;
+  }
+  
+  /* Mobile menu adjustments */
+  .mobile-menu {
+    top: 4rem;
+    height: calc(100vh - 4rem);
+  }
+  
+  /* Compact mobile menu content */
+  .mobile-menu > div {
+    padding: 1rem 0.75rem;
+  }
+  
+  /* Services dropdown in mobile - more compact */
+  .mobile-menu .space-y-4 > div:nth-child(3) .pl-4 {
+    padding-left: 1rem;
+  }
+  
+  .mobile-menu .space-y-4 > div:nth-child(3) .space-y-4 > div {
+    margin-bottom: 1rem;
+  }
+}
+
+/* Touch-friendly improvements */
+@media (hover: none) and (pointer: coarse) {
+  /* Touch device styles */
+  .mobile-menu-button {
+    min-height: 44px;
+    min-width: 44px;
   }
   
   .mobile-menu a {
-    @apply text-gray-100 hover:text-[#9B4F96];
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .mobile-menu button {
+    min-height: 44px;
+    padding: 0.75rem 0;
+  }
+}
+
+/* Ensure mobile menu doesn't interfere with page content */
+.mobile-menu-open {
+  overflow: hidden;
+}
+
+/* Animation enhancements for mobile */
+.mobile-menu-enter {
+  transform: translateX(100%);
+  opacity: 0;
+}
+
+.mobile-menu-enter-active {
+  transform: translateX(0);
+  opacity: 1;
+  transition: all 0.3s ease-in-out;
+}
+
+.mobile-menu-exit {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+.mobile-menu-exit-active {
+  transform: translateX(100%);
+  opacity: 0;
+  transition: all 0.3s ease-in-out;
+}
+
+/* Mobile menu backdrop */
+.mobile-menu-backdrop {
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+/* Responsive grid improvements for other components */
+@media (max-width: 768px) {
+  /* Services grid */
+  .grid-responsive {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  /* Project cards */
+  .project-card,
+  .service-card {
+    margin-bottom: 1.5rem;
+  }
+  
+  /* Contact form improvements */
+  .contact-form {
+    padding: 1.5rem 1rem;
+  }
+  
+  /* Hero section mobile */
+  .hero-section {
+    min-height: calc(100vh - 4rem);
+    padding: 2rem 1rem;
+  }
+  
+  .hero-title {
+    font-size: 2.5rem;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+  }
+  
+  .hero-subtitle {
+    font-size: 1.125rem;
+    margin-bottom: 2rem;
+  }
+}
+
+@media (max-width: 640px) {
+  /* Extra mobile responsive adjustments */
+  .section-title {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+  
+  .section-subtitle {
+    font-size: 1rem;
+    margin-bottom: 2rem;
+    padding: 0 1rem;
+  }
+  
+  /* Button improvements for mobile */
+  .btn {
+    padding: 0.75rem 1.5rem;
+    font-size: 0.875rem;
+    min-height: 44px;
+  }
+  
+  /* Card spacing */
+  .card {
+    padding: 1.5rem 1rem;
+    margin-bottom: 1.5rem;
+  }
+}
+
+/* Landscape mobile optimizations */
+@media (max-width: 896px) and (orientation: landscape) {
+  nav {
+    height: 3.5rem;
+  }
+  
+  nav img {
+    height: 2.5rem;
+    width: 200px;
+  }
+  
+  .mobile-menu {
+    top: 3.5rem;
+    height: calc(100vh - 3.5rem);
+  }
+  
+  .hero-section {
+    min-height: calc(100vh - 3.5rem);
+    padding: 1rem;
+  }
+  
+  .hero-title {
+    font-size: 2rem;
+  }
+  
+  .hero-subtitle {
+    font-size: 1rem;
+  }
+}
+
+/* High DPI/Retina display optimizations */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  nav img {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+}
+
+/* Accessibility improvements for mobile */
+@media (prefers-reduced-motion: reduce) {
+  .mobile-menu {
+    transition: none;
+  }
+  
+  .mobile-menu * {
+    transition: none;
+    animation: none;
+  }
+}
+
+/* Dark mode support for mobile menu */
+@media (prefers-color-scheme: dark) {
+  .mobile-menu {
+    background: rgba(31, 41, 55, 0.98);
+    color: white;
+  }
+  
+  .mobile-menu a {
+    color: rgba(255, 255, 255, 0.9);
+  }
+  
+  .mobile-menu a:hover {
+    color: #9B4F96;
   }
   
   .mobile-menu .border-gray-200 {
-    @apply border-gray-700;
+    border-color: rgba(255, 255, 255, 0.1);
   }
 }

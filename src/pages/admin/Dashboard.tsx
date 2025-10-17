@@ -13,6 +13,7 @@ import {
   FolderKanban,
   Users
 } from 'lucide-react';
+
 import adminApiService from '../../services/adminApi';
 import { clientApi } from '../../services/clientApi';
 
@@ -144,7 +145,16 @@ const AdminDashboard = () => {
               <Users size={20} />
               <span className="font-medium" style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>Clients</span>
             </Link>
+                      <Link
+  to="/admin/hero-images"
+  className="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-gray-100 transition-colors mt-2 text-gray-700"
+>
+  <FolderKanban size={20} />
+  <span className="font-medium" style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>Hero Images</span>
+</Link>
+
           </nav>
+          
 
           <div className="p-4 border-t">
             <button

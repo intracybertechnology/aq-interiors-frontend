@@ -2,22 +2,38 @@ import React, { useState, useEffect } from 'react';
 import { ArrowRight, Play } from 'lucide-react';
 
 const HeroSection: React.FC = () => {
-  // Carousel state and images
-  const heroImages = [
-    '/images/hero/hero-bg.jpg',
-    '/images/hero/hero1-bg.jpg',
-    '/images/hero/hero2-bg.jpg',
-    '/images/hero/hero3-bg.jpg',
-    '/images/hero/hero5-bg.jpg'
-  ];
-
+  const [heroImages, setHeroImages] = useState<string[]>([]);
   const [currentImage, setCurrentImage] = useState(0);
+
+  // Fetch hero images from API
+  useEffect(() => {
+    const fetchHeroImages = async () => {
+      try {
+        const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/hero-images`);
+        const data = await response.json();
+        
+        if (data.success && data.data && data.data.length > 0) {
+          const apiImages = data.data.map((item: any) => item.imageUrl);
+          setHeroImages(apiImages);
+        } else {
+          console.warn('No hero images found in database');
+        }
+      } catch (error) {
+        console.error('Failed to fetch hero images:', error);
+      }
+    };
+
+    fetchHeroImages();
+  }, []);
 
   // Auto-rotate carousel every 5 seconds
   useEffect(() => {
+    if (heroImages.length === 0) return;
+    
     const interval = setInterval(() => {
       setCurrentImage((prev) => (prev + 1) % heroImages.length);
     }, 5000);
+    
     return () => clearInterval(interval);
   }, [heroImages.length]);
 
@@ -38,7 +54,7 @@ const HeroSection: React.FC = () => {
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-all duration-1000 ease-in-out"
         style={{
-          backgroundImage: `url('${heroImages[currentImage]}')`,
+          backgroundImage: heroImages.length > 0 ? `url('${heroImages[currentImage]}')` : 'linear-gradient(135deg, #9B4F96 0%, #c96bb3 100%)',
         }}
       />
 
@@ -50,13 +66,12 @@ const HeroSection: React.FC = () => {
         <div className="w-full">
           <div className="max-w-4xl">
             <div className="animate-fade-in">
-              {/* Main Headline - Al Qethaa Al Qadeema Tagline */}
+              {/* Main Headline */}
               <h1 
                 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 leading-tight text-white"
                 style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}
               >
-                <span className="block">Your Vision - Our Creation </span>
-               
+                <span className="block">Your Vision - Our Creation</span>
               </h1>
 
               {/* Subtitle */}
@@ -71,7 +86,7 @@ const HeroSection: React.FC = () => {
               <div className="flex flex-col sm:flex-row gap-6">
                 <button
                   onClick={() => scrollToSection('contact')}
-                  className="group px-8 py-4 text-lg bg-primary hover:bg-primary/90 text-white rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 flex items-center justify-center"
+                  className="group px-8 py-4 text-lg bg-[#9B4F96] hover:bg-[#7f8c8d] text-white rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 flex items-center justify-center"
                   style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}
                 >
                   Start Your Project
@@ -92,20 +107,21 @@ const HeroSection: React.FC = () => {
         </div>
       </div>
 
-     
       {/* Carousel Indicators */}
-      <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 flex space-x-2 z-20">
-        {heroImages.map((_, index) => (
-          <button
-            key={index}
-            onClick={() => setCurrentImage(index)}
-            className={`w-3 h-3 rounded-full transition-all duration-300 ${currentImage === index
-              ? 'bg-white scale-125'
-              : 'bg-white/50 hover:bg-white/70'
-              }`}
-          />
-        ))}
-      </div>
+      {heroImages.length > 0 && (
+        <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 flex space-x-2 z-20">
+          {heroImages.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentImage(index)}
+              className={`w-3 h-3 rounded-full transition-all duration-300 ${currentImage === index
+                ? 'bg-white scale-125'
+                : 'bg-white/50 hover:bg-white/70'
+                }`}
+            />
+          ))}
+        </div>
+      )}
     </section>
   );
 };
