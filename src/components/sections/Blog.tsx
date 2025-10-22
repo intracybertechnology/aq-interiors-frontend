@@ -166,13 +166,13 @@ const Blog: React.FC = () => {
                 />
               </div>
               <div className="flex flex-wrap gap-2">
-                {categories.map((category) => (
+                {categories.map((category, index) => (
                   <button
-                    key={category}
+                    key={`${category}-${index}`}  // Fixed: Added index to make keys unique
                     onClick={() => handleCategoryChange(category)}
                     className={`px-4 py-2 rounded-full text-sm font-medium transition-all transform hover:scale-105 ${selectedCategory === category
-                      ? 'bg-[#9B4F96] text-white shadow-lg'
-                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                        ? 'bg-[#9B4F96] text-white shadow-lg'
+                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                       }`}
                     style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}
                   >
