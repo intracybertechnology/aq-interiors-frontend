@@ -131,7 +131,7 @@ const Blog: React.FC = () => {
 
   return (
     <>
-      <div className="min-h-screen bg-gray-50">
+     <div className="bg-gray-50 pb-0 border-b-8 border-white-500">
         <div className="relative bg-white py-20 overflow-hidden">
           <div className="container mx-auto px-4 relative z-10">
             <div className="text-center">
