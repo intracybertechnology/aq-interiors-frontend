@@ -50,7 +50,9 @@ const Blog: React.FC = () => {
         const response = await fetch(`${API_BASE_URL}/api/blogs/categories`);
         const data = await response.json();
         if (data.success) {
-          setCategories(['All', ...data.data.categories]);
+          // Filter out 'All' from API response to prevent duplicates
+          const uniqueCategories = ['All', ...data.data.categories.filter((cat: string) => cat !== 'All')];
+          setCategories(uniqueCategories);
         }
       } catch (err) {
         console.error('Failed to fetch categories:', err);
@@ -168,7 +170,7 @@ const Blog: React.FC = () => {
               <div className="flex flex-wrap gap-2">
                 {categories.map((category, index) => (
                   <button
-                    key={`${category}-${index}`}  // Fixed: Added index to make keys unique
+                    key={`${category}-${index}`}  
                     onClick={() => handleCategoryChange(category)}
                     className={`px-4 py-2 rounded-full text-sm font-medium transition-all transform hover:scale-105 ${selectedCategory === category
                         ? 'bg-[#9B4F96] text-white shadow-lg'

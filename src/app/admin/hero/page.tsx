@@ -2,17 +2,26 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import {
   Plus,
   Trash2,
   Edit2,
   Upload,
-  Image,
   ChevronUp,
   ChevronDown,
   Eye,
   EyeOff,
-  Loader2
+  Loader2,
+  LayoutDashboard,
+  Mail,
+  LogOut,
+  Menu,
+  X,
+  FileText,
+  FolderKanban,
+  Users,
+  Image as ImageIcon
 } from 'lucide-react';
 import { heroImageApi } from '@/services/heroImageApi';
 import { useAdminAuth } from '@/contexts/AdminAuthContext';
@@ -38,6 +47,8 @@ const AdminHeroPage: React.FC = () => {
   const router = useRouter();
   const { isAuthenticated, loading: authLoading } = useAdminAuth();
   
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [adminName, setAdminName] = useState('AQ Admin');
   const [heroImages, setHeroImages] = useState<HeroImage[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -52,8 +63,22 @@ const AdminHeroPage: React.FC = () => {
     isActive: true
   });
 
+  const navLinks = [
+    { href: '/admin/dashboard', icon: LayoutDashboard, label: 'Dashboard', active: false },
+    { href: '/admin/enquiries', icon: Mail, label: 'Enquiries', active: false },
+    { href: '/admin/blogs', icon: FileText, label: 'Blogs', active: false },
+    { href: '/admin/projects', icon: FolderKanban, label: 'Projects', active: false },
+    { href: '/admin/clients', icon: Users, label: 'Clients', active: false },
+    { href: '/admin/hero', icon: ImageIcon, label: 'Hero Images', active: true }
+  ];
+
   useEffect(() => {
     setIsMounted(true);
+    const adminInfo = localStorage.getItem('adminInfo');
+    if (adminInfo) {
+      const parsed = JSON.parse(adminInfo);
+      setAdminName(parsed.name || 'AQ Admin');
+    }
   }, []);
 
   useEffect(() => {
@@ -220,226 +245,295 @@ const AdminHeroPage: React.FC = () => {
     setShowForm(false);
   };
 
+  const handleLogout = () => {
+    if (confirm('Are you sure you want to logout?')) {
+      localStorage.clear();
+      router.push('/');
+    }
+  };
+
   if (!isMounted || authLoading) {
     return null;
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2" style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>
-            Hero Images
-          </h1>
-          <p className="text-gray-600" style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>
-            Manage your hero section images
-          </p>
+    <div className="flex h-screen bg-gray-100">
+      {/* Sidebar */}
+      <aside className={`bg-white shadow-lg transition-all duration-300 ${sidebarOpen ? 'w-64' : 'w-0'} overflow-hidden`}>
+        <div className="h-full flex flex-col">
+          <div className="p-6 border-b" style={{ background: 'linear-gradient(135deg, #9B4F96 0%, #c96bb3 100%)' }}>
+            <h1 className="text-xl font-bold text-white" style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>AQ Interiors</h1>
+            <p className="text-sm text-white/80 mt-1" style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>Admin Panel</p>
+          </div>
+
+          <nav className="flex-1 p-4">
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors mt-2 ${
+                  link.active
+                    ? 'text-white'
+                    : 'text-gray-700 hover:bg-gray-100'
+                }`}
+                style={link.active ? { backgroundColor: '#9B4F96' } : {}}
+              >
+                <link.icon size={20} />
+                <span className="font-medium" style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>
+                  {link.label}
+                </span>
+              </Link>
+            ))}
+          </nav>
+
+          <div className="p-4 border-t">
+            <button onClick={handleLogout} className="w-full flex items-center justify-center space-x-2 px-4 py-3 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors font-medium">
+              <LogOut size={20} />
+              <span style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>Logout</span>
+            </button>
+          </div>
         </div>
+      </aside>
 
-        <button
-          onClick={() => setShowForm(!showForm)}
-          className="flex items-center gap-2 px-6 py-3 rounded-lg text-white font-medium mb-6 transition-all transform hover:scale-105"
-          style={{ background: 'linear-gradient(135deg, #9B4F96 0%, #c96bb3 100%)', fontFamily: '"Lucida Bright", Georgia, serif' }}
-        >
-          <Plus size={20} />
-          {showForm ? 'Cancel' : 'Add New Hero Image'}
-        </button>
-
-        {showForm && (
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 mb-8">
-            <h3 className="text-xl font-bold text-gray-800 mb-6" style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>
-              {editingId ? 'Edit Hero Image' : 'Add New Hero Image'}
-            </h3>
-
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2" style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>
-                    Title *
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.title}
-                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                    required
-                    maxLength={100}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#9B4F96] focus:border-transparent"
-                    placeholder="Enter image title"
-                    style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2" style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>
-                    Order
-                  </label>
-                  <input
-                    type="number"
-                    value={formData.order}
-                    onChange={(e) => setFormData({ ...formData, order: Number(e.target.value) })}
-                    min="1"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#9B4F96] focus:border-transparent"
-                    style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}
-                  />
-                </div>
+      {/* Main Content */}
+      <div className="flex-1 flex flex-col overflow-hidden">
+        <header className="bg-white shadow-sm">
+          <div className="flex items-center justify-between px-6 py-4">
+            <div className="flex items-center space-x-4">
+              <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-2 rounded-lg hover:bg-gray-100 transition-colors">
+                {sidebarOpen ? <X size={24} /> : <Menu size={24} />}
+              </button>
+              <h2 className="text-2xl font-bold text-gray-800" style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>
+                Hero Images
+              </h2>
+            </div>
+            <div className="flex items-center space-x-4">
+              <div className="text-right">
+                <p className="text-sm font-medium text-gray-800" style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>{adminName}</p>
+                <p className="text-xs text-gray-500" style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>Administrator</p>
               </div>
+              <div className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold" style={{ background: 'linear-gradient(135deg, #9B4F96 0%, #c96bb3 100%)' }}>
+                {adminName.charAt(0)}
+              </div>
+            </div>
+          </div>
+        </header>
 
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2" style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>
-                  Image *
-                </label>
-                {formData.imageUrl && (
-                  <div className="mb-4">
-                    <img src={formData.imageUrl} alt="Preview" className="w-40 h-32 object-cover rounded" />
+        <main className="flex-1 overflow-y-auto p-6">
+          <div className="mb-6">
+            <p className="text-gray-600" style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>
+              Manage your hero section images
+            </p>
+          </div>
+
+          <button
+            onClick={() => setShowForm(!showForm)}
+            className="flex items-center gap-2 px-6 py-3 rounded-lg text-white font-medium mb-6 transition-all transform hover:scale-105"
+            style={{ background: 'linear-gradient(135deg, #9B4F96 0%, #c96bb3 100%)', fontFamily: '"Lucida Bright", Georgia, serif' }}
+          >
+            <Plus size={20} />
+            {showForm ? 'Cancel' : 'Add New Hero Image'}
+          </button>
+
+          {showForm && (
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 mb-8">
+              <h3 className="text-xl font-bold text-gray-800 mb-6" style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>
+                {editingId ? 'Edit Hero Image' : 'Add New Hero Image'}
+              </h3>
+
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2" style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>
+                      Title *
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.title}
+                      onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                      required
+                      maxLength={100}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#9B4F96] focus:border-transparent"
+                      placeholder="Enter image title"
+                      style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}
+                    />
                   </div>
-                )}
-                <label className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors w-fit">
-                  <Upload size={20} />
-                  <span style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>
-                    {uploading ? 'Uploading...' : 'Upload Image'}
-                  </span>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageUpload}
-                    disabled={uploading}
-                    className="hidden"
-                  />
-                </label>
-              </div>
 
-              <div className="flex items-center gap-4">
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={formData.isActive}
-                    onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
-                    className="w-4 h-4 rounded"
-                  />
-                  <span style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>Active</span>
-                </label>
-              </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2" style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>
+                      Order
+                    </label>
+                    <input
+                      type="number"
+                      value={formData.order}
+                      onChange={(e) => setFormData({ ...formData, order: Number(e.target.value) })}
+                      min="1"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#9B4F96] focus:border-transparent"
+                      style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}
+                    />
+                  </div>
+                </div>
 
-              <div className="flex gap-4 pt-6 border-t">
-                <button
-                  type="submit"
-                  disabled={loading || uploading}
-                  className="px-6 py-3 rounded-lg text-white font-medium transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
-                  style={{ background: 'linear-gradient(135deg, #9B4F96 0%, #c96bb3 100%)', fontFamily: '"Lucida Bright", Georgia, serif' }}
-                >
-                  {loading ? 'Saving...' : (editingId ? 'Update Image' : 'Create Image')}
-                </button>
-                <button
-                  type="button"
-                  onClick={resetForm}
-                  className="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-50 transition-colors"
-                  style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}
-                >
-                  Cancel
-                </button>
-              </div>
-            </form>
-          </div>
-        )}
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2" style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>
+                    Image *
+                  </label>
+                  {formData.imageUrl && (
+                    <div className="mb-4">
+                      <img src={formData.imageUrl} alt="Preview" className="w-40 h-32 object-cover rounded" />
+                    </div>
+                  )}
+                  <label className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors w-fit">
+                    <Upload size={20} />
+                    <span style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>
+                      {uploading ? 'Uploading...' : 'Upload Image'}
+                    </span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageUpload}
+                      disabled={uploading}
+                      className="hidden"
+                    />
+                  </label>
+                </div>
 
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-          <div className="p-6 border-b border-gray-200">
-            <h3 className="text-lg font-bold text-gray-800" style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>
-              Hero Images ({heroImages.length})
-            </h3>
-          </div>
+                <div className="flex items-center gap-4">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={formData.isActive}
+                      onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
+                      className="w-5 h-5 text-purple-600 rounded focus:ring-purple-500"
+                    />
+                    <span className="text-sm font-semibold text-gray-700" style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>Active</span>
+                  </label>
+                </div>
 
-          {loading ? (
-            <div className="flex items-center justify-center h-64">
-              <div className="text-center">
-                <Loader2 className="w-12 h-12 animate-spin text-[#9B4F96] mx-auto mb-4" />
-                <p className="text-gray-600" style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>
-                  Loading hero images...
-                </p>
-              </div>
-            </div>
-          ) : heroImages.length > 0 ? (
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>Order</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>Image</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>Title</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>Status</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>Actions</th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                  {heroImages.map((image, index) => (
-                    <tr key={image._id} className="hover:bg-gray-50 transition-colors">
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="flex items-center gap-2">
-                          <button
-                            onClick={() => handleReorder(image._id, 'up')}
-                            disabled={index === 0}
-                            className="p-1 hover:bg-gray-200 rounded disabled:opacity-50 disabled:cursor-not-allowed"
-                          >
-                            <ChevronUp size={16} />
-                          </button>
-                          <span className="w-6 text-center font-semibold">{index + 1}</span>
-                          <button
-                            onClick={() => handleReorder(image._id, 'down')}
-                            disabled={index === heroImages.length - 1}
-                            className="p-1 hover:bg-gray-200 rounded disabled:opacity-50 disabled:cursor-not-allowed"
-                          >
-                            <ChevronDown size={16} />
-                          </button>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <img src={image.imageUrl} alt={image.title} className="w-16 h-12 object-cover rounded" />
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="font-medium text-gray-900" style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>{image.title}</div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <button
-                          onClick={() => handleToggleActive(image)}
-                          className="flex items-center gap-1 px-3 py-1 rounded-full text-sm font-medium transition-colors"
-                          style={{
-                            backgroundColor: image.isActive ? '#dcfce7' : '#fee2e2',
-                            color: image.isActive ? '#166534' : '#991b1b'
-                          }}
-                        >
-                          {image.isActive ? <Eye size={14} /> : <EyeOff size={14} />}
-                          {image.isActive ? 'Active' : 'Inactive'}
-                        </button>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="flex gap-2">
-                          <button
-                            onClick={() => handleEdit(image)}
-                            className="p-2 text-blue-600 hover:bg-blue-50 rounded transition-colors"
-                          >
-                            <Edit2 size={18} />
-                          </button>
-                          <button
-                            onClick={() => handleDelete(image._id)}
-                            className="p-2 text-red-600 hover:bg-red-50 rounded transition-colors"
-                          >
-                            <Trash2 size={18} />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          ) : (
-            <div className="p-8 text-center">
-              <p className="text-gray-500" style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>
-                No hero images yet. Create one to get started!
-              </p>
+                <div className="flex gap-4 pt-6 border-t">
+                  <button
+                    type="submit"
+                    disabled={loading || uploading}
+                    className="flex items-center gap-2 px-6 py-3 rounded-lg text-white font-medium transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                    style={{ background: 'linear-gradient(135deg, #9B4F96 0%, #c96bb3 100%)', fontFamily: '"Lucida Bright", Georgia, serif' }}
+                  >
+                    <Upload size={20} />
+                    <span>{loading ? 'Saving...' : (editingId ? 'Update Image' : 'Create Image')}</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={resetForm}
+                    className="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-50 transition-colors"
+                    style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
             </div>
           )}
-        </div>
+
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <div className="p-6 border-b border-gray-200">
+              <h3 className="text-lg font-bold text-gray-800" style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>
+                Hero Images ({heroImages.length})
+              </h3>
+            </div>
+
+            {loading ? (
+              <div className="flex items-center justify-center h-64">
+                <div className="text-center">
+                  <Loader2 className="w-12 h-12 animate-spin text-[#9B4F96] mx-auto mb-4" />
+                  <p className="text-gray-600" style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>
+                    Loading hero images...
+                  </p>
+                </div>
+              </div>
+            ) : heroImages.length > 0 ? (
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Image</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {heroImages.map((image, index) => (
+                      <tr key={image._id} className="hover:bg-gray-50 transition-colors">
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="flex items-center gap-2">
+                            <button
+                              onClick={() => handleReorder(image._id, 'up')}
+                              disabled={index === 0}
+                              className="p-1 hover:bg-gray-200 rounded disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                              <ChevronUp size={16} />
+                            </button>
+                            <span className="w-6 text-center font-semibold">{index + 1}</span>
+                            <button
+                              onClick={() => handleReorder(image._id, 'down')}
+                              disabled={index === heroImages.length - 1}
+                              className="p-1 hover:bg-gray-200 rounded disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                              <ChevronDown size={16} />
+                            </button>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <img src={image.imageUrl} alt={image.title} className="w-16 h-12 object-cover rounded" />
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="font-medium text-gray-900">{image.title}</div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <button
+                            onClick={() => handleToggleActive(image)}
+                            className={`flex items-center gap-1 px-3 py-1 rounded-full text-sm font-medium transition-colors ${
+                              image.isActive 
+                                ? 'bg-green-100 text-green-800' 
+                                : 'bg-red-100 text-red-800'
+                            }`}
+                          >
+                            {image.isActive ? <Eye size={14} /> : <EyeOff size={14} />}
+                            {image.isActive ? 'Active' : 'Inactive'}
+                          </button>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="flex gap-2">
+                            <button
+                              onClick={() => handleEdit(image)}
+                              className="p-2 text-blue-600 hover:bg-blue-50 rounded transition-colors"
+                              title="Edit"
+                            >
+                              <Edit2 size={18} />
+                            </button>
+                            <button
+                              onClick={() => handleDelete(image._id)}
+                              className="p-2 text-red-600 hover:bg-red-50 rounded transition-colors"
+                              title="Delete"
+                            >
+                              <Trash2 size={18} />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <div className="p-8 text-center">
+                <p className="text-gray-500" style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>
+                  No hero images yet. Create one to get started!
+                </p>
+              </div>
+            )}
+          </div>
+        </main>
       </div>
     </div>
   );
