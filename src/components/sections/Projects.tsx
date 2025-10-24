@@ -27,7 +27,7 @@ const Projects: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const observerRef = useRef<IntersectionObserver | null>(null);
 
-  // Fetch categories
+
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -40,7 +40,7 @@ const Projects: React.FC = () => {
     fetchCategories();
   }, []);
 
-  // Fetch projects
+
   useEffect(() => {
     const fetchProjects = async () => {
       setLoading(true);
@@ -64,7 +64,7 @@ const Projects: React.FC = () => {
     fetchProjects();
   }, [selectedCategory]);
 
-  // Intersection Observer for animations
+
   useEffect(() => {
     observerRef.current = new IntersectionObserver(
       (entries) => {

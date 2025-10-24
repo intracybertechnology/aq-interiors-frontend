@@ -50,7 +50,6 @@ const Blog: React.FC = () => {
         const response = await fetch(`${API_BASE_URL}/api/blogs/categories`);
         const data = await response.json();
         if (data.success) {
-          // Filter out 'All' from API response to prevent duplicates
           const uniqueCategories = ['All', ...data.data.categories.filter((cat: string) => cat !== 'All')];
           setCategories(uniqueCategories);
         }

@@ -56,15 +56,14 @@ export const seoPages = {
   }
 };
 
-// Helper function to generate metadata
+
 export function generatePageMetadata(page: keyof typeof seoPages): Metadata {
   const pageData = seoPages[page];
   
   return {
     title: pageData.title,
     description: pageData.description,
-    // Note: keywords meta tag is largely ignored by modern search engines
-    // Consider removing or keeping for legacy support
+  
     keywords: pageData.keywords,
     openGraph: {
       title: pageData.title,
@@ -87,7 +86,7 @@ export function generatePageMetadata(page: keyof typeof seoPages): Metadata {
       title: pageData.title,
       description: pageData.description,
       images: [pageData.ogImage || `${baseUrl}/og-image.jpg`],
-      creator: '@aqdecor', // Add your Twitter handle
+      creator: '@aqdecor', 
     },
     alternates: {
       canonical: pageData.canonical,
@@ -106,7 +105,6 @@ export function generatePageMetadata(page: keyof typeof seoPages): Metadata {
   };
 }
 
-// Organization Schema (for layout.tsx)
 export const organizationSchema = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
@@ -137,10 +135,10 @@ export const localBusinessSchema = {
   description: 'Commercial Fit-out, Interior Design & Exhibition Solutions in Dubai',
   address: {
     '@type': 'PostalAddress',
-    streetAddress: 'Your Street Address', // TODO: Add actual address
+    streetAddress: 'Your Street Address', 
     addressLocality: 'Dubai',
     addressCountry: 'AE',
-    postalCode: 'Your Postal Code', // TODO: Add postal code
+    postalCode: 'Your Postal Code', 
   },
   geo: {
     '@type': 'GeoCoordinates',
@@ -148,8 +146,8 @@ export const localBusinessSchema = {
     longitude: '55.2708',
   },
   url: baseUrl,
-  telephone: '+971-XX-XXX-XXXX', // TODO: Add phone number
-  email: 'info@aqdecor.com', // TODO: Add email
+  telephone: '+971-XX-XXX-XXXX', 
+  email: 'info@aqdecor.com',
   openingHoursSpecification: [
     {
       '@type': 'OpeningHoursSpecification',
@@ -228,8 +226,6 @@ export const serviceSchema = {
     ],
   },
 };
-
-// Breadcrumb Schema Generator
 export const generateBreadcrumbSchema = (items: { name: string; url: string }[]) => ({
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
@@ -241,7 +237,6 @@ export const generateBreadcrumbSchema = (items: { name: string; url: string }[])
   })),
 });
 
-// FAQ Schema Generator (useful for blog posts or service pages)
 export const generateFAQSchema = (faqs: { question: string; answer: string }[]) => ({
   '@context': 'https://schema.org',
   '@type': 'FAQPage',

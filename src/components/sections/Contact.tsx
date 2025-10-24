@@ -8,7 +8,7 @@ import { validateUAEPhone, getPhoneExample } from '@/utils/phoneValidator';
 import contactApi from '@/services/contactApi';
 import { locationApi, Location } from '@/services/locationApi';
 
-// Default location data
+
 const DEFAULT_LOCATION: Location = {
   name: 'Al Qethaa Al Qadeema',
   address: 'Sharjah, United Arab Emirates',
@@ -36,7 +36,7 @@ const Contact: React.FC = () => {
   const [isVisible, setIsVisible] = useState<{ [key: string]: boolean }>({});
   const observerRef = useRef<IntersectionObserver | null>(null);
 
-  // Animation observer setup
+
   useEffect(() => {
     observerRef.current = new IntersectionObserver(
       (entries) => {
@@ -66,14 +66,14 @@ const Contact: React.FC = () => {
     };
   }, []);
 
-  // Fetch location data (with fallback to default)
+
   useEffect(() => {
     const fetchLocation = async () => {
       try {
         const data = await locationApi.getLocation();
         setLocationData(data);
       } catch (error) {
-        // Silently use default location if API fails
+
         console.log('Using default location data');
       }
     };

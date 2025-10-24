@@ -7,14 +7,13 @@ const HeroSection: React.FC = () => {
   const [heroImages, setHeroImages] = useState<string[]>([]);
   const [currentImage, setCurrentImage] = useState(0);
 
-  // Fetch hero images from API
   useEffect(() => {
     const fetchHeroImages = async () => {
       try {
         const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
         const response = await fetch(`${apiUrl}/api/hero-images`);
         const data = await response.json();
-        
+
         if (data.success && data.data && data.data.length > 0) {
           const apiImages = data.data.map((item: any) => item.imageUrl);
           setHeroImages(apiImages);
@@ -29,18 +28,18 @@ const HeroSection: React.FC = () => {
     fetchHeroImages();
   }, []);
 
-  // Auto-rotate carousel every 5 seconds
+
   useEffect(() => {
     if (heroImages.length === 0) return;
-    
+
     const interval = setInterval(() => {
       setCurrentImage((prev) => (prev + 1) % heroImages.length);
     }, 5000);
-    
+
     return () => clearInterval(interval);
   }, [heroImages.length]);
 
-  // Smooth scroll function for navigation
+
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
@@ -53,7 +52,7 @@ const HeroSection: React.FC = () => {
 
   return (
     <section id="home" className="relative min-h-screen flex flex-col overflow-hidden">
-      {/* Background Image Carousel - CHANGED: Removed z-index from here */}
+
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-all duration-1000 ease-in-out"
         style={{
@@ -61,31 +60,29 @@ const HeroSection: React.FC = () => {
         }}
       />
 
-      {/* Dark overlay for better text readability */}
       <div className="absolute inset-0 bg-black/40 z-0"></div>
 
-      {/* Hero Content - CHANGED: Added pt-24 for navbar space and z-10 */}
+
       <div className="flex-1 flex items-center relative z-10 px-8 lg:px-16 pt-24 lg:pt-32">
         <div className="w-full">
           <div className="max-w-4xl">
             <div className="animate-fade-in">
-              {/* Main Headline */}
-              <h1 
+
+              <h1
                 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 leading-tight text-white"
                 style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}
               >
                 <span className="block">Your Vision - Our Creation</span>
               </h1>
 
-              {/* Subtitle */}
-              <p 
+
+              <p
                 className="text-xl md:text-2xl text-gray-200 mb-12 max-w-3xl leading-relaxed"
                 style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}
               >
                 "Providing Professional interior design and fit-out solutions for Commercial, Retail, Residential, Healthcare & Hospitality projects across UAE."
               </p>
 
-              {/* CTA Buttons */}
               <div className="flex flex-col sm:flex-row gap-6">
                 <button
                   onClick={() => scrollToSection('contact')}
@@ -110,7 +107,7 @@ const HeroSection: React.FC = () => {
         </div>
       </div>
 
-      {/* Carousel Indicators - CHANGED: Added z-20 */}
+
       {heroImages.length > 0 && (
         <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 flex space-x-2 z-20">
           {heroImages.map((_, index) => (

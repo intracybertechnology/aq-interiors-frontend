@@ -6,7 +6,7 @@ import Card from '@/components/ui/Card';
 import { CheckCircle } from 'lucide-react';
 
 const Services: React.FC = () => {
-  // Smooth scroll function for navigation
+
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
@@ -20,7 +20,7 @@ const Services: React.FC = () => {
   return (
     <section id="services" className="pt-24 pb-16 bg-white">
       <div className="container mx-auto px-4 lg:px-8">
-        {/* Header */}
+
         <div className="text-center mb-16">
           <div className="relative inline-block mb-6">
             <h1 className="text-4xl md:text-5xl font-bold"
@@ -35,9 +35,9 @@ const Services: React.FC = () => {
           </p>
         </div>
 
-        {/* Three Phase Categories */}
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-          {/* Design Phase */}
+
           <div className="bg-gray-50 rounded-2xl p-8 hover:shadow-lg transition-all duration-300">
             <div className="w-20 h-20 bg-[#9B4F96]/10 rounded-full flex items-center justify-center mx-auto mb-6">
               <div className="w-10 h-10 bg-[#9B4F96] rounded-lg flex items-center justify-center">
@@ -62,7 +62,7 @@ const Services: React.FC = () => {
             </ul>
           </div>
 
-          {/* Develop Phase */}
+
           <div className="bg-gray-50 rounded-2xl p-8 hover:shadow-lg transition-all duration-300">
             <div className="w-20 h-20 bg-[#9B4F96]/10 rounded-full flex items-center justify-center mx-auto mb-6">
               <div className="w-10 h-10 bg-[#9B4F96] rounded-lg flex items-center justify-center">
@@ -87,7 +87,6 @@ const Services: React.FC = () => {
             </ul>
           </div>
 
-          {/* Deploy Phase */}
           <div className="bg-gray-50 rounded-2xl p-8 hover:shadow-lg transition-all duration-300">
             <div className="w-20 h-20 bg-[#9B4F96]/10 rounded-full flex items-center justify-center mx-auto mb-6">
               <div className="w-10 h-10 bg-[#9B4F96] rounded-lg flex items-center justify-center">
@@ -113,7 +112,6 @@ const Services: React.FC = () => {
           </div>
         </div>
 
-        {/* View All Services Button */}
         <div className="text-center mb-16">
           <button
             onClick={() => scrollToSection('contact')}
@@ -124,7 +122,6 @@ const Services: React.FC = () => {
           </button>
         </div>
 
-        {/* Services Grid - Detailed Services */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
           {services.map((service) => (
             <Card key={service.id} className="p-8 h-full" hover>
@@ -166,7 +163,7 @@ const Services: React.FC = () => {
           ))}
         </div>
 
-        {/* In-house Factory Advantage Section */}
+
         <div className="bg-gray-50 rounded-2xl p-8 mb-16">
           <div className="text-center mb-8">
             <h2 className="text-3xl font-bold mb-4"

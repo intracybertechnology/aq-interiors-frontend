@@ -14,7 +14,7 @@ const API_BASE_URL = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:500
 
 class AdminApiService {
   private getAuthHeaders(): HeadersInit {
-    // Check if we're in browser before accessing localStorage
+  
     if (typeof window === 'undefined') {
       return {
         'Content-Type': 'application/json',

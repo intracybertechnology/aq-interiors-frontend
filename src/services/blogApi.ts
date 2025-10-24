@@ -204,7 +204,7 @@ class BlogApi {
     return data.data;
   }
 
-  // Utility method to get the base URL for image construction
+ 
   getBaseUrl(): string {
     return API_BASE_URL;
   }
@@ -212,5 +212,5 @@ class BlogApi {
 
 export const blogApi = new BlogApi();
 
-// Export for use in components that need to construct image URLs
+
 export { API_BASE_URL };
