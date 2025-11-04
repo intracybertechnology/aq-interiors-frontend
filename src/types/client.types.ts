@@ -1,4 +1,4 @@
-// Client entity (already in clientApi.ts, but should be here)
+
 export interface Client {
   id: string;
   name: string;

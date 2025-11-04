@@ -1,24 +1,11 @@
 'use client'
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Phone, Mail, MapPin, Clock, Send, Factory, Award, CheckCircle, ArrowRight, AlertCircle } from 'lucide-react';
+import { Phone, Mail, Clock, Send, Factory, Award, CheckCircle, ArrowRight, AlertCircle } from 'lucide-react';
 import Card from '@/components/ui/Card';
 import type { ContactForm } from '@/types';
 import { validateUAEPhone, getPhoneExample } from '@/utils/phoneValidator';
 import contactApi from '@/services/contactApi';
-import { locationApi, Location } from '@/services/locationApi';
-
-
-const DEFAULT_LOCATION: Location = {
-  name: 'Al Qethaa Al Qadeema',
-  address: 'Sharjah, United Arab Emirates',
-  latitude: 25.3463,
-  longitude: 55.4209,
-  phone: '+971 56 100 1190',
-  email: 'sales@aqdecor.com',
-  workingHours: 'Mon-Fri: 8AM-6PM,Sat: 9AM-2PM',
-  description: 'Visit our factory and office'
-};
 
 const Contact: React.FC = () => {
   const [formData, setFormData] = useState<ContactForm>({
@@ -31,11 +18,9 @@ const Contact: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [phoneError, setPhoneError] = useState<string>('');
   const [submitSuccess, setSubmitSuccess] = useState(false);
-  const [locationData, setLocationData] = useState<Location>(DEFAULT_LOCATION);
   const [submitError, setSubmitError] = useState<string>('');
   const [isVisible, setIsVisible] = useState<{ [key: string]: boolean }>({});
   const observerRef = useRef<IntersectionObserver | null>(null);
-
 
   useEffect(() => {
     observerRef.current = new IntersectionObserver(
@@ -64,21 +49,6 @@ const Contact: React.FC = () => {
         observerRef.current.disconnect();
       }
     };
-  }, []);
-
-
-  useEffect(() => {
-    const fetchLocation = async () => {
-      try {
-        const data = await locationApi.getLocation();
-        setLocationData(data);
-      } catch (error) {
-
-        console.log('Using default location data');
-      }
-    };
-
-    fetchLocation();
   }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -157,31 +127,23 @@ const Contact: React.FC = () => {
     {
       icon: Phone,
       title: 'Phone',
-      details: [locationData.phone || '+971 56 100 1190', 'Call us anytime'],
-      href: `tel:${(locationData.phone || '+971561001190').replace(/\s/g, '')}`,
+      details: ['+971 56 100 1190', 'Call us anytime'],
+      href: 'tel:+971561001190',
       color: 'from-blue-500 to-blue-600',
       bgColor: 'bg-blue-50'
     },
     {
       icon: Mail,
       title: 'Email',
-      details: [locationData.email || 'sales@aqdecor.com', 'Get in touch'],
-      href: `mailto:${locationData.email || 'sales@aqdecor.com'}`,
+      details: ['sales@aqdecor.com', 'Get in touch'],
+      href: 'mailto:sales@aqdecor.com',
       color: 'from-red-500 to-red-600',
       bgColor: 'bg-red-50'
     },
     {
-      icon: MapPin,
-      title: 'Location',
-      details: [locationData.address, 'Visit our factory & office'],
-      href: `https://maps.google.com/maps?q=${locationData.latitude},${locationData.longitude}`,
-      color: 'from-green-500 to-green-600',
-      bgColor: 'bg-green-50'
-    },
-    {
       icon: Clock,
       title: 'Working Hours',
-      details: (locationData.workingHours || 'Mon-Fri: 8AM-6PM,Sat: 9AM-2PM').split(','),
+      details: ['Mon-Fri: 8AM-6PM', 'Sat: 9AM-2PM'],
       color: 'from-purple-500 to-purple-600',
       bgColor: 'bg-purple-50'
     }
@@ -270,8 +232,6 @@ const Contact: React.FC = () => {
                         {info.href ? (
                           <a
                             href={info.href}
-                            target={info.title === 'Location' ? '_blank' : undefined}
-                            rel={info.title === 'Location' ? 'noopener noreferrer' : undefined}
                             className="text-base text-[#9B4F96] hover:text-[#c96bb3] font-semibold transition-colors duration-300 block mb-1"
                             style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}
                           >
@@ -445,10 +405,8 @@ const Contact: React.FC = () => {
                       name="service"
                       value={formData.service}
                       onChange={handleChange}
-
                       className="w-full px-4 py-3 text-gray-900 bg-white border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#9B4F96] focus:border-transparent transition-all duration-300"
                     >
-
                       <option value="">Select a service</option>
                       {services.map((service, index) => (
                         <option key={index} value={service}>{service}</option>
