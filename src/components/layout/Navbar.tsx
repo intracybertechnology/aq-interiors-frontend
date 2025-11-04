@@ -150,7 +150,7 @@ const Navbar: React.FC = () => {
         <Instagram size={18} />
       </a>
       <a
-        href="https://www.linkedin.com/company/aqdecor"
+        href="https://www.linkedin.com/company/aqdecor/"
         target="_blank"
         rel="noopener noreferrer"
         className={`p-2 rounded-full hover:bg-[#9B4F96] transition-all duration-300 ${getTextColor} hover:text-white`}

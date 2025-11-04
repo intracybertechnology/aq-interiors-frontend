@@ -7,6 +7,7 @@ export interface Client {
   logo?: string;
   location: string;
   category: string;
+  order?:number;
   isActive?: boolean;
   createdAt?: string;
   updatedAt?: string;
