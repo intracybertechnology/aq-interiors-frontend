@@ -9,16 +9,24 @@ const Clients: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // ADD THIS
+  console.log('🔵 Clients component mounted');
+  console.log('🔵 API URL:', process.env.NEXT_PUBLIC_API_URL);
+
   useEffect(() => {
     const fetchClients = async () => {
       try {
+        console.log('🟢 Starting to fetch clients...');
         setLoading(true);
         const response = await clientApi.getClients({ limit: 100 });
+        console.log('🟢 Clients response:', response);
+        
         // Filter only active clients
         const activeClients = response.clients.filter(client => client.isActive);
+        console.log('🟢 Active clients:', activeClients.length);
         setClients(activeClients);
       } catch (err) {
-        console.error('Error fetching clients:', err);
+        console.error('🔴 Error fetching clients:', err);
         setError('Failed to load clients');
       } finally {
         setLoading(false);
@@ -32,6 +40,8 @@ const Clients: React.FC = () => {
   const midPoint = Math.ceil(clients.length / 2);
   const leftColumn = clients.slice(0, midPoint);
   const rightColumn = clients.slice(midPoint);
+
+  console.log('🔵 Render state - loading:', loading, 'error:', error, 'clients:', clients.length);
 
   if (loading) {
     return (
@@ -60,8 +70,22 @@ const Clients: React.FC = () => {
     );
   }
 
+  // ADD THIS CHECK
+  if (clients.length === 0) {
+    return (
+      <section id="clients" className="py-20 bg-gradient-to-br from-gray-50 to-white">
+        <div className="container mx-auto px-4 lg:px-8">
+          <div className="text-center text-yellow-600">
+            <p style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>No active clients found</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section id="clients" className="py-20 bg-gradient-to-br from-gray-50 to-white overflow-hidden">
+      {/* Rest of your JSX stays the same */}
       <div className="container mx-auto px-4 lg:px-8">
         {/* Header */}
         <div className="text-center mb-16">
@@ -84,7 +108,6 @@ const Clients: React.FC = () => {
 
         {/* Clients Grid */}
         <div className="relative max-w-6xl mx-auto">
-          {/* Background Image Effect */}
           <div className="absolute inset-0 bg-gradient-to-r from-gray-100/50 to-gray-200/50 rounded-3xl backdrop-blur-sm"></div>
           
           <div className="relative grid grid-cols-1 md:grid-cols-2 gap-8 p-8 md:p-12">
