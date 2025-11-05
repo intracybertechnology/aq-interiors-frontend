@@ -1,22 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
-import mongoose from 'mongoose';
+import { connectDB } from '@/lib/config/database';
 import Project from '@/lib/models/Project';
 import { sendSuccessResponse, sendErrorResponse } from '@/lib/utils/responseHelper';
 import { verifyAuthToken } from '@/lib/middleware/auth';
 
-// GET /api/projects - Get all projects (public) OR Get categories
+// GET /api/projects - Get all projects (public)
 export async function GET(request: NextRequest) {
   try {
+    await connectDB(); // ADD THIS LINE
+    
     const searchParams = request.nextUrl.searchParams;
     
-    // Check if requesting categories
-    const getCategories = searchParams.get('categories');
-    if (getCategories === 'true') {
-      const categories = await Project.distinct('category', { isActive: true });
-      const allCategories = ['All', ...categories.sort()];
-      return sendSuccessResponse('Project categories retrieved successfully', allCategories);
-    }
-
     // Regular project listing
     const category = searchParams.get('category');
     const search = searchParams.get('search');
@@ -71,10 +65,12 @@ export async function GET(request: NextRequest) {
 // POST /api/projects - Create project (admin only)
 export async function POST(request: NextRequest) {
   try {
+    await connectDB(); // ADD THIS LINE
+    
     // Authenticate admin
     const authResult = await verifyAuthToken(request);
     if (authResult instanceof NextResponse) {
-      return authResult; // Return error response if auth fails
+      return authResult;
     }
 
     const body = await request.json();
