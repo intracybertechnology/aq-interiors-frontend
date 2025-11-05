@@ -1,3 +1,5 @@
+// services/blogApi.ts - FIXED VERSION
+
 import { 
   Blog, 
   BlogsResponse, 
@@ -6,7 +8,6 @@ import {
 } from '../types/blog.types';
 import { ApiResponse } from '../types';
 
-// Next.js API routes base URL
 const API_BASE_URL = '/api';
 
 class BlogApi {
@@ -20,7 +21,6 @@ class BlogApi {
     if (params.featured) queryParams.append('featured', 'true');
 
     const url = `${API_BASE_URL}/blogs?${queryParams}`;
-
     const response = await fetch(url);
     
     if (!response.ok) {
@@ -36,15 +36,19 @@ class BlogApi {
     return data.data;
   }
 
+  // ✅ FIXED: Use admin=true query parameter instead of separate route
   async getAllBlogsAdmin(params: BlogPaginationParams = {}, token: string): Promise<BlogsResponse> {
     const queryParams = new URLSearchParams();
+    
+    // Add admin flag
+    queryParams.append('admin', 'true');
     
     if (params.page) queryParams.append('page', params.page.toString());
     if (params.limit) queryParams.append('limit', params.limit.toString());
     if (params.category && params.category !== 'All') queryParams.append('category', params.category);
     if (params.search) queryParams.append('search', params.search);
 
-    const url = `${API_BASE_URL}/blogs/admin/all?${queryParams}`;
+    const url = `${API_BASE_URL}/blogs?${queryParams}`;
 
     const response = await fetch(url, {
       headers: {
@@ -68,7 +72,6 @@ class BlogApi {
 
   async getBlogById(id: string): Promise<Blog> {
     const url = `${API_BASE_URL}/blogs/${id}`;
-
     const response = await fetch(url);
     
     if (!response.ok) {
@@ -89,7 +92,6 @@ class BlogApi {
 
   async getFeaturedBlogs(limit: number = 3): Promise<Blog[]> {
     const url = `${API_BASE_URL}/blogs/featured?limit=${limit}`;
-
     const response = await fetch(url);
     
     if (!response.ok) {
@@ -107,7 +109,6 @@ class BlogApi {
 
   async getCategories(): Promise<BlogCategoriesResponse> {
     const url = `${API_BASE_URL}/blogs/categories`;
-
     const response = await fetch(url);
     
     if (!response.ok) {
@@ -125,13 +126,11 @@ class BlogApi {
 
   async createBlog(blogData: FormData, token: string): Promise<Blog> {
     const url = `${API_BASE_URL}/blogs`;
-    console.log('📡 Creating blog at:', url);
 
     const response = await fetch(url, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`
-        // NOTE: Don't set Content-Type for FormData - browser sets it automatically with boundary
       },
       body: blogData
     });
@@ -152,13 +151,11 @@ class BlogApi {
 
   async updateBlog(id: string, blogData: FormData, token: string): Promise<Blog> {
     const url = `${API_BASE_URL}/blogs/${id}`;
-    console.log('Updating blog at:', url);
 
     const response = await fetch(url, {
       method: 'PUT',
       headers: {
         'Authorization': `Bearer ${token}`
-        // NOTE: Don't set Content-Type for FormData
       },
       body: blogData
     });
@@ -179,7 +176,6 @@ class BlogApi {
 
   async deleteBlog(id: string, token: string): Promise<{ deletedId: string; title: string }> {
     const url = `${API_BASE_URL}/blogs/${id}`;
-    console.log('🗑️ Deleting blog at:', url);
 
     const response = await fetch(url, {
       method: 'DELETE',
@@ -202,12 +198,7 @@ class BlogApi {
     
     return data.data;
   }
-
-  getBaseUrl(): string {
-    return API_BASE_URL;
-  }
 }
 
 export const blogApi = new BlogApi();
-
 export { API_BASE_URL };

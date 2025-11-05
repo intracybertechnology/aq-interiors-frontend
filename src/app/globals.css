@@ -19,8 +19,76 @@
   }
 }
 
+/* ✅ FIX: Remove default margins and ensure smooth scrolling */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family:'Lucida Bright', Georgia, serif;
+  font-family: 'Lucida Bright', Georgia, serif;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  overflow-x: hidden;
+  /* Prevent browser extensions from adding icons */
+  position: relative;
+}
+
+/* ✅ FIX: Prevent black lines/gaps between sections */
+main {
+  display: block;
+  min-height: 100vh;
+  background: #ffffff;
+}
+
+/* ✅ FIX: Hide browser extension overlays on images */
+img {
+  pointer-events: auto;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* Prevent extension icons from appearing over content */
+body::before,
+body::after {
+  display: none !important;
+}
+
+/* Hide any injected browser extension UI elements */
+[class*="extension"],
+[id*="extension"],
+[class*="chrome"],
+[id*="chrome"] {
+  display: none !important;
+}
+
+/* ✅ FIX: Ensure full page coverage without gaps */
+#__next,
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Smooth transitions between pages */
+.page-transition {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
