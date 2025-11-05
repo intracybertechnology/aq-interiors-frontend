@@ -76,3 +76,10 @@ export const verifyRefreshToken = (token: string): JWTPayload => {
     audience: 'aq-interiors-users'
   }) as JWTPayload;
 };
+
+export const extractTokenFromHeader = (authHeader: string | null): string | null => {
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return null;
+  }
+  return authHeader.substring(7);
+};
