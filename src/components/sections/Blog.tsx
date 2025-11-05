@@ -29,8 +29,7 @@ interface PaginationInfo {
   hasPrev: boolean;
 }
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
-const BASE_URL = API_BASE_URL;
+// ✅ REMOVED: No need for BASE_URL anymore
 
 const Blog: React.FC = () => {
   const router = useRouter();
@@ -47,7 +46,7 @@ const Blog: React.FC = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch(`${API_BASE_URL}/api/blogs/categories`);
+      const response = await fetch('/api/blogs/categories');
         const data = await response.json();
         if (data.success) {
           const uniqueCategories = ['All', ...data.data.categories.filter((cat: string) => cat !== 'All')];
@@ -223,10 +222,14 @@ const Blog: React.FC = () => {
                       onClick={() => navigateToBlog(post)}
                     >
                       <div className="relative overflow-hidden">
+                        {/* ✅ FIXED: Use post.image directly */}
                         <img
-                          src={`${BASE_URL}${post.image}`}
+                          src={post.image}
                           alt={post.title}
                           className="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-110"
+                          onError={(e) => {
+                            e.currentTarget.src = '/images/placeholder-blog.jpg';
+                          }}
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                         <div className="absolute top-4 left-4">
@@ -293,10 +296,14 @@ const Blog: React.FC = () => {
                     >
                       <div className="lg:w-1/2 cursor-pointer" onClick={() => navigateToBlog(post)}>
                         <div className="relative group overflow-hidden rounded-2xl shadow-lg">
+                          {/* ✅ FIXED: Use post.image directly */}
                           <img
-                            src={`${BASE_URL}${post.image}`}
+                            src={post.image}
                             alt={post.title}
                             className="w-full h-72 object-cover transition-transform duration-500 group-hover:scale-110"
+                            onError={(e) => {
+                              e.currentTarget.src = '/images/placeholder-blog.jpg';
+                            }}
                           />
                         </div>
                       </div>

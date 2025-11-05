@@ -30,3 +30,11 @@ export interface ClientsResponse {
   clients: Client[];
   pagination: ClientPagination;
 }
+// Contact form data
+export interface ContactFormData {
+  fullName: string;
+  emailAddress: string;
+  phoneNumber?: string;
+  serviceInterestedIn?: string;
+  projectDetails?: string;
+}

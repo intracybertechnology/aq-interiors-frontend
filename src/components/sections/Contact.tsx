@@ -295,7 +295,7 @@ const Contact: React.FC = () => {
           </div>
 
           <div
-            id="contact-form"
+            id="contact-form" 
             data-animate
             className={`lg:col-span-2 transition-all duration-1000 delay-400 transform ${isVisible['contact-form'] ? 'translate-x-0 opacity-100' : 'translate-x-10 opacity-0'
               }`}
@@ -379,7 +379,7 @@ const Contact: React.FC = () => {
                       value={formData.phone}
                       onChange={handleChange}
                       required
-                      className={`w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 transition-all duration-300 ${phoneError
+                      className={`w-full px-4   text-gray-900   py-3 border rounded-xl focus:outline-none focus:ring-2 transition-all duration-300 ${phoneError
                         ? 'border-red-500 focus:ring-red-500'
                         : 'border-gray-300 focus:ring-[#9B4F96] focus:border-transparent'
                         }`}
@@ -394,7 +394,7 @@ const Contact: React.FC = () => {
                     )}
                     <p className="text-xs text-gray-500 mt-1" style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>
                       Format: 050 123 4567 or +971 50 123 4567
-                    </p>
+                    </p>     
                   </div>
 
                   <div>
@@ -425,7 +425,7 @@ const Contact: React.FC = () => {
                     onChange={handleChange}
                     required
                     rows={6}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#9B4F96] focus:border-transparent transition-all duration-300 resize-none"
+                    className="w-full px-4 py-3 text-gray-900 bg-white border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#9B4F96] focus:border-transparent transition-all duration-300"
                     placeholder="Tell us about your project..."
                     style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}
                   ></textarea>

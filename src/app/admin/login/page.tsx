@@ -139,7 +139,7 @@ const AdminLogin: React.FC = () => {
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <Lock className="text-gray-400" size={20} />
                 </div>
-                <input
+               <input
                   type={showPassword ? 'text' : 'password'}
                   id="password"
                   name="password"
@@ -149,7 +149,10 @@ const AdminLogin: React.FC = () => {
                   autoComplete="current-password"
                   className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#9B4F96] focus:border-transparent transition-all duration-300 bg-gray-50 focus:bg-white"
                   placeholder="Enter your password"
-                  style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}
+                  style={{ 
+                    fontFamily: '"Lucida Bright", Georgia, serif',
+                  
+                  }}
                 />
                 <button
                   type="button"

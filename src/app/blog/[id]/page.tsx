@@ -7,7 +7,7 @@ import { Calendar, Clock, User, Tag, ArrowLeft, Share2, AlertCircle, Loader } fr
 import { blogApi } from '@/services/blogApi';
 import { Blog } from '@/types/blog.types';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+// ✅ REMOVED: No need for API_BASE_URL anymore
 
 export default function BlogDetailPage() {
   const params = useParams();
@@ -75,12 +75,7 @@ export default function BlogDetailPage() {
     }
   };
 
-  const getImageUrl = (imagePath: string): string => {
-    if (imagePath.startsWith('http')) {
-      return imagePath;
-    }
-    return `${API_BASE_URL}${imagePath}`;
-  };
+  // ✅ REMOVED: getImageUrl function - images already have correct paths from API
 
   if (loading) {
     return (
@@ -173,11 +168,15 @@ export default function BlogDetailPage() {
       {/* Featured Image */}
       <div className="container mx-auto px-4 -mt-8 mb-8">
         <div className="max-w-4xl mx-auto overflow-hidden rounded-xl shadow-xl">
+          {/* ✅ FIXED: Use blog.image directly */}
           <img
-            src={getImageUrl(blog.image)}
+            src={blog.image}
             alt={`${blog.title} - ${blog.category}`}
             className="w-full h-96 object-cover"
             style={{ objectPosition: 'center' }}
+            onError={(e) => {
+              e.currentTarget.src = '/images/placeholder-blog.jpg';
+            }}
           />
         </div>
       </div>
@@ -254,11 +253,15 @@ export default function BlogDetailPage() {
                     onClick={() => router.push(`/blog/${relatedBlog.slug || relatedBlog._id}`)}
                     className="bg-white rounded-xl shadow-lg overflow-hidden cursor-pointer hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2"
                   >
+                    {/* ✅ FIXED: Use relatedBlog.image directly */}
                     <img
-                      src={getImageUrl(relatedBlog.image)}
+                      src={relatedBlog.image}
                       alt={`${relatedBlog.title} - Related Article`}
                       className="w-full h-48 object-cover"
                       loading="lazy"
+                      onError={(e) => {
+                        e.currentTarget.src = '/images/placeholder-blog.jpg';
+                      }}
                     />
                     <div className="p-4">
                       <h3 className="font-bold text-gray-800 mb-2 line-clamp-2 hover:text-[#9B4F96] transition-colors"

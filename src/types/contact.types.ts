@@ -1,10 +1,11 @@
 // Contact form data
-export interface ContactFormData {
-  fullName: string;
-  emailAddress: string;
-  phoneNumber?: string;
-  serviceInterestedIn?: string;
-  projectDetails?: string;
+
+export interface ContactForm {
+  name: string;
+  email: string;
+  phone: string;
+  message: string;
+  service: string;
 }
 
 // Contact form validation errors

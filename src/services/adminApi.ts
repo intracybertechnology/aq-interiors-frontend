@@ -1,6 +1,6 @@
 import { 
   LoginRequest, 
-  LoginResponse, 
+  AdminLoginResponse, 
   RefreshTokenResponse,
   DashboardStats,
   EnquiriesResponse,
@@ -10,7 +10,7 @@ import {
 } from '../types/admin';
 
 // Next.js uses NEXT_PUBLIC_ prefix for client-side env variables
-const API_BASE_URL = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api`;
+const API_BASE_URL = '/api';
 
 class AdminApiService {
   private getAuthHeaders(): HeadersInit {
@@ -45,7 +45,7 @@ class AdminApiService {
     return data;
   }
 
-  async login(credentials: LoginRequest): Promise<LoginResponse> {
+  async login(credentials: LoginRequest): Promise<AdminLoginResponse> {
     try {
       const response = await fetch(`${API_BASE_URL}/admin/login`, {
         method: 'POST',

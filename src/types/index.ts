@@ -1,157 +1,62 @@
-export interface Project {
-  id: string;
-  title: string;
-  category: string;
-  description: string;
-  images: string[];
-  location?: string;
-  year?: string;
+// src/types/index.ts
+import { Request } from 'express';
+
+export interface AuthenticatedRequest extends Request {
+  user?: {
+    id: string;
+    email: string;
+    role?: string;
+  };
+  admin?: {
+    id: string;
+    email: string;
+    role?: string;
+  };
+  body: any;
+  query: any;
+  params: any;
+  headers: any;
+  file?: Express.Multer.File;
+  files?: Express.Multer.File[] | { [fieldname: string]: Express.Multer.File[] };
 }
 
-export interface Service {
-  id: string;
-  title: string;
-  description: string;
-  icon: string;
-  features: string[];
+export interface QueryParams {
+  page?: string;
+  limit?: string;
+  search?: string;
+  status?: string;
+  sortBy?: string;
+  sortOrder?: 'asc' | 'desc';
+  category?: string;
 }
 
-export interface Client {
-  id: string;
-  name: string;
-  logo?: string;
-  location: string;
-  category: string;
-}
-
-export interface ContactForm {
-  name: string;
-  email: string;
-  phone: string;
-  message: string;
-  service?: string;
-}
-// Contact Enquiry Interface (matches backend Contact model)
-export interface ContactEnquiry {
-  _id: string;
-  fullName: string;
-  emailAddress: string;
-  phoneNumber?: string;
-  serviceInterestedIn?: string;
-  projectDetails?: string;
-  status: 'new' | 'contacted' | 'closed';
-  adminNotes?: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-// API Response Interface
-export interface ContactApiResponse {
+export interface ApiResponse<T = any> {
   success: boolean;
   message: string;
-  data?: ContactEnquiry;
-}
-
-// Update Status Request
-export interface UpdateStatusRequest {
-  status: 'new' | 'contacted' | 'closed';
-  adminNotes?: string;
-}
-
-
-export interface Location {
-  id: string;
-  name: string;
-  address: string;
-  latitude: number;
-  longitude: number;
-  type: 'office' | 'branch' | 'service_area' | 'project_location';
-  description?: string;
-  isActive: boolean;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface MapConfig {
-  center: {
-    lat: number;
-    lng: number;
-  };
-  zoom: number;
-  apiKey: string;
-}
-
-export interface MarkerData {
-  position: {
-    lat: number;
-    lng: number;
-  };
-  title: string;
-  content: string;
-  type: Location['type'];
-}
-// Blog interfaces
-export interface Blog {
-  _id: string;
-  title: string;
-  slug: string;
-  excerpt: string;
-  content: string;
-  author: string;
-  category: string;
-  tags: string[];
-  image: string;
-  readTime: string;
-  featured: boolean;
-  isPublished: boolean;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface BlogsResponse {
-  success: boolean;
-  message: string;
-  data: {
-    blogs: Blog[];
-    pagination: {
-      page: number;
-      limit: number;
-      total: number;
-      pages: number;
-    };
+  data?: T;
+  error?: string;
+  errors?: any;
+  pagination?: {
+    page: number;
+    limit: number;
+    total: number;
+    pages: number;
   };
 }
 
-// Common API response wrapper
-export interface ApiResponse<T> {
-  success: boolean;
-  message: string;
-  data: T;
-}
-
-// Common pagination
-export interface Pagination {
-  page: number;
-  limit: number;
-  total: number;
-  pages: number;
-}
-
-// Loading states
-export interface LoadingState {
-  isLoading: boolean;
-  error: string | null;
-}
-
-// Form submission state
-export interface FormState extends LoadingState {
-  isSuccess: boolean;
-}
-
-// Re-export all types
-export * from './admin';
-export * from './blog.types';
-export * from './project.types';
+// Export contact types
+export * from './contact';
 export * from './contact.types';
+
+// Export client types - only from one file to avoid duplicates
 export * from './client.types';
-export * from './location.types';
+
+// Export blog types - only from one file to avoid duplicates
+export * from './blog.types';
+
+// Export project types - only from one file to avoid duplicates
+export * from './project.types';
+
+// Export other types
+export * from './admin';
+export * from './upload';

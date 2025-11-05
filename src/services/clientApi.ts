@@ -1,5 +1,4 @@
-const API_BASE_URL = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api`;
-
+const API_BASE_URL = '/api/client';
 // TypeScript Interfaces
 export interface Client {
   id: string;
@@ -65,7 +64,7 @@ class ClientApi {
         queryParams.append('category', params.category);
       }
 
-      const response = await fetch(`${API_BASE_URL}/clients?${queryParams}`);
+   const response = await fetch(`/api/client?${queryParams}`);
       return await this.handleResponse<ClientsResponse>(response);
     } catch (error) {
       console.error('Error fetching clients:', error);

@@ -9,24 +9,21 @@ const Clients: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // ADD THIS
-  console.log('🔵 Clients component mounted');
-  console.log('🔵 API URL:', process.env.NEXT_PUBLIC_API_URL);
 
   useEffect(() => {
     const fetchClients = async () => {
       try {
-        console.log('🟢 Starting to fetch clients...');
+    
         setLoading(true);
         const response = await clientApi.getClients({ limit: 100 });
-        console.log('🟢 Clients response:', response);
+     
         
         // Filter only active clients
         const activeClients = response.clients.filter(client => client.isActive);
-        console.log('🟢 Active clients:', activeClients.length);
+ 
         setClients(activeClients);
       } catch (err) {
-        console.error('🔴 Error fetching clients:', err);
+   
         setError('Failed to load clients');
       } finally {
         setLoading(false);
@@ -41,7 +38,7 @@ const Clients: React.FC = () => {
   const leftColumn = clients.slice(0, midPoint);
   const rightColumn = clients.slice(midPoint);
 
-  console.log('🔵 Render state - loading:', loading, 'error:', error, 'clients:', clients.length);
+ 
 
   if (loading) {
     return (

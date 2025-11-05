@@ -6,9 +6,8 @@ import {
 } from '../types/blog.types';
 import { ApiResponse } from '../types';
 
-// Next.js uses NEXT_PUBLIC_ prefix for client-side env variables
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
-const API_ENDPOINT = `${API_BASE_URL}/api`;
+// Next.js API routes base URL
+const API_BASE_URL = '/api';
 
 class BlogApi {
   async getBlogs(params: BlogPaginationParams = {}): Promise<BlogsResponse> {
@@ -20,7 +19,7 @@ class BlogApi {
     if (params.search) queryParams.append('search', params.search);
     if (params.featured) queryParams.append('featured', 'true');
 
-    const url = `${API_ENDPOINT}/blogs?${queryParams}`;
+    const url = `${API_BASE_URL}/blogs?${queryParams}`;
 
     const response = await fetch(url);
     
@@ -30,7 +29,7 @@ class BlogApi {
 
     const data: ApiResponse<BlogsResponse> = await response.json();
     
-    if (!data.success) {
+    if (!data.success || !data.data) {
       throw new Error(data.message || 'Failed to fetch blogs');
     }
     
@@ -45,7 +44,7 @@ class BlogApi {
     if (params.category && params.category !== 'All') queryParams.append('category', params.category);
     if (params.search) queryParams.append('search', params.search);
 
-    const url = `${API_ENDPOINT}/blogs/admin/all?${queryParams}`;
+    const url = `${API_BASE_URL}/blogs/admin/all?${queryParams}`;
 
     const response = await fetch(url, {
       headers: {
@@ -60,7 +59,7 @@ class BlogApi {
 
     const data: ApiResponse<BlogsResponse> = await response.json();
     
-    if (!data.success) {
+    if (!data.success || !data.data) {
       throw new Error(data.message || 'Failed to fetch blogs');
     }
     
@@ -68,7 +67,7 @@ class BlogApi {
   }
 
   async getBlogById(id: string): Promise<Blog> {
-    const url = `${API_ENDPOINT}/blogs/${id}`;
+    const url = `${API_BASE_URL}/blogs/${id}`;
 
     const response = await fetch(url);
     
@@ -81,7 +80,7 @@ class BlogApi {
 
     const data: ApiResponse<Blog> = await response.json();
     
-    if (!data.success) {
+    if (!data.success || !data.data) {
       throw new Error(data.message || 'Blog not found');
     }
     
@@ -89,7 +88,7 @@ class BlogApi {
   }
 
   async getFeaturedBlogs(limit: number = 3): Promise<Blog[]> {
-    const url = `${API_ENDPOINT}/blogs/featured?limit=${limit}`;
+    const url = `${API_BASE_URL}/blogs/featured?limit=${limit}`;
 
     const response = await fetch(url);
     
@@ -99,7 +98,7 @@ class BlogApi {
 
     const data: ApiResponse<Blog[]> = await response.json();
     
-    if (!data.success) {
+    if (!data.success || !data.data) {
       throw new Error(data.message || 'Failed to fetch featured blogs');
     }
     
@@ -107,7 +106,7 @@ class BlogApi {
   }
 
   async getCategories(): Promise<BlogCategoriesResponse> {
-    const url = `${API_ENDPOINT}/blogs/categories`;
+    const url = `${API_BASE_URL}/blogs/categories`;
 
     const response = await fetch(url);
     
@@ -117,7 +116,7 @@ class BlogApi {
 
     const data: ApiResponse<BlogCategoriesResponse> = await response.json();
     
-    if (!data.success) {
+    if (!data.success || !data.data) {
       throw new Error(data.message || 'Failed to fetch categories');
     }
     
@@ -125,7 +124,7 @@ class BlogApi {
   }
 
   async createBlog(blogData: FormData, token: string): Promise<Blog> {
-    const url = `${API_ENDPOINT}/blogs`;
+    const url = `${API_BASE_URL}/blogs`;
     console.log('📡 Creating blog at:', url);
 
     const response = await fetch(url, {
@@ -144,7 +143,7 @@ class BlogApi {
 
     const data: ApiResponse<Blog> = await response.json();
     
-    if (!data.success) {
+    if (!data.success || !data.data) {
       throw new Error(data.message || 'Failed to create blog');
     }
     
@@ -152,7 +151,7 @@ class BlogApi {
   }
 
   async updateBlog(id: string, blogData: FormData, token: string): Promise<Blog> {
-    const url = `${API_ENDPOINT}/blogs/${id}`;
+    const url = `${API_BASE_URL}/blogs/${id}`;
     console.log('Updating blog at:', url);
 
     const response = await fetch(url, {
@@ -171,7 +170,7 @@ class BlogApi {
 
     const data: ApiResponse<Blog> = await response.json();
     
-    if (!data.success) {
+    if (!data.success || !data.data) {
       throw new Error(data.message || 'Failed to update blog');
     }
     
@@ -179,7 +178,7 @@ class BlogApi {
   }
 
   async deleteBlog(id: string, token: string): Promise<{ deletedId: string; title: string }> {
-    const url = `${API_ENDPOINT}/blogs/${id}`;
+    const url = `${API_BASE_URL}/blogs/${id}`;
     console.log('🗑️ Deleting blog at:', url);
 
     const response = await fetch(url, {
@@ -197,20 +196,18 @@ class BlogApi {
 
     const data: ApiResponse<{ deletedId: string; title: string }> = await response.json();
     
-    if (!data.success) {
+    if (!data.success || !data.data) {
       throw new Error(data.message || 'Failed to delete blog');
     }
     
     return data.data;
   }
 
- 
   getBaseUrl(): string {
     return API_BASE_URL;
   }
 }
 
 export const blogApi = new BlogApi();
-
 
 export { API_BASE_URL };

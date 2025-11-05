@@ -10,8 +10,7 @@ import {
 import { blogApi } from '@/services/blogApi';
 import { Blog } from '@/types';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
-const BASE_URL = API_BASE_URL.replace('/api', '');
+// ✅ REMOVED: No need for BASE_URL anymore since images are in public folder
 
 const AdminBlogs = () => {
   const router = useRouter();
@@ -273,7 +272,16 @@ const AdminBlogs = () => {
                       filteredBlogs.map((blog) => (
                         <tr key={blog._id} className="hover:bg-gray-50 transition-colors">
                           <td className="px-6 py-4 whitespace-nowrap">
-                            <img src={`${BASE_URL}${blog.image}`} alt={blog.title} className="w-16 h-16 object-cover rounded" />
+                            {/* ✅ FIXED: Use blog.image directly - it already contains /uploads/blogs/filename */}
+                            <img 
+                              src={blog.image} 
+                              alt={blog.title} 
+                              className="w-16 h-16 object-cover rounded" 
+                              onError={(e) => {
+                                // Fallback if image doesn't load
+                                e.currentTarget.src = '/images/placeholder-blog.jpg';
+                              }}
+                            />
                           </td>
                           <td className="px-6 py-4">
                             <div className="font-medium text-gray-900 max-w-xs truncate">{blog.title}</div>

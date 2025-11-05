@@ -1,4 +1,4 @@
-const API_BASE_URL = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api`;
+const API_BASE_URL = '/api';
 
 interface HeroImage {
   _id?: string;
@@ -201,4 +201,4 @@ class HeroImageApi {
   }
 }
 
-export const heroImageApi = new HeroImageApi();
+export const heroImageApi = new HeroImageApi();    

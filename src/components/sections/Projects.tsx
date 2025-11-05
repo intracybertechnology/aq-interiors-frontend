@@ -32,7 +32,7 @@ const Projects: React.FC = () => {
     const fetchCategories = async () => {
       try {
         const data = await projectApi.getCategories();
-        setCategories(data);
+        setCategories(data.categories || []);
       } catch (err) {
         console.error('Failed to fetch categories:', err);
       }
