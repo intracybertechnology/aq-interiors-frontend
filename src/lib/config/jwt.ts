@@ -2,13 +2,14 @@
 import jwt from 'jsonwebtoken';
 
 interface JWTPayload {
-  userId: string;
+  id?: string;      // Add this
+  sub?: string;     // Add this (standard JWT claim)
+  userId?: string;  // Make optional
   email: string;
   role: string;
   iat?: number;
   exp?: number;
 }
-
 export const generateToken = (payload: Omit<JWTPayload, 'iat' | 'exp'>): string => {
   const secret = process.env.JWT_SECRET;
   

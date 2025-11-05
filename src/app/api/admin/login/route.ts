@@ -45,10 +45,10 @@ export async function POST(request: NextRequest) {
     const adminId = String(admin._id);
 
     const tokens = generateTokenPair({
-      sub:adminId,
+       id: adminId,
       email: admin.email,
       role: 'admin'
-    } as any);
+    });
 
     const adminInfo = {
       id: adminId,
