@@ -46,7 +46,7 @@ const Blog: React.FC = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-      const response = await fetch('/api/blogs/categories');
+        const response = await fetch('/api/blogs/categories', { cache: 'no-store' });
         const data = await response.json();
         if (data.success) {
           const uniqueCategories = ['All', ...data.data.categories.filter((cat: string) => cat !== 'All')];
@@ -129,7 +129,7 @@ const Blog: React.FC = () => {
 
   return (
     <>
-     <div className="bg-gray-50 pb-0 border-b-8 border-white-500">
+     <div className="bg-gray-50 pb-0">
         <div className="relative bg-white py-20 overflow-hidden">
           <div className="container mx-auto px-4 relative z-10">
             <div className="text-center">

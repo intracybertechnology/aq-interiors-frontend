@@ -17,7 +17,9 @@ class ProjectApi {
     if (params.category && params.category !== 'All') queryParams.append('category', params.category);
     if (params.search) queryParams.append('search', params.search);
 
-    const response = await fetch(`${API_BASE_URL}/projects?${queryParams}`);
+   const response = await fetch(`${API_BASE_URL}/projects?${queryParams}`, {
+  cache: 'no-store'
+});
     const data = await response.json();
     
     if (!data.success) {
@@ -29,7 +31,9 @@ class ProjectApi {
 
   // Get project by ID
   async getProjectById(id: string) {
-    const response = await fetch(`${API_BASE_URL}/projects/${id}`);
+  const response = await fetch(`${API_BASE_URL}/projects/${id}`, {
+  cache: 'no-store'
+});
     const data = await response.json();
     
     if (!data.success) {
@@ -41,7 +45,9 @@ class ProjectApi {
 
   // Get categories
   async getCategories() {
-    const response = await fetch(`${API_BASE_URL}/projects/categories`);
+    const response = await fetch(`${API_BASE_URL}/projects/categories`, {
+  cache: 'no-store'
+});
     const data = await response.json();
     
     if (!data.success) {
