@@ -2,16 +2,18 @@ import { NextRequest, NextResponse } from 'next/server';
 import HeroImage from '@/lib/models/HeroImage';
 import { sendSuccessResponse, sendErrorResponse } from '@/lib/utils/responseHelper';
 import { verifyAuthToken } from '@/lib/middleware/auth';
+import { connectDB } from '@/lib/config/database';
 
-// GET /api/hero - Get hero images (public or admin)
+// GET /api/hero-image - Get hero images (public or admin)
 export async function GET(request: NextRequest) {
   try {
+    await connectDB();
     const searchParams = request.nextUrl.searchParams;
     const admin = searchParams.get('admin');
     const page = searchParams.get('page') || '1';
     const limit = searchParams.get('limit') || '10';
 
-    // Admin route: GET /api/hero?admin=true
+    // Admin route: GET /api/hero-image?admin=true
     if (admin === 'true') {
       // Authenticate admin
       const authResult = await verifyAuthToken(request);
@@ -44,7 +46,7 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    // Public route: GET /api/hero
+    // Public route: GET /api/hero-image
     const heroImages = await HeroImage.find({ isActive: true })
       .select('-__v')
       .sort({ order: 1 })
@@ -57,9 +59,10 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// POST /api/hero - Create hero image (admin only)
+// POST /api/hero-image - Create hero image (admin only)
 export async function POST(request: NextRequest) {
   try {
+    await connectDB();
     const searchParams = request.nextUrl.searchParams;
     const reorder = searchParams.get('reorder');
 
@@ -71,7 +74,7 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json();
 
-    // Handle reorder: POST /api/hero?reorder=true
+    // Handle reorder: POST /api/hero-image?reorder=true
     if (reorder === 'true') {
       const { images } = body;
 
@@ -92,7 +95,7 @@ export async function POST(request: NextRequest) {
       return sendSuccessResponse('Hero images reordered successfully', reorderedImages);
     }
 
-    // Regular create: POST /api/hero
+    // Regular create: POST /api/hero-image
     const { title, imageUrl, order, isActive } = body;
 
     if (!title || !imageUrl) {
@@ -126,9 +129,10 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// PUT /api/hero?id=xxx - Update hero image (admin only)
+// PUT /api/hero-image?id=xxx - Update hero image (admin only)
 export async function PUT(request: NextRequest) {
   try {
+    await connectDB();
     // Authenticate admin
     const authResult = await verifyAuthToken(request);
     if (authResult instanceof NextResponse) {
@@ -174,9 +178,10 @@ export async function PUT(request: NextRequest) {
   }
 }
 
-// DELETE /api/hero?id=xxx - Delete hero image (admin only)
+// DELETE /api/hero-image?id=xxx - Delete hero image (admin only)
 export async function DELETE(request: NextRequest) {
   try {
+    await connectDB();
     // Authenticate admin
     const authResult = await verifyAuthToken(request);
     if (authResult instanceof NextResponse) {

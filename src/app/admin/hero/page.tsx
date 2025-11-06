@@ -26,7 +26,6 @@ import {
 import { heroImageApi } from '@/services/heroImageApi';
 import { useAdminAuth } from '@/contexts/AdminAuthContext';
 
-const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
 interface HeroImage {
   _id: string;
@@ -123,7 +122,7 @@ const AdminHeroPage: React.FC = () => {
       const formDataUpload = new FormData();
       formDataUpload.append('images', file);
 
-      const response = await fetch(`${BACKEND_URL}/api/upload/multiple`, {
+     const response = await fetch(`/api/upload?multiple=true`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -137,7 +136,7 @@ const AdminHeroPage: React.FC = () => {
         throw new Error(data.message || 'Upload failed');
       }
 
-      const imageUrl = `${BACKEND_URL}${data.data.files[0].path}`;
+     const imageUrl = data.data.files[0].url;
       setFormData(prev => ({
         ...prev,
         imageUrl
@@ -353,7 +352,7 @@ const AdminHeroPage: React.FC = () => {
                       onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                       required
                       maxLength={100}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#9B4F96] focus:border-transparent"
+                      className="w-full px-4 py-3 border text-gray-900 border-gray-300 rounded-lg focus:ring-2 focus:ring-[#9B4F96] focus:border-transparent"
                       placeholder="Enter image title"
                       style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}
                     />
@@ -368,7 +367,7 @@ const AdminHeroPage: React.FC = () => {
                       value={formData.order}
                       onChange={(e) => setFormData({ ...formData, order: Number(e.target.value) })}
                       min="1"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#9B4F96] focus:border-transparent"
+                      className="w-full px-4 py-3 border text-gray-900 border-gray-300 rounded-lg focus:ring-2 focus:ring-[#9B4F96] focus:border-transparent"
                       style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}
                     />
                   </div>

@@ -11,7 +11,7 @@ const HeroSection: React.FC = () => {
     const fetchHeroImages = async () => {
       try {
         const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
-       const response = await fetch('/api/hero');
+       const response = await fetch('/api/hero-image');
         const data = await response.json();
 
         if (data.success && data.data && data.data.length > 0) {

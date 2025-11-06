@@ -24,5 +24,20 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  const { id: clientId } = await params;
+  await connectDB();
+  
+  try {
+    const { id: clientId } = await params;
+    
+    const deletedClient = await Client.findOneAndDelete({ id: clientId });
+    
+    if (!deletedClient) {
+      return sendErrorResponse('Client not found', 404);
+    }
+    
+    return sendSuccessResponse('Client deleted successfully', deletedClient);
+  } catch (error) {
+    console.error('Delete client error:', error);
+    return sendErrorResponse('Failed to delete client', 500);
+  }
 }

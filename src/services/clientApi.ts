@@ -64,7 +64,7 @@ class ClientApi {
         queryParams.append('category', params.category);
       }
 
-   const response = await fetch(`/api/client?${queryParams}`);
+ const response = await fetch(`${API_BASE_URL}?${queryParams}`);
       return await this.handleResponse<ClientsResponse>(response);
     } catch (error) {
       console.error('Error fetching clients:', error);
@@ -75,7 +75,7 @@ class ClientApi {
   // Get client by ID
   async getClientById(id: string): Promise<Client> {
     try {
-      const response = await fetch(`${API_BASE_URL}/clients/${id}`);
+      const response = await fetch(`${API_BASE_URL}/${id}`);
       return await this.handleResponse<Client>(response);
     } catch (error) {
       console.error(`Error fetching client ${id}:`, error);
@@ -86,7 +86,7 @@ class ClientApi {
   // Get categories
   async getCategories(): Promise<string[]> {
     try {
-      const response = await fetch(`${API_BASE_URL}/clients/categories`);
+      const response = await fetch(`${API_BASE_URL}/categories`);
       return await this.handleResponse<string[]>(response);
     } catch (error) {
       console.error('Error fetching categories:', error);
@@ -97,7 +97,7 @@ class ClientApi {
   // Admin: Create client (requires auth token)
   async createClient(clientData: Omit<Client, 'createdAt' | 'updatedAt' | 'isActive'>, token: string): Promise<Client> {
     try {
-      const response = await fetch(`${API_BASE_URL}/clients`, {
+      const response = await fetch(`${API_BASE_URL}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -120,7 +120,7 @@ class ClientApi {
     token: string
   ): Promise<Client> {
     try {
-      const response = await fetch(`${API_BASE_URL}/clients/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -139,7 +139,7 @@ class ClientApi {
   // Admin: Delete client (requires auth token)
   async deleteClient(id: string, token: string): Promise<{ message: string }> {
     try {
-      const response = await fetch(`${API_BASE_URL}/clients/${id}`, {
+    const response = await fetch(`${API_BASE_URL}/${id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`

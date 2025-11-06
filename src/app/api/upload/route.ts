@@ -4,6 +4,7 @@ import { verifyAuthToken } from '@/lib/middleware/auth';
 import cloudinary from '@/lib/config/cloudinary';
 import { writeFile, unlink } from 'fs/promises';
 import path from 'path';
+import { tmpdir } from 'os';
 
 // POST /api/upload - Upload single or multiple images (admin only)
 export async function POST(request: NextRequest) {
@@ -39,7 +40,7 @@ export async function POST(request: NextRequest) {
         // Save file temporarily
         const bytes = await file.arrayBuffer();
         const buffer = Buffer.from(bytes);
-        const tempPath = path.join('/tmp', `upload-${Date.now()}-${file.name}`);
+       const tempPath = path.join(tmpdir(), `upload-${Date.now()}-${file.name}`);
         await writeFile(tempPath, buffer);
 
         try {
@@ -87,7 +88,7 @@ export async function POST(request: NextRequest) {
     // Save file temporarily
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
-    const tempPath = path.join('/tmp', `upload-${Date.now()}-${file.name}`);
+const tempPath = path.join(tmpdir(), `upload-${Date.now()}-${file.name}`);
     await writeFile(tempPath, buffer);
 
     try {

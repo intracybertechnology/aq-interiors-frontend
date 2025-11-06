@@ -59,24 +59,24 @@ export default function AdminClients() {
     }
   };
 
-  const handleDelete = async (id: string, name: string) => {
-    if (!confirm(`Are you sure you want to delete "${name}"?`)) return;
+ const handleDelete = async (id: string, name: string) => {
+  if (!confirm(`Are you sure you want to delete "${name}"?`)) return;
 
-    try {
-      const token = localStorage.getItem('adminToken');
-      if (!token) {
-        alert('Authentication required');
-        return;
-      }
-
-      await clientApi.deleteClient(id, token);
-      fetchClients();
-    } catch (error) {
-      console.error('Failed to delete client:', error);
-      alert('Failed to delete client');
+  try {
+    const token = localStorage.getItem('adminToken');
+    if (!token) {
+      alert('Authentication required');
+      return;
     }
-  };
 
+    await clientApi.deleteClient(id, token);
+    alert('Client deleted successfully!');
+    fetchClients();
+  } catch (error) {
+    console.error('Failed to delete client:', error);
+    alert('Failed to delete client');
+  }
+};
   const handleLogout = () => {
     if (confirm('Are you sure you want to logout?')) {
       localStorage.clear();

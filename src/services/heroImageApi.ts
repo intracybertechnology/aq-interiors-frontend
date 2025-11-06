@@ -18,7 +18,7 @@ interface PaginationParams {
 class HeroImageApi {
   // Get all active hero images (public)
   async getHeroImages() {
-    const response = await fetch(`${API_BASE_URL}/hero-images`);
+    const response = await fetch(`${API_BASE_URL}/hero-image`);
     const data = await response.json();
 
     if (!data.success) {
@@ -45,7 +45,7 @@ class HeroImageApi {
       throw new Error('Authentication required');
     }
 
-    const response = await fetch(`${API_BASE_URL}/hero-images/admin/all?${queryParams}`, {
+    const response = await fetch(`${API_BASE_URL}/hero-image?admin=true&${queryParams}`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
@@ -71,7 +71,7 @@ class HeroImageApi {
       throw new Error('Authentication required');
     }
 
-    const response = await fetch(`${API_BASE_URL}/hero-images/admin/${id}`, {
+    const response = await fetch(`${API_BASE_URL}/hero-image?id=${id}`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
@@ -97,7 +97,7 @@ class HeroImageApi {
       throw new Error('Authentication required');
     }
 
-    const response = await fetch(`${API_BASE_URL}/hero-images`, {
+    const response = await fetch(`${API_BASE_URL}/hero-image`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -126,7 +126,7 @@ class HeroImageApi {
       throw new Error('Authentication required');
     }
 
-    const response = await fetch(`${API_BASE_URL}/hero-images/${id}`, {
+    const response = await fetch(`${API_BASE_URL}/hero-image?id=${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -155,7 +155,7 @@ class HeroImageApi {
       throw new Error('Authentication required');
     }
 
-    const response = await fetch(`${API_BASE_URL}/hero-images/${id}`, {
+    const response = await fetch(`${API_BASE_URL}/hero-image?id=${id}`, {
       method: 'DELETE',
       headers: {
         'Authorization': `Bearer ${token}`
@@ -182,7 +182,7 @@ class HeroImageApi {
       throw new Error('Authentication required');
     }
 
-    const response = await fetch(`${API_BASE_URL}/hero-images/admin/reorder`, {
+    const response = await fetch(`${API_BASE_URL}/hero-image?reorder=true`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -201,4 +201,4 @@ class HeroImageApi {
   }
 }
 
-export const heroImageApi = new HeroImageApi();    
+export const heroImageApi = new HeroImageApi();

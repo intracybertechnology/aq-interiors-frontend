@@ -220,7 +220,7 @@ export default function NewBlogPage() {
                                         onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                                         required
                                         maxLength={300}
-                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900"
                                         placeholder="Enter blog title"
                                         style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}
                                     />
@@ -234,7 +234,7 @@ export default function NewBlogPage() {
                                         required
                                         maxLength={500}
                                         rows={3}
-                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
+                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none text-gray-900"
                                         placeholder="Short description (max 500 characters)"
                                         style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}
                                     />
@@ -247,7 +247,7 @@ export default function NewBlogPage() {
                                         onChange={(e) => setFormData({ ...formData, content: e.target.value })}
                                         required
                                         rows={12}
-                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
+                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none text-gray-900"
                                         placeholder="Write your blog content here..."
                                         style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}
                                     />
@@ -286,7 +286,7 @@ export default function NewBlogPage() {
                                             type="text"
                                             value={formData.author}
                                             onChange={(e) => setFormData({ ...formData, author: e.target.value })}
-                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900"
                                             style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}
                                         />
                                     </div>
@@ -296,7 +296,7 @@ export default function NewBlogPage() {
                                         <select
                                             value={formData.category}
                                             onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900"
                                             style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}
                                         >
                                             {categories.map(cat => (
@@ -314,7 +314,7 @@ export default function NewBlogPage() {
                                             value={formData.readTime}
                                             onChange={(e) => setFormData({ ...formData, readTime: e.target.value })}
                                             placeholder="e.g., 5 min read"
-                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900"
                                             style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}
                                         />
                                     </div>
@@ -326,7 +326,7 @@ export default function NewBlogPage() {
                                             value={formData.tags}
                                             onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
                                             placeholder="interior, design, tips"
-                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900"
                                             style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}
                                         />
                                     </div>

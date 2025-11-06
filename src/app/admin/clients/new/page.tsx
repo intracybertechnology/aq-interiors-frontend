@@ -18,8 +18,6 @@ import {
 } from 'lucide-react';
 import { clientApi } from '@/services/clientApi';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
-
 export default function NewClientPage() {
   const router = useRouter();
 
@@ -63,7 +61,7 @@ export default function NewClientPage() {
       const formDataUpload = new FormData();
       formDataUpload.append('image', file);
 
-      const response = await fetch(`${API_BASE_URL}/upload/single`, {
+      const response = await fetch('/api/upload', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -77,7 +75,7 @@ export default function NewClientPage() {
         throw new Error(data.message || 'Upload failed');
       }
 
-      const imageUrl = `${API_BASE_URL.replace('/api', '')}${data.data.path}`;
+      const imageUrl = data.data.url;
       
       setFormData(prev => ({
         ...prev,
@@ -235,7 +233,7 @@ export default function NewClientPage() {
                       value={formData.id}
                       onChange={(e) => setFormData({ ...formData, id: e.target.value })}
                       required
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900"
                       placeholder="e.g., client-001"
                       style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}
                     />
@@ -246,7 +244,7 @@ export default function NewClientPage() {
                     <select
                       value={formData.category}
                       onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900"
                       style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}
                     >
                       {categories.map(cat => (
@@ -264,7 +262,7 @@ export default function NewClientPage() {
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     required
                     maxLength={200}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900"
                     placeholder="Enter client name"
                     style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}
                   />
@@ -277,7 +275,7 @@ export default function NewClientPage() {
                     value={formData.location}
                     onChange={(e) => setFormData({ ...formData, location: e.target.value })}
                     required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900"
                     placeholder="e.g., Dubai, UAE"
                     style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}
                   />

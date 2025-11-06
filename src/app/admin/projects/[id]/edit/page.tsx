@@ -97,7 +97,7 @@ export default function EditProjectPage() {
         formDataUpload.append('images', file);
       });
 
-      const response = await fetch(`${API_BASE_URL}/upload/multiple`, {
+      const response = await fetch('/api/upload?multiple=true', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -274,8 +274,7 @@ export default function EditProjectPage() {
                       value={formData.id}
                       onChange={(e) => setFormData({ ...formData, id: e.target.value })}
                       required
-                      disabled
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent disabled:bg-gray-100"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900"
                       placeholder="e.g., project-001"
                       style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}
                     />
@@ -286,7 +285,7 @@ export default function EditProjectPage() {
                     <select
                       value={formData.category}
                       onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900"
                       style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}
                     >
                       {categories.map(cat => (
@@ -304,7 +303,7 @@ export default function EditProjectPage() {
                     onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                     required
                     maxLength={200}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900"
                     placeholder="Enter project title"
                     style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}
                   />
@@ -318,7 +317,7 @@ export default function EditProjectPage() {
                     required
                     maxLength={1000}
                     rows={6}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none text-gray-900"
                     placeholder="Describe the project..."
                     style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}
                   />
@@ -331,7 +330,7 @@ export default function EditProjectPage() {
                       type="text"
                       value={formData.location}
                       onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900"
                       placeholder="e.g., Dubai, UAE"
                       style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}
                     />
@@ -343,7 +342,7 @@ export default function EditProjectPage() {
                       type="text"
                       value={formData.year}
                       onChange={(e) => setFormData({ ...formData, year: e.target.value })}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900"
                       placeholder="e.g., 2024"
                       style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}
                     />

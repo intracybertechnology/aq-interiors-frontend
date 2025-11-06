@@ -147,7 +147,7 @@ const AdminLogin: React.FC = () => {
                   onChange={handleChange}
                   required
                   autoComplete="current-password"
-                  className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#9B4F96] focus:border-transparent transition-all duration-300 bg-gray-50 focus:bg-white"
+                  className="w-full pl-10 pr-12 py-3 text-gray-900 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#9B4F96] focus:border-transparent transition-all duration-300 bg-gray-50 focus:bg-white"
                   placeholder="Enter your password"
                   style={{ 
                     fontFamily: '"Lucida Bright", Georgia, serif',
