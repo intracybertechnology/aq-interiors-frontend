@@ -15,7 +15,7 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const { id } = params;
+    const { id } = await params;
     let project;
 
     if (isValidObjectId(id)) {
@@ -50,7 +50,7 @@ export async function PUT(
       return authResult; // Return error response if auth fails
     }
 
-    const { id } = params;
+    const { id } = await params;
     const body = await request.json();
     const { _id, createdAt, updatedAt, __v, ...updateData } = body;
 
