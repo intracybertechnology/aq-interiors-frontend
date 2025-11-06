@@ -254,6 +254,7 @@ const AdminBlogForm = () => {
 
                         <form onSubmit={handleSubmit} className="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
                             <div className="space-y-6">
+                                {/* Title Field - FIXED */}
                                 <div>
                                     <label className="block text-sm font-semibold text-gray-700 mb-2" style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>Title *</label>
                                     <input
@@ -262,12 +263,16 @@ const AdminBlogForm = () => {
                                         onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                                         required
                                         maxLength={300}
-                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 placeholder-gray-400"
                                         placeholder="Enter blog title"
-                                        style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}
+                                        style={{ 
+                                            fontFamily: '"Lucida Bright", Georgia, serif',
+                                            color: '#111827'
+                                        }}
                                     />
                                 </div>
 
+                                {/* Excerpt Field - FIXED */}
                                 <div>
                                     <label className="block text-sm font-semibold text-gray-700 mb-2" style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>Excerpt *</label>
                                     <textarea
@@ -276,12 +281,16 @@ const AdminBlogForm = () => {
                                         required
                                         maxLength={500}
                                         rows={3}
-                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
+                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none text-gray-900 placeholder-gray-400"
                                         placeholder="Short description (max 500 characters)"
-                                        style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}
+                                        style={{ 
+                                            fontFamily: '"Lucida Bright", Georgia, serif',
+                                            color: '#111827'
+                                        }}
                                     />
                                 </div>
 
+                                {/* Content Field - FIXED */}
                                 <div>
                                     <label className="block text-sm font-semibold text-gray-700 mb-2" style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>Content *</label>
                                     <textarea
@@ -289,12 +298,16 @@ const AdminBlogForm = () => {
                                         onChange={(e) => setFormData({ ...formData, content: e.target.value })}
                                         required
                                         rows={12}
-                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
+                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none text-gray-900 placeholder-gray-400"
                                         placeholder="Write your blog content here..."
-                                        style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}
+                                        style={{ 
+                                            fontFamily: '"Lucida Bright", Georgia, serif',
+                                            color: '#111827'
+                                        }}
                                     />
                                 </div>
 
+                                {/* Cover Image Field */}
                                 <div>
                                     <label className="block text-sm font-semibold text-gray-700 mb-2" style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>
                                         Cover Image * {!isEdit && '(Required)'}
@@ -322,24 +335,32 @@ const AdminBlogForm = () => {
                                 </div>
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    {/* Author Field - FIXED */}
                                     <div>
                                         <label className="block text-sm font-semibold text-gray-700 mb-2" style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>Author</label>
                                         <input
                                             type="text"
                                             value={formData.author}
                                             onChange={(e) => setFormData({ ...formData, author: e.target.value })}
-                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                                            style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}
+                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900"
+                                            style={{ 
+                                                fontFamily: '"Lucida Bright", Georgia, serif',
+                                                color: '#111827'
+                                            }}
                                         />
                                     </div>
 
+                                    {/* Category Field - FIXED */}
                                     <div>
                                         <label className="block text-sm font-semibold text-gray-700 mb-2" style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>Category</label>
                                         <select
                                             value={formData.category}
                                             onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                                            style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}
+                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900"
+                                            style={{ 
+                                                fontFamily: '"Lucida Bright", Georgia, serif',
+                                                color: '#111827'
+                                            }}
                                         >
                                             {categories.map(cat => (
                                                 <option key={cat} value={cat}>{cat}</option>
@@ -349,6 +370,7 @@ const AdminBlogForm = () => {
                                 </div>
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    {/* Read Time Field - FIXED */}
                                     <div>
                                         <label className="block text-sm font-semibold text-gray-700 mb-2" style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>Read Time</label>
                                         <input
@@ -356,11 +378,15 @@ const AdminBlogForm = () => {
                                             value={formData.readTime}
                                             onChange={(e) => setFormData({ ...formData, readTime: e.target.value })}
                                             placeholder="e.g., 5 min read"
-                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                                            style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}
+                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 placeholder-gray-400"
+                                            style={{ 
+                                                fontFamily: '"Lucida Bright", Georgia, serif',
+                                                color: '#111827'
+                                            }}
                                         />
                                     </div>
 
+                                    {/* Tags Field - FIXED */}
                                     <div>
                                         <label className="block text-sm font-semibold text-gray-700 mb-2" style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>Tags (comma separated)</label>
                                         <input
@@ -368,12 +394,16 @@ const AdminBlogForm = () => {
                                             value={formData.tags}
                                             onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
                                             placeholder="interior, design, tips"
-                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                                            style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}
+                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 placeholder-gray-400"
+                                            style={{ 
+                                                fontFamily: '"Lucida Bright", Georgia, serif',
+                                                color: '#111827'
+                                            }}
                                         />
                                     </div>
                                 </div>
 
+                                {/* Checkboxes */}
                                 <div className="flex items-center gap-6">
                                     <label className="flex items-center gap-2 cursor-pointer">
                                         <input
@@ -396,6 +426,7 @@ const AdminBlogForm = () => {
                                     </label>
                                 </div>
 
+                                {/* Action Buttons */}
                                 <div className="flex gap-4 pt-6 border-t">
                                     <button
                                         type="submit"
