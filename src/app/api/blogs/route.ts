@@ -1,10 +1,34 @@
 import { NextRequest, NextResponse } from 'next/server';
-import  { connectDB } from '@/lib/config/database';
+import { connectDB } from '@/lib/config/database';
 import Blog from '@/lib/models/Blog';
 import { verifyAuthToken } from '@/lib/middleware/auth';
-import { writeFile, mkdir } from 'fs/promises';
-import path from 'path';
-import { existsSync } from 'fs';
+import { v2 as cloudinary } from 'cloudinary';
+
+// Configure Cloudinary
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+// Helper: Upload buffer to Cloudinary
+const uploadToCloudinary = (buffer: Buffer): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    cloudinary.uploader.upload_stream(
+      {
+        folder: 'aq-interiors/blogs',
+        resource_type: 'image',
+      },
+      (error, result) => {
+        if (error || !result) {
+          reject(error || new Error('Cloudinary upload failed'));
+        } else {
+          resolve(result.secure_url);
+        }
+      }
+    ).end(buffer);
+  });
+};
 
 // GET /api/blogs - Get blogs (public or admin)
 export async function GET(req: NextRequest) {
@@ -15,21 +39,20 @@ export async function GET(req: NextRequest) {
     const category = searchParams.get('category');
     const search = searchParams.get('search');
     const featured = searchParams.get('featured');
-    const admin = searchParams.get('admin'); // ?admin=true for admin view
+    const admin = searchParams.get('admin');
     const page = Math.max(1, Number(searchParams.get('page')) || 1);
     const limit = Math.min(Math.max(1, Number(searchParams.get('limit')) || 10), 100);
 
     // If admin mode, verify authentication
-   if (admin === 'true') {
-  const authResult = await verifyAuthToken(req);
-  if (!authResult.success || !authResult.admin) {
-    return NextResponse.json(
-      { success: false, message: 'Unauthorized' },
-      { status: 401 }
-    );
-  }
-}
-
+    if (admin === 'true') {
+      const authResult = await verifyAuthToken(req);
+      if (!authResult.success || !authResult.admin) {
+        return NextResponse.json(
+          { success: false, message: 'Unauthorized' },
+          { status: 401 }
+        );
+      }
+    }
 
     const filter: any = admin === 'true' ? {} : { isPublished: true };
 
@@ -91,13 +114,13 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     // Verify authentication
-   const authResult = await verifyAuthToken(req);
-if (!authResult.success || !authResult.admin) {
-  return NextResponse.json(
-    { success: false, message: 'Unauthorized' },
-    { status: 401 }
-  );
-}
+    const authResult = await verifyAuthToken(req);
+    if (!authResult.success || !authResult.admin) {
+      return NextResponse.json(
+        { success: false, message: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
 
     await connectDB();
 
@@ -120,7 +143,7 @@ if (!authResult.success || !authResult.admin) {
       );
     }
 
-    if (!image) {
+    if (!image || image.size === 0) {
       return NextResponse.json(
         { success: false, message: 'Blog image is required' },
         { status: 400 }
@@ -139,29 +162,13 @@ if (!authResult.success || !authResult.admin) {
       );
     }
 
-    // Handle file upload
+    // ✅ Upload image to Cloudinary (works on Vercel)
     const bytes = await image.arrayBuffer();
     const buffer = Buffer.from(bytes);
-
-    // Generate unique filename
-    const timestamp = Date.now();
-    const originalName = image.name.replace(/\s+/g, '-');
-    const filename = `${timestamp}-${originalName}`;
-
-    // Create uploads directory if it doesn't exist
-    const uploadsDir = path.join(process.cwd(), 'public', 'uploads', 'blogs');
-    if (!existsSync(uploadsDir)) {
-      await mkdir(uploadsDir, { recursive: true });
-    }
-
-    // Save file
-    const filepath = path.join(uploadsDir, filename);
-    await writeFile(filepath, buffer);
-
-    const imageUrl = `/uploads/blogs/${filename}`;
+    const imageUrl = await uploadToCloudinary(buffer);
 
     // Parse tags
-    let parsedTags = [];
+    let parsedTags: string[] = [];
     if (tags) {
       try {
         parsedTags = JSON.parse(tags);
@@ -170,13 +177,13 @@ if (!authResult.success || !authResult.admin) {
       }
     }
 
-    // Create blog
+    // ✅ Fixed default category to match schema enum
     const blogData = {
       title: title.trim(),
       excerpt: excerpt.trim(),
       content: content.trim(),
       author: author?.trim() || 'AQ Design Team',
-      category: category?.trim() || 'General',
+      category: category?.trim() || 'Design Trends',
       tags: parsedTags,
       image: imageUrl,
       readTime: readTime || '5 min read',

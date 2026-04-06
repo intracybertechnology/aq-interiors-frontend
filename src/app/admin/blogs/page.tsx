@@ -10,7 +10,7 @@ import {
 import { blogApi } from '@/services/blogApi';
 import { Blog } from '@/types';
 
-// ✅ REMOVED: No need for BASE_URL anymore since images are in public folder
+
 
 const AdminBlogs = () => {
   const router = useRouter();

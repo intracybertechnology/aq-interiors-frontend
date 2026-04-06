@@ -1,5 +1,3 @@
-// services/blogApi.ts - FIXED VERSION
-
 import { 
   Blog, 
   BlogsResponse, 
