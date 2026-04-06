@@ -6,12 +6,13 @@ import {
 } from '../types/blog.types';
 import { ApiResponse } from '../types';
 
-const API_BASE_URL = '/api';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL!;
 
 class BlogApi {
+
   async getBlogs(params: BlogPaginationParams = {}): Promise<BlogsResponse> {
     const queryParams = new URLSearchParams();
-    
+
     if (params.page) queryParams.append('page', params.page.toString());
     if (params.limit) queryParams.append('limit', params.limit.toString());
     if (params.category && params.category !== 'All') queryParams.append('category', params.category);
@@ -20,27 +21,25 @@ class BlogApi {
 
     const url = `${API_BASE_URL}/blogs?${queryParams}`;
     const response = await fetch(url);
-    
+
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}: Failed to fetch blogs`);
     }
 
     const data: ApiResponse<BlogsResponse> = await response.json();
-    
+
     if (!data.success || !data.data) {
       throw new Error(data.message || 'Failed to fetch blogs');
     }
-    
+
     return data.data;
   }
 
-  // ✅ FIXED: Use admin=true query parameter instead of separate route
   async getAllBlogsAdmin(params: BlogPaginationParams = {}, token: string): Promise<BlogsResponse> {
     const queryParams = new URLSearchParams();
-    
-    // Add admin flag
+
     queryParams.append('admin', 'true');
-    
+
     if (params.page) queryParams.append('page', params.page.toString());
     if (params.limit) queryParams.append('limit', params.limit.toString());
     if (params.category && params.category !== 'All') queryParams.append('category', params.category);
@@ -50,28 +49,28 @@ class BlogApi {
 
     const response = await fetch(url, {
       headers: {
-        'Authorization': `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json'
       }
     });
-    
+
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}: Failed to fetch admin blogs`);
     }
 
     const data: ApiResponse<BlogsResponse> = await response.json();
-    
+
     if (!data.success || !data.data) {
       throw new Error(data.message || 'Failed to fetch blogs');
     }
-    
+
     return data.data;
   }
 
   async getBlogById(id: string): Promise<Blog> {
     const url = `${API_BASE_URL}/blogs/${id}`;
     const response = await fetch(url);
-    
+
     if (!response.ok) {
       if (response.status === 404) {
         throw new Error('Blog not found');
@@ -80,70 +79,78 @@ class BlogApi {
     }
 
     const data: ApiResponse<Blog> = await response.json();
-    
+
     if (!data.success || !data.data) {
       throw new Error(data.message || 'Blog not found');
     }
-    
+
     return data.data;
   }
 
   async getFeaturedBlogs(limit: number = 3): Promise<Blog[]> {
     const url = `${API_BASE_URL}/blogs/featured?limit=${limit}`;
     const response = await fetch(url);
-    
+
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}: Failed to fetch featured blogs`);
     }
 
     const data: ApiResponse<Blog[]> = await response.json();
-    
+
     if (!data.success || !data.data) {
       throw new Error(data.message || 'Failed to fetch featured blogs');
     }
-    
+
     return data.data;
   }
 
   async getCategories(): Promise<BlogCategoriesResponse> {
     const url = `${API_BASE_URL}/blogs/categories`;
     const response = await fetch(url);
-    
+
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}: Failed to fetch categories`);
     }
 
     const data: ApiResponse<BlogCategoriesResponse> = await response.json();
-    
+
     if (!data.success || !data.data) {
       throw new Error(data.message || 'Failed to fetch categories');
     }
-    
+
     return data.data;
   }
 
+  // 🔥 FIXED CREATE BLOG
   async createBlog(blogData: FormData, token: string): Promise<Blog> {
     const url = `${API_BASE_URL}/blogs`;
 
     const response = await fetch(url, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${token}`
+        Authorization: `Bearer ${token}`
       },
       body: blogData
     });
-    
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || `HTTP ${response.status}: Failed to create blog`);
+
+    let data;
+
+    try {
+      data = await response.json();
+    } catch (err) {
+      const text = await response.text();
+      console.error("Server returned non-JSON:", text);
+      throw new Error("Server error: " + text);
     }
 
-    const data: ApiResponse<Blog> = await response.json();
-    
+    if (!response.ok) {
+      throw new Error(data?.message || `HTTP ${response.status}: Failed to create blog`);
+    }
+
     if (!data.success || !data.data) {
       throw new Error(data.message || 'Failed to create blog');
     }
-    
+
     return data.data;
   }
 
@@ -153,22 +160,29 @@ class BlogApi {
     const response = await fetch(url, {
       method: 'PUT',
       headers: {
-        'Authorization': `Bearer ${token}`
+        Authorization: `Bearer ${token}`
       },
       body: blogData
     });
-    
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || `HTTP ${response.status}: Failed to update blog`);
+
+    let data;
+
+    try {
+      data = await response.json();
+    } catch (err) {
+      const text = await response.text();
+      console.error("Server returned non-JSON:", text);
+      throw new Error("Server error: " + text);
     }
 
-    const data: ApiResponse<Blog> = await response.json();
-    
+    if (!response.ok) {
+      throw new Error(data?.message || `HTTP ${response.status}: Failed to update blog`);
+    }
+
     if (!data.success || !data.data) {
       throw new Error(data.message || 'Failed to update blog');
     }
-    
+
     return data.data;
   }
 
@@ -178,22 +192,29 @@ class BlogApi {
     const response = await fetch(url, {
       method: 'DELETE',
       headers: {
-        'Authorization': `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json'
       }
     });
-    
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || `HTTP ${response.status}: Failed to delete blog`);
+
+    let data;
+
+    try {
+      data = await response.json();
+    } catch (err) {
+      const text = await response.text();
+      console.error("Server returned non-JSON:", text);
+      throw new Error("Server error: " + text);
     }
 
-    const data: ApiResponse<{ deletedId: string; title: string }> = await response.json();
-    
+    if (!response.ok) {
+      throw new Error(data?.message || `HTTP ${response.status}: Failed to delete blog`);
+    }
+
     if (!data.success || !data.data) {
       throw new Error(data.message || 'Failed to delete blog');
     }
-    
+
     return data.data;
   }
 }
