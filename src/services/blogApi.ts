@@ -6,7 +6,20 @@ import {
 } from '../types/blog.types';
 import { ApiResponse } from '../types';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL!;
+// ✅ FIXED: Use relative URLs since API routes are inside Next.js itself.
+// NEXT_PUBLIC_API_URL was set to "https://aqdecor.com" (missing /api),
+// causing all API calls to hit the wrong endpoint.
+// Relative URLs like /api/blogs work correctly on both localhost and Vercel.
+const getBaseUrl = () => {
+  // Server-side: need absolute URL
+  if (typeof window === 'undefined') {
+    return process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+  }
+  // Client-side: relative URL works perfectly
+  return '';
+};
+
+const API_BASE = () => `${getBaseUrl()}/api`;
 
 class BlogApi {
   async getBlogs(params: BlogPaginationParams = {}): Promise<BlogsResponse> {
@@ -18,7 +31,7 @@ class BlogApi {
     if (params.search) queryParams.append('search', params.search);
     if (params.featured) queryParams.append('featured', 'true');
 
-    const url = `${API_BASE_URL}/blogs?${queryParams}`;
+    const url = `${API_BASE()}/blogs?${queryParams}`;
     const response = await fetch(url);
     
     if (!response.ok) {
@@ -34,11 +47,9 @@ class BlogApi {
     return data.data;
   }
 
-  // ✅ FIXED: Use admin=true query parameter instead of separate route
   async getAllBlogsAdmin(params: BlogPaginationParams = {}, token: string): Promise<BlogsResponse> {
     const queryParams = new URLSearchParams();
     
-    // Add admin flag
     queryParams.append('admin', 'true');
     
     if (params.page) queryParams.append('page', params.page.toString());
@@ -46,7 +57,7 @@ class BlogApi {
     if (params.category && params.category !== 'All') queryParams.append('category', params.category);
     if (params.search) queryParams.append('search', params.search);
 
-    const url = `${API_BASE_URL}/blogs?${queryParams}`;
+    const url = `${API_BASE()}/blogs?${queryParams}`;
 
     const response = await fetch(url, {
       headers: {
@@ -69,7 +80,7 @@ class BlogApi {
   }
 
   async getBlogById(id: string): Promise<Blog> {
-    const url = `${API_BASE_URL}/blogs/${id}`;
+    const url = `${API_BASE()}/blogs/${id}`;
     const response = await fetch(url);
     
     if (!response.ok) {
@@ -89,7 +100,7 @@ class BlogApi {
   }
 
   async getFeaturedBlogs(limit: number = 3): Promise<Blog[]> {
-    const url = `${API_BASE_URL}/blogs/featured?limit=${limit}`;
+    const url = `${API_BASE()}/blogs/featured?limit=${limit}`;
     const response = await fetch(url);
     
     if (!response.ok) {
@@ -106,7 +117,7 @@ class BlogApi {
   }
 
   async getCategories(): Promise<BlogCategoriesResponse> {
-    const url = `${API_BASE_URL}/blogs/categories`;
+    const url = `${API_BASE()}/blogs/categories`;
     const response = await fetch(url);
     
     if (!response.ok) {
@@ -123,7 +134,7 @@ class BlogApi {
   }
 
   async createBlog(blogData: FormData, token: string): Promise<Blog> {
-    const url = `${API_BASE_URL}/blogs`;
+    const url = `${API_BASE()}/blogs`;
 
     const response = await fetch(url, {
       method: 'POST',
@@ -148,7 +159,7 @@ class BlogApi {
   }
 
   async updateBlog(id: string, blogData: FormData, token: string): Promise<Blog> {
-    const url = `${API_BASE_URL}/blogs/${id}`;
+    const url = `${API_BASE()}/blogs/${id}`;
 
     const response = await fetch(url, {
       method: 'PUT',
@@ -173,7 +184,7 @@ class BlogApi {
   }
 
   async deleteBlog(id: string, token: string): Promise<{ deletedId: string; title: string }> {
-    const url = `${API_BASE_URL}/blogs/${id}`;
+    const url = `${API_BASE()}/blogs/${id}`;
 
     const response = await fetch(url, {
       method: 'DELETE',
@@ -199,4 +210,3 @@ class BlogApi {
 }
 
 export const blogApi = new BlogApi();
-export { API_BASE_URL };

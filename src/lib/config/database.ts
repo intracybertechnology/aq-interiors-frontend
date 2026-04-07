@@ -1,32 +1,35 @@
 import mongoose from 'mongoose';
-import { env } from './env';
+
+const MONGODB_URI = process.env.MONGODB_URI!;
+
+if (!MONGODB_URI) {
+  throw new Error('Please define the MONGODB_URI environment variable');
+}
+
+// Cache connection across hot reloads in development
+let cached = (global as any).mongoose;
+
+if (!cached) {
+  cached = (global as any).mongoose = { conn: null, promise: null };
+}
 
 export const connectDB = async (): Promise<void> => {
+  if (cached.conn) {
+    return;
+  }
+
+  if (!cached.promise) {
+    cached.promise = mongoose.connect(MONGODB_URI, {
+      bufferCommands: false,
+    }).then((mongoose) => mongoose);
+  }
+
   try {
-    const conn = await mongoose.connect(env.MONGODB_URI);
-    console.log(`MongoDB connected: ${conn.connection.host}`);
-    mongoose.connection.on('error', (error) => {
-      console.error('MongoDB connection error:', error);
-    });
-
-    mongoose.connection.on('disconnected', () => {
-      console.log('MongoDB disconnected');
-    });
-
-    process.on('SIGINT', async () => {
-      try {
-        await mongoose.connection.close();
-        console.log('MongoDB connection closed');
-        process.exit(0);
-      } catch (error) {
-        console.error('Error closing MongoDB connection:', error);
-        process.exit(1);
-      }
-    });
-
+    cached.conn = await cached.promise;
   } catch (error) {
+    cached.promise = null;
     console.error('MongoDB connection failed:', error);
-    process.exit(1);
+    throw error; // throw instead of process.exit — Vercel can't handle process.exit
   }
 };
 
