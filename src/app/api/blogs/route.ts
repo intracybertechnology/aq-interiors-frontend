@@ -53,7 +53,7 @@ const deleteFromCloudinary = async (imageUrl: string): Promise<void> => {
 // GET /api/blogs/[id] - Get single blog by ID or slug (public)
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+ { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await connectDB();
@@ -126,7 +126,7 @@ export async function GET(
 // PUT /api/blogs/[id] - Update blog (protected)
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+ { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const authResult = await verifyAuthToken(req);
@@ -242,7 +242,7 @@ export async function PUT(
 // DELETE /api/blogs/[id] - Delete blog (protected)
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+{ params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const authResult = await verifyAuthToken(req);
