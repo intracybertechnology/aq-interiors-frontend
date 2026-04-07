@@ -46,10 +46,10 @@ const Blog: React.FC = () => {
       try {
         const response = await fetch('/api/blogs/categories', { cache: 'no-store' });
         const data = await response.json();
-        if (data.success) {
-          const uniqueCategories = ['All', ...data.data.categories.filter((cat: string) => cat !== 'All')];
-          setCategories(uniqueCategories);
-        }
+        if (data.success && data.data?.categories) {
+  const uniqueCategories = ['All', ...data.data.categories.filter((cat: string) => cat !== 'All')];
+  setCategories(uniqueCategories);
+}
       } catch (err) {
         console.error('Failed to fetch categories:', err);
       }
