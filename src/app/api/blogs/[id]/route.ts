@@ -52,12 +52,12 @@ const deleteFromCloudinary = async (imageUrl: string): Promise<void> => {
 //
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } } // ✅ FIXED
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await connectDB();
 
-    const { id } = params; // ✅ NO await
+    const { id } = await params;
 
     // Featured blogs
     if (id === 'featured') {
@@ -115,7 +115,7 @@ export async function GET(
 //
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } } // ✅ FIXED
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const auth = await verifyAuthToken(req);
@@ -125,7 +125,7 @@ export async function PUT(
 
     await connectDB();
 
-    const { id } = params;
+    const { id } = await params;
 
     if (!isValidObjectId(id)) {
       return NextResponse.json({ success: false, message: 'Invalid ID' }, { status: 400 });
@@ -180,7 +180,7 @@ export async function PUT(
 //
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } } // ✅ FIXED
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const auth = await verifyAuthToken(req);
@@ -190,7 +190,7 @@ export async function DELETE(
 
     await connectDB();
 
-    const { id } = params;
+    const { id } = await params;
 
     if (!isValidObjectId(id)) {
       return NextResponse.json({ success: false }, { status: 400 });

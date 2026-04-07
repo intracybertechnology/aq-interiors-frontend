@@ -103,8 +103,8 @@ const Blog: React.FC = () => {
     return () => observer.disconnect();
   }, [blogPosts]);
 
-  const featuredPosts = blogPosts.filter(post => post.featured);
-  const regularPosts = blogPosts.filter(post => !post.featured);
+  const featuredPosts = (blogPosts || []).filter(post => post.featured);
+const regularPosts = (blogPosts || []).filter(post => !post.featured);
 
   const handleSearch = (value: string) => {
     setSearchTerm(value);
@@ -196,7 +196,7 @@ const Blog: React.FC = () => {
           <Loader className="inline-block w-12 h-12 text-[#9B4F96] animate-spin" />
           <p className="mt-4 text-gray-600">Loading blogs...</p>
         </div>
-      ) : blogPosts.length === 0 ? (
+      ) : (blogPosts || []).length === 0 ? (
         <div className="container mx-auto px-4 py-16 text-center">
           <p className="text-xl text-gray-600">No blogs found matching your criteria.</p>
         </div>
