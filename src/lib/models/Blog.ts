@@ -36,7 +36,7 @@ const blogSchema = new Schema<IBlog>({
     unique: true,
     lowercase: true,
     trim: true,
-    index: true
+   
   },
   excerpt: {
     type: String,
@@ -113,7 +113,7 @@ blogSchema.index({
 });
 
 blogSchema.pre('save', function(next) {
-  if (this.isModified('title') && !this.slug) {
+  if (this.isModified('title')) {
     this.slug = this.title
       .toLowerCase()
       .replace(/[^\w\s-]/g, '')
@@ -123,7 +123,6 @@ blogSchema.pre('save', function(next) {
   }
   next();
 });
-
 blogSchema.statics.getCategories = function() {
   return [...BLOG_CATEGORIES];
 };
