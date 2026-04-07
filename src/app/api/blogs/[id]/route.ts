@@ -74,14 +74,15 @@ export async function GET(
     }
 
     // Categories
-    if (id === 'categories') {
-      const categories = await Blog.distinct('category', { isPublished: true });
-
-      return NextResponse.json({
-        success: true,
-        data: ['All', ...categories.sort()],
-      });
+  if (id === 'categories') {
+  const categories = await Blog.distinct('category', { isPublished: true });
+  return NextResponse.json({
+    success: true,
+    data: {
+      categories: categories.sort().filter(Boolean)
     }
+  });
+}
 
     // Fetch by ID or slug
     let blog;

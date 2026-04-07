@@ -3,60 +3,56 @@ import { connectDB } from '@/lib/config/database';
 import Blog from '@/lib/models/Blog';
 import { v2 as cloudinary } from 'cloudinary';
 
-// Cloudinary config
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME!,
   api_key: process.env.CLOUDINARY_API_KEY!,
   api_secret: process.env.CLOUDINARY_API_SECRET!,
 });
 
-// Upload helper
 const uploadToCloudinary = (buffer: Buffer): Promise<string> => {
   return new Promise((resolve, reject) => {
     cloudinary.uploader.upload_stream(
-      {
-        folder: 'aq-interiors/blogs',
-      },
+      { folder: 'aq-interiors/blogs' },
       (error, result) => {
-        if (error || !result) {
-          reject(error);
-        } else {
-          resolve(result.secure_url);
-        }
+        if (error || !result) reject(error);
+        else resolve(result.secure_url);
       }
     ).end(buffer);
   });
 };
 
-//
-// ✅ GET ALL BLOGS
-//
 export async function GET(req: NextRequest) {
   try {
     await connectDB();
 
     const { searchParams } = new URL(req.url);
-
     const category = searchParams.get('category');
     const search = searchParams.get('search');
+    const page = Math.max(1, Number(searchParams.get('page')) || 1);
+    const limit = Math.min(Math.max(1, Number(searchParams.get('limit')) || 10), 50);
+    const skip = (page - 1) * limit;
 
     let filter: any = { isPublished: true };
+    if (category && category !== 'All') filter.category = category;
+    if (search) filter.title = { $regex: search, $options: 'i' };
 
-    if (category && category !== 'All') {
-      filter.category = category;
-    }
+    const [blogs, total] = await Promise.all([
+      Blog.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit).select('-__v'),
+      Blog.countDocuments(filter)
+    ]);
 
-    if (search) {
-      filter.title = { $regex: search, $options: 'i' };
-    }
-
-    const blogs = await Blog.find(filter)
-      .sort({ createdAt: -1 })
-      .select('-__v');
+    const pages = Math.ceil(total / limit);
 
     return NextResponse.json({
       success: true,
-      data: blogs,
+      data: {
+        blogs,
+        pagination: {
+          page, limit, total, pages,
+          hasNext: page < pages,
+          hasPrev: page > 1,
+        }
+      }
     });
 
   } catch (error) {
@@ -68,9 +64,6 @@ export async function GET(req: NextRequest) {
   }
 }
 
-//
-// ✅ CREATE BLOG (POST)
-//
 export async function POST(req: NextRequest) {
   try {
     await connectDB();
@@ -88,19 +81,16 @@ export async function POST(req: NextRequest) {
     const isPublished = formData.get('isPublished') as string;
     const image = formData.get('image') as File;
 
-    // validation
     if (!title || !excerpt || !content || !category || !image) {
       return NextResponse.json(
-        { success: false, message: 'Missing required fields' },
+        { success: false, message: 'Missing required fields: title, excerpt, content, category, image' },
         { status: 400 }
       );
     }
 
-    // upload image
     const buffer = Buffer.from(await image.arrayBuffer());
     const imageUrl = await uploadToCloudinary(buffer);
 
-    // generate slug
     const slug = title
       .toLowerCase()
       .replace(/[^\w\s-]/g, '')
@@ -108,16 +98,15 @@ export async function POST(req: NextRequest) {
       .replace(/-+/g, '-')
       .trim();
 
-    // create blog
     const newBlog = await Blog.create({
       title: title.trim(),
       excerpt: excerpt.trim(),
       content: content.trim(),
-      author: author || 'AQ Design Team',
+      author: author?.trim() || 'AQ Design Team',
       category: category.trim(),
       image: imageUrl,
       slug,
-      tags: tags ? tags.split(',').map(t => t.trim()) : [],
+      tags: tags ? tags.split(',').map(t => t.trim()).filter(Boolean) : [],
       readTime: readTime || '5 min read',
       featured: featured === 'true',
       isPublished: isPublished !== 'false',
@@ -132,8 +121,16 @@ export async function POST(req: NextRequest) {
   } catch (error: any) {
     console.error('POST blog error:', error);
 
+    // Handle duplicate slug
+    if (error.code === 11000) {
+      return NextResponse.json(
+        { success: false, message: 'A blog with this title already exists' },
+        { status: 409 }
+      );
+    }
+
     return NextResponse.json(
-      { success: false, message: 'Failed to create blog' },
+      { success: false, message: error.message || 'Failed to create blog' },
       { status: 500 }
     );
   }
