@@ -16,9 +16,9 @@ const Navbar: React.FC = () => {
   const pathname = usePathname();
 
   const servicesData = {
-    design:  ['Interior Designing', 'MEP', 'Shop Front Signage', 'Light Boxes', 'Exhibition Stand'],
+    design: ['Interior Designing', 'MEP', 'Shop Front Signage', 'Light Boxes', 'Exhibition Stand'],
     develop: ['Fit-out', 'Flooring & Ceiling', 'Partition & Painting', 'Shop Front Glass', 'Office Furniture', 'Painted Furniture'],
-    deploy:  ['Mannequins Repainting', 'Acrylic Products', 'Slat Boards & Accessories', 'Stainless Steel Stand', 'Glass Counter', 'Reception Counter', 'Kiosk'],
+    deploy: ['Mannequins Repainting', 'Acrylic Products', 'Slat Boards & Accessories', 'Stainless Steel Stand', 'Glass Counter', 'Reception Counter', 'Kiosk'],
   };
 
   const isHomePage = pathname === '/';
@@ -152,7 +152,7 @@ const Navbar: React.FC = () => {
                   width={350}
                   height={96}
                   className="h-14 sm:h-16 md:h-24 lg:h-24 object-contain transition-all duration-700 group-hover:scale-105"
-                  style={{ width: 'auto', maxWidth: '350px', maxHeight: '100%' }}
+                  style={{ width: 'auto', height: 'auto', maxWidth: '350px' }}
                   priority
                   draggable={false}
                 />
@@ -208,9 +208,9 @@ const Navbar: React.FC = () => {
                     >
                       <div className="grid grid-cols-3 gap-x-12 gap-y-0">
                         {[
-                          { title: 'Design',  items: servicesData.design },
+                          { title: 'Design', items: servicesData.design },
                           { title: 'Develop', items: servicesData.develop },
-                          { title: 'Deploy',  items: servicesData.deploy },
+                          { title: 'Deploy', items: servicesData.deploy },
                         ].map((category) => (
                           <div key={category.title}>
                             <p className="text-xs font-bold text-[#9B4F96] uppercase tracking-widest mb-3">
@@ -298,19 +298,18 @@ const Navbar: React.FC = () => {
         role="dialog"
         aria-label="Mobile navigation menu"
         aria-modal="true"
-        className={`mobile-menu fixed top-16 sm:top-20 right-0 w-full xs:w-80 sm:w-96 h-[calc(100vh-4rem)] sm:h-[calc(100vh-5rem)] bg-white/98 backdrop-blur-lg shadow-2xl z-50 transform transition-all duration-300 lg:hidden overflow-y-auto ${
-          mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
-        }`}
+        className={`mobile-menu fixed top-16 sm:top-20 right-0 w-full xs:w-80 sm:w-96 h-[calc(100vh-4rem)] sm:h-[calc(100vh-5rem)] bg-white/98 backdrop-blur-lg shadow-2xl z-50 transform transition-all duration-300 lg:hidden overflow-y-auto ${mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
+          }`}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
           <nav aria-label="Mobile navigation" className="space-y-2 sm:space-y-4">
             {[
-              { name: 'Home',     path: '/' },
+              { name: 'Home', path: '/' },
               { name: 'About Us', path: '/company' },
               { name: 'Projects', path: '/projects' },
-              { name: 'Blog',     path: '/blog' },
-              { name: 'Contact',  path: '/contact' },
+              { name: 'Blog', path: '/blog' },
+              { name: 'Contact', path: '/contact' },
             ].map((item) => (
               <Link
                 key={item.path}
@@ -340,9 +339,8 @@ const Navbar: React.FC = () => {
 
               <div
                 id="mobile-services-menu"
-                className={`overflow-hidden transition-all duration-300 ${
-                  mobileServicesOpen ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'
-                }`}
+                className={`overflow-hidden transition-all duration-300 ${mobileServicesOpen ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'
+                  }`}
               >
                 <ul className="pl-3 sm:pl-4 pb-3 sm:pb-4 space-y-1.5 sm:space-y-2">
                   {[...servicesData.design, ...servicesData.develop, ...servicesData.deploy]
