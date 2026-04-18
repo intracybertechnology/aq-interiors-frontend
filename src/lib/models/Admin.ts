@@ -23,7 +23,7 @@ const adminSchema = new Schema<IAdmin>({
   email: {
     type: String,
     required: [true, 'Email is required'],
-    unique: true,
+    unique: true, // This alone is sufficient — no need for adminSchema.index({ email: 1 }) below
     lowercase: true,
     trim: true,
     match: [
@@ -48,12 +48,12 @@ const adminSchema = new Schema<IAdmin>({
   timestamps: true
 });
 
-adminSchema.index({ email: 1 }, { unique: true });
+// ✅ Removed duplicate adminSchema.index({ email: 1 }, { unique: true })
+// The unique: true on the field definition above already creates this index
 adminSchema.index({ isActive: 1 });
 
 adminSchema.pre('save', async function(next) {
   if (!this.isModified('password')) return next();
-
   try {
     const salt = await bcrypt.genSalt(12);
     this.password = await bcrypt.hash(this.password, salt);

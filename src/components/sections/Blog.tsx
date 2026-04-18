@@ -46,10 +46,10 @@ const Blog: React.FC = () => {
       try {
         const response = await fetch('/api/blogs/categories', { cache: 'no-store' });
         const data = await response.json();
- if (data.success && data.data?.categories) {
-  const uniqueCategories = ['All', ...data.data.categories.filter((cat: string) => cat !== 'All')];
-  setCategories(uniqueCategories);
-}
+        if (data.success && data.data?.categories) {
+          const uniqueCategories = ['All', ...data.data.categories.filter((cat: string) => cat !== 'All')];
+          setCategories(uniqueCategories);
+        }
       } catch (err) {
         console.error('Failed to fetch categories:', err);
       }
@@ -104,7 +104,7 @@ const Blog: React.FC = () => {
   }, [blogPosts]);
 
   const featuredPosts = (blogPosts || []).filter(post => post.featured);
-const regularPosts = (blogPosts || []).filter(post => !post.featured);
+  const regularPosts = (blogPosts || []).filter(post => !post.featured);
 
   const handleSearch = (value: string) => {
     setSearchTerm(value);
@@ -126,8 +126,8 @@ const regularPosts = (blogPosts || []).filter(post => !post.featured);
   };
 
   return (
-    // ✅ FIXED: Changed pb-0 to pb-16 to prevent black lines
     <div className="bg-gray-50 min-h-screen pb-16">
+      {/* Hero Header */}
       <div className="relative bg-white py-20 overflow-hidden">
         <div className="container mx-auto px-4 relative z-10">
           <div className="text-center">
@@ -149,6 +149,7 @@ const regularPosts = (blogPosts || []).filter(post => !post.featured);
         <div className="absolute top-40 right-1/4 w-12 h-12 bg-white/10 rounded-full animate-float animation-delay-500"></div>
       </div>
 
+      {/* Search & Filter */}
       <div className="container mx-auto px-4 -mt-10 relative z-20">
         <div className="bg-white rounded-2xl shadow-xl p-8 mb-12">
           <div className="flex flex-col lg:flex-row gap-6 items-center">
@@ -169,8 +170,8 @@ const regularPosts = (blogPosts || []).filter(post => !post.featured);
                   key={`${category}-${index}`}
                   onClick={() => handleCategoryChange(category)}
                   className={`px-4 py-2 rounded-full text-sm font-medium transition-all transform hover:scale-105 ${selectedCategory === category
-                      ? 'bg-[#9B4F96] text-white shadow-lg'
-                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                    ? 'bg-[#9B4F96] text-white shadow-lg'
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                     }`}
                   style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}
                 >
@@ -182,6 +183,7 @@ const regularPosts = (blogPosts || []).filter(post => !post.featured);
         </div>
       </div>
 
+      {/* Error */}
       {error && (
         <div className="container mx-auto px-4 mb-8">
           <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-center gap-3">
@@ -191,6 +193,7 @@ const regularPosts = (blogPosts || []).filter(post => !post.featured);
         </div>
       )}
 
+      {/* Loading / Empty / Content */}
       {loading ? (
         <div className="container mx-auto px-4 py-16 text-center">
           <Loader className="inline-block w-12 h-12 text-[#9B4F96] animate-spin" />
@@ -202,6 +205,7 @@ const regularPosts = (blogPosts || []).filter(post => !post.featured);
         </div>
       ) : (
         <>
+          {/* Featured Posts — 2-column grid (unchanged) */}
           {featuredPosts.length > 0 && (
             <div className="container mx-auto px-4 mb-16">
               <h2 className="text-3xl font-bold text-[#9B4F96] mb-8"
@@ -220,7 +224,6 @@ const regularPosts = (blogPosts || []).filter(post => !post.featured);
                     onClick={() => navigateToBlog(post)}
                   >
                     <div className="relative overflow-hidden">
-                      {/* ✅ FIXED: Added object-fit and position to prevent icon overlay */}
                       <img
                         src={post.image}
                         alt={post.title}
@@ -276,81 +279,96 @@ const regularPosts = (blogPosts || []).filter(post => !post.featured);
             </div>
           )}
 
+          {/* ✅ Latest Posts — 3-column grid (updated from alternating layout) */}
           {regularPosts.length > 0 && (
             <div className="container mx-auto px-4 mb-16">
               <h2 className="text-3xl font-bold text-[#9B4F96] mb-8"
                 style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>
                 Latest Articles
               </h2>
-              <div className="space-y-16">
-                {regularPosts.map((post, index) => (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {regularPosts.map((post) => (
                   <article
                     key={post._id}
                     data-post-id={post._id}
-                    className={`flex flex-col lg:flex-row items-center gap-8 ${index % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'
-                      } ${visiblePosts.includes(post._id)
-                        ? 'opacity-100 translate-x-0'
-                        : `opacity-0 ${index % 2 === 0 ? '-translate-x-8' : 'translate-x-8'}`
-                      } transition-all duration-700`}
+                    className={`group bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 cursor-pointer flex flex-col ${visiblePosts.includes(post._id)
+                      ? 'opacity-100 translate-y-0'
+                      : 'opacity-0 translate-y-8'
+                      }`}
+                    onClick={() => navigateToBlog(post)}
                   >
-                    <div className="lg:w-1/2 cursor-pointer" onClick={() => navigateToBlog(post)}>
-                      <div className="relative group overflow-hidden rounded-2xl shadow-lg">
-                        {/* ✅ FIXED: Added classes to prevent icon overlay */}
-                        <img
-                          src={post.image}
-                          alt={post.title}
-                          className="w-full h-72 object-cover object-center transition-transform duration-500 group-hover:scale-110 select-none pointer-events-none"
-                          draggable="false"
-                          onError={(e) => {
-                            e.currentTarget.src = '/images/placeholder-blog.jpg';
-                          }}
-                        />
-                      </div>
-                    </div>
-                    <div className="lg:w-1/2 space-y-4">
-                      <div className="flex items-center gap-4 text-sm text-gray-500">
-                        <span className="bg-[#9B4F96] text-white px-3 py-1 rounded-full font-medium">
+                    {/* Image */}
+                    <div className="relative overflow-hidden">
+                      <img
+                        src={post.image}
+                        alt={post.title}
+                        className="w-full h-52 object-cover object-center transition-transform duration-500 group-hover:scale-110 select-none pointer-events-none"
+                        draggable="false"
+                        onError={(e) => {
+                          e.currentTarget.src = '/images/placeholder-blog.jpg';
+                        }}
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                      <div className="absolute top-4 left-4">
+                        <span className="bg-[#9B4F96] text-white px-3 py-1 rounded-full text-xs font-medium">
                           {post.category}
                         </span>
+                      </div>
+                    </div>
+
+                    {/* Content */}
+                    <div className="p-5 flex flex-col flex-1">
+                      {/* Meta */}
+                      <div className="flex items-center gap-3 text-xs text-gray-500 mb-3">
                         <div className="flex items-center gap-1">
-                          <Calendar className="w-4 h-4" />
+                          <Calendar className="w-3.5 h-3.5" />
                           <time dateTime={post.createdAt}>{new Date(post.createdAt).toLocaleDateString()}</time>
                         </div>
                         <div className="flex items-center gap-1">
-                          <Clock className="w-4 h-4" />
+                          <Clock className="w-3.5 h-3.5" />
                           <span>{post.readTime}</span>
                         </div>
                       </div>
-                      <h3
-                        className="text-xl font-bold text-[#9B4F96] hover:text-[#7B4278] transition-colors duration-300 cursor-pointer"
-                        onClick={() => navigateToBlog(post)}
-                      >
+
+                      {/* Title */}
+                      <h3 className="text-base font-bold text-gray-800 mb-2 group-hover:text-[#9B4F96] transition-colors leading-snug line-clamp-2">
                         {post.title}
                       </h3>
-                      <p className="text-base text-gray-600 leading-relaxed">
+
+                      {/* Excerpt */}
+                      <p className="text-sm text-gray-600 leading-relaxed line-clamp-3 mb-3 flex-1">
                         {post.excerpt}
                       </p>
-                      <div className="flex flex-wrap gap-2 mb-4">
-                        {post.tags.slice(0, 3).map((tag, tagIndex) => (
-                          <span
-                            key={tagIndex}
-                            className="inline-flex items-center gap-1 text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full"
-                          >
-                            <Tag className="w-3 h-3" />
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-                      <div className="flex items-center justify-between pt-4">
-                        <div className="flex items-center gap-2 text-gray-500">
-                          <User className="w-4 h-4" />
+
+                      {/* Tags */}
+                      {post.tags.length > 0 && (
+                        <div className="flex flex-wrap gap-1 mb-4">
+                          {post.tags.slice(0, 3).map((tag, tagIndex) => (
+                            <span
+                              key={tagIndex}
+                              className="inline-flex items-center gap-1 text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full"
+                            >
+                              <Tag className="w-3 h-3" />
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+
+                      {/* Footer */}
+                      <div className="flex items-center justify-between pt-3 border-t border-gray-100">
+                        <div className="flex items-center gap-1.5 text-xs text-gray-500">
+                          <User className="w-3.5 h-3.5" />
                           <span className="font-medium">{post.author}</span>
                         </div>
                         <button
-                          onClick={() => navigateToBlog(post)}
-                          className="flex items-center gap-1 text-[#9B4F96] hover:gap-2 transition-all duration-300 font-medium"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            navigateToBlog(post);
+                          }}
+                          className="flex items-center gap-1 text-[#9B4F96] hover:gap-2 transition-all duration-300 text-xs font-medium"
                         >
-                          Read More <ChevronRight className="w-4 h-4" />
+                          Read More <ChevronRight className="w-3.5 h-3.5" />
                         </button>
                       </div>
                     </div>
@@ -360,6 +378,7 @@ const regularPosts = (blogPosts || []).filter(post => !post.featured);
             </div>
           )}
 
+          {/* Pagination (unchanged) */}
           {pagination && pagination.pages > 1 && (
             <div className="container mx-auto px-4 mb-16">
               <div className="flex justify-center items-center gap-2">
@@ -405,45 +424,24 @@ const regularPosts = (blogPosts || []).filter(post => !post.featured);
 
       <style jsx>{`
         @keyframes fade-in-up {
-          from {
-            opacity: 0;
-            transform: translateY(30px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
+          from { opacity: 0; transform: translateY(30px); }
+          to { opacity: 1; transform: translateY(0); }
         }
-        
         @keyframes float {
-          0%, 100% {
-            transform: translateY(0px);
-          }
-          50% {
-            transform: translateY(-20px);
-          }
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-20px); }
         }
-        
-        .animate-fade-in-up {
-          animation: fade-in-up 0.6s ease-out;
+        .animate-fade-in-up { animation: fade-in-up 0.6s ease-out; }
+        .animate-float { animation: float 6s ease-in-out infinite; }
+        .animation-delay-200 { animation-delay: 200ms; }
+        .animation-delay-500 { animation-delay: 500ms; }
+        .animation-delay-1000 { animation-delay: 1000ms; }
+        .line-clamp-2 {
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
         }
-        
-        .animate-float {
-          animation: float 6s ease-in-out infinite;
-        }
-        
-        .animation-delay-200 {
-          animation-delay: 200ms;
-        }
-        
-        .animation-delay-500 {
-          animation-delay: 500ms;
-        }
-        
-        .animation-delay-1000 {
-          animation-delay: 1000ms;
-        }
-        
         .line-clamp-3 {
           display: -webkit-box;
           -webkit-line-clamp: 3;

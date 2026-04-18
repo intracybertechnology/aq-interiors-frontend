@@ -29,7 +29,7 @@ const projectSchema = new Schema<IProject>({
   id: {
     type: String,
     required: [true, 'Project ID is required'],
-    unique: true,
+    unique: true, // ✅ This alone creates the index — removed duplicate below
     trim: true
   },
   title: {
@@ -85,10 +85,9 @@ const projectSchema = new Schema<IProject>({
   timestamps: true
 });
 
-projectSchema.index({ id: 1 }, { unique: true });
+// ✅ Removed duplicate projectSchema.index({ id: 1 }, { unique: true })
 projectSchema.index({ category: 1, isActive: 1 });
 projectSchema.index({ createdAt: -1 });
-
 projectSchema.index({
   title: 'text',
   description: 'text',

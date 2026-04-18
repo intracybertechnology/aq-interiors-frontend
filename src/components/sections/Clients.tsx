@@ -9,43 +9,35 @@ const Clients: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-
   useEffect(() => {
     const fetchClients = async () => {
       try {
-    
         setLoading(true);
         const response = await clientApi.getClients({ limit: 100 });
-     
-        
-        // Filter only active clients
-        const activeClients = response.clients.filter(client => client.isActive);
- 
+        const activeClients = response.clients.filter((client) => client.isActive);
         setClients(activeClients);
       } catch (err) {
-   
         setError('Failed to load clients');
       } finally {
         setLoading(false);
       }
     };
-
     fetchClients();
   }, []);
 
-  // Split clients into two columns
   const midPoint = Math.ceil(clients.length / 2);
   const leftColumn = clients.slice(0, midPoint);
   const rightColumn = clients.slice(midPoint);
 
- 
-
   if (loading) {
     return (
-      <section id="clients" className="py-20 bg-gradient-to-br from-gray-50 to-white">
+      <section id="clients" aria-label="Our Clients" className="py-20 bg-gradient-to-br from-gray-50 to-white">
         <div className="container mx-auto px-4 lg:px-8">
-          <div className="text-center">
-            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-[#9B4F96]"></div>
+          <div className="text-center" role="status" aria-live="polite">
+            <div
+              className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-[#9B4F96]"
+              aria-hidden="true"
+            />
             <p className="mt-4 text-gray-600" style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>
               Loading our clients...
             </p>
@@ -57,9 +49,9 @@ const Clients: React.FC = () => {
 
   if (error) {
     return (
-      <section id="clients" className="py-20 bg-gradient-to-br from-gray-50 to-white">
+      <section id="clients" aria-label="Our Clients" className="py-20 bg-gradient-to-br from-gray-50 to-white">
         <div className="container mx-auto px-4 lg:px-8">
-          <div className="text-center text-red-600">
+          <div role="alert" className="text-center text-red-600">
             <p style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>{error}</p>
           </div>
         </div>
@@ -67,10 +59,9 @@ const Clients: React.FC = () => {
     );
   }
 
-  // ADD THIS CHECK
   if (clients.length === 0) {
     return (
-      <section id="clients" className="py-20 bg-gradient-to-br from-gray-50 to-white">
+      <section id="clients" aria-label="Our Clients" className="py-20 bg-gradient-to-br from-gray-50 to-white">
         <div className="container mx-auto px-4 lg:px-8">
           <div className="text-center text-yellow-600">
             <p style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>No active clients found</p>
@@ -80,22 +71,60 @@ const Clients: React.FC = () => {
     );
   }
 
+  const ClientCard = ({ client, index }: { client: Client; index: number }) => (
+    <div
+      className="group flex items-center space-x-3 p-4 bg-white/80 backdrop-blur-sm rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border border-gray-100"
+      style={{
+        animationDelay: `${index * 50}ms`,
+        animation: 'fadeInUp 0.6s ease-out forwards',
+        opacity: 0,
+      }}
+    >
+      <div
+        className="w-10 h-10 bg-gradient-to-br from-[#9B4F96] to-[#c96bb3] rounded-lg flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300"
+        aria-hidden="true"
+      >
+        <Briefcase className="text-white" size={20} aria-hidden="true" />
+      </div>
+      <div className="flex-1 min-w-0">
+        <p
+          className="text-base font-semibold text-gray-800 group-hover:text-[#9B4F96] transition-colors duration-300 truncate"
+          style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}
+        >
+          {client.name}
+        </p>
+        {client.location && (
+          <p
+            className="text-sm text-gray-500 truncate"
+            style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}
+          >
+            {client.location}
+          </p>
+        )}
+      </div>
+    </div>
+  );
+
   return (
-    <section id="clients" className="py-20 bg-gradient-to-br from-gray-50 to-white overflow-hidden">
-      {/* Rest of your JSX stays the same */}
+    <section
+      id="clients"
+      aria-label="Our Clients"
+      className="py-20 bg-gradient-to-br from-gray-50 to-white overflow-hidden"
+    >
       <div className="container mx-auto px-4 lg:px-8">
-        {/* Header */}
+
+        {/* ── Header ── */}
         <div className="text-center mb-16">
           <div className="relative inline-block">
-            <h2 
+            <h2
               className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-[#9B4F96] via-[#c96bb3] to-[#9B4F96] bg-clip-text text-transparent animate-gradient bg-300% leading-tight"
               style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}
             >
-               Our Clients
+              Our Clients
             </h2>
-            <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-32 h-1 bg-gradient-to-r from-[#9B4F96] to-[#c96bb3] rounded-full"></div>
+            <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-32 h-1 bg-gradient-to-r from-[#9B4F96] to-[#c96bb3] rounded-full" />
           </div>
-          <p 
+          <p
             className="text-lg text-gray-600 max-w-3xl mx-auto mt-8 leading-relaxed"
             style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}
           >
@@ -103,83 +132,37 @@ const Clients: React.FC = () => {
           </p>
         </div>
 
-        {/* Clients Grid */}
+        {/* ── Clients Grid ── */}
         <div className="relative max-w-6xl mx-auto">
-          <div className="absolute inset-0 bg-gradient-to-r from-gray-100/50 to-gray-200/50 rounded-3xl backdrop-blur-sm"></div>
-          
-          <div className="relative grid grid-cols-1 md:grid-cols-2 gap-8 p-8 md:p-12">
+          <div className="absolute inset-0 bg-gradient-to-r from-gray-100/50 to-gray-200/50 rounded-3xl backdrop-blur-sm" aria-hidden="true" />
+
+          <ul
+            className="relative grid grid-cols-1 md:grid-cols-2 gap-8 p-8 md:p-12 list-none"
+            aria-label="List of AQ Decor clients"
+          >
             {/* Left Column */}
-            <div className="space-y-4">
+            <li className="space-y-4 list-none">
               {leftColumn.map((client, index) => (
-                <div
-                  key={client.id}
-                  className="group flex items-center space-x-3 p-4 bg-white/80 backdrop-blur-sm rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border border-gray-100"
-                  style={{
-                    animationDelay: `${index * 50}ms`,
-                    animation: 'fadeInUp 0.6s ease-out forwards',
-                    opacity: 0
-                  }}
-                >
-                  <div className="w-10 h-10 bg-gradient-to-br from-[#9B4F96] to-[#c96bb3] rounded-lg flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
-                    <Briefcase className="text-white" size={20} />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h3 
-                      className="text-base font-semibold text-gray-800 group-hover:text-[#9B4F96] transition-colors duration-300 truncate"
-                      style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}
-                    >
-                      {client.name}
-                    </h3>
-                    <p 
-                      className="text-sm text-gray-500 truncate"
-                      style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}
-                    >
-                      {client.location}
-                    </p>
-                  </div>
-                </div>
+                <ClientCard key={client.id} client={client} index={index} />
               ))}
-            </div>
+            </li>
 
             {/* Right Column */}
-            <div className="space-y-4">
+            <li className="space-y-4 list-none">
               {rightColumn.map((client, index) => (
-                <div
-                  key={client.id}
-                  className="group flex items-center space-x-3 p-4 bg-white/80 backdrop-blur-sm rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border border-gray-100"
-                  style={{
-                    animationDelay: `${(index + leftColumn.length) * 50}ms`,
-                    animation: 'fadeInUp 0.6s ease-out forwards',
-                    opacity: 0
-                  }}
-                >
-                  <div className="w-10 h-10 bg-gradient-to-br from-[#9B4F96] to-[#c96bb3] rounded-lg flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
-                    <Briefcase className="text-white" size={20} />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h3 
-                      className="text-base font-semibold text-gray-800 group-hover:text-[#9B4F96] transition-colors duration-300 truncate"
-                      style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}
-                    >
-                      {client.name}
-                    </h3>
-                    <p 
-                      className="text-sm text-gray-500 truncate"
-                      style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}
-                    >
-                      {client.location}
-                    </p>
-                  </div>
-                </div>
+                <ClientCard key={client.id} client={client} index={index + leftColumn.length} />
               ))}
-            </div>
-          </div>
+            </li>
+          </ul>
         </div>
 
-        {/* Client Count Badge */}
+        {/* ── Client Count Badge ── */}
         <div className="text-center mt-12">
-          <div className="inline-flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-[#9B4F96] to-[#c96bb3] rounded-full shadow-lg">
-            <span 
+          <div
+            className="inline-flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-[#9B4F96] to-[#c96bb3] rounded-full shadow-lg"
+            aria-label={`${clients.length} satisfied clients`}
+          >
+            <span
               className="text-white font-bold text-lg"
               style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}
             >
@@ -191,29 +174,16 @@ const Clients: React.FC = () => {
 
       <style jsx>{`
         @keyframes fadeInUp {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
+          from { opacity: 0; transform: translateY(20px); }
+          to   { opacity: 1; transform: translateY(0); }
         }
-
         @keyframes gradient {
-          0% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
+          0%   { background-position: 0% 50%; }
+          50%  { background-position: 100% 50%; }
           100% { background-position: 0% 50%; }
         }
-        
-        .animate-gradient {
-          animation: gradient 4s ease infinite;
-        }
-        
-        .bg-300\\% {
-          background-size: 300% 300%;
-        }
+        .animate-gradient { animation: gradient 4s ease infinite; }
+        .bg-300\\% { background-size: 300% 300%; }
       `}</style>
     </section>
   );
