@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { projectApi } from '@/services/projectApi';
 import ImageGallery from '@/components/common/ImageGallery';
 import { MapPin, Calendar, ArrowLeft, ChevronRight, Loader, AlertCircle } from 'lucide-react';
@@ -142,23 +143,22 @@ export default function ProjectDetail({ id }: ProjectDetailProps) {
           </p>
         </div>
 
-        {/* Main Image */}
+        {/* ✅ Main Image — Next.js Image */}
         {project.images && project.images.length > 0 && (
           <div className="container mx-auto px-4 lg:px-8 pb-12">
             <div
-              className="relative rounded-2xl overflow-hidden shadow-2xl cursor-pointer group"
+              className="relative rounded-2xl overflow-hidden shadow-2xl cursor-pointer group h-[500px]"
               onClick={() => openGallery(0)}
             >
-              <img
+              <Image
                 src={project.images[0]}
                 alt={project.title}
-                className="w-full h-[500px] object-cover transition-transform duration-700 group-hover:scale-105"
-                onError={(e) => {
-                  e.currentTarget.src =
-                    'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDQwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0xNzUgMTI1SDE2NS41VjEzNUgxNzVWMTI1WiIgZmlsbD0iIzlCNEY5NiIvPgo8cGF0aCBkPSJNMjI1IDEyNUgyMTUuNVYxMzVIMjI1VjEyNVoiIGZpbGw9IiM5QjRGOTYiLz4K';
-                }}
+                fill
+                priority
+                sizes="100vw"
+                className="object-cover transition-transform duration-700 group-hover:scale-105"
               />
-              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center">
+              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center z-10">
                 <div className="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-center">
                   <p className="text-lg font-semibold" style={{ fontFamily: '"Lucida Bright", Georgia, serif' }}>
                     Click to view gallery
@@ -229,7 +229,7 @@ export default function ProjectDetail({ id }: ProjectDetailProps) {
           </div>
         </div>
 
-        {/* Image Gallery Grid */}
+        {/* ✅ Image Gallery Grid — Next.js Image */}
         {project.images && project.images.length > 1 && (
           <div className="container mx-auto px-4 lg:px-8 pb-16">
             <h2
@@ -245,16 +245,15 @@ export default function ProjectDetail({ id }: ProjectDetailProps) {
                   className="relative rounded-xl overflow-hidden shadow-lg cursor-pointer group aspect-video"
                   onClick={() => openGallery(index + 1)}
                 >
-                  <img
+                  <Image
                     src={image}
                     alt={`${project.title} - Image ${index + 2}`}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                    onError={(e) => {
-                      e.currentTarget.src =
-                        'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDQwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0xNzUgMTI1SDE2NS41VjEzNUgxNzVWMTI1WiIgZmlsbD0iIzlCNEY5NiIvPgo8cGF0aCBkPSJNMjI1IDEyNUgyMTUuNVYxMzVIMjI1VjEyNVoiIGZpbGw9IiM5QjRGOTYiLz4K';
-                    }}
+                    fill
+                    loading="lazy"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    className="object-cover transition-transform duration-700 group-hover:scale-110"
                   />
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-all duration-300 flex items-center justify-center">
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-all duration-300 flex items-center justify-center z-10">
                     <div className="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                       <ChevronRight size={32} />
                     </div>

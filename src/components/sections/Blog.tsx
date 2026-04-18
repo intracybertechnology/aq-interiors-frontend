@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { Calendar, Clock, User, Tag, ChevronRight, Search, AlertCircle, Loader } from 'lucide-react';
 import { blogApi } from '../../services/blogApi';
 
@@ -205,7 +206,7 @@ const Blog: React.FC = () => {
         </div>
       ) : (
         <>
-          {/* Featured Posts — 2-column grid (unchanged) */}
+          {/* Featured Posts — 2-column grid */}
           {featuredPosts.length > 0 && (
             <div className="container mx-auto px-4 mb-16">
               <h2 className="text-3xl font-bold text-[#9B4F96] mb-8"
@@ -223,18 +224,17 @@ const Blog: React.FC = () => {
                       }`}
                     onClick={() => navigateToBlog(post)}
                   >
-                    <div className="relative overflow-hidden">
-                      <img
+                    {/* ✅ Featured image — Next.js Image */}
+                    <div className="relative h-48 overflow-hidden">
+                      <Image
                         src={post.image}
                         alt={post.title}
-                        className="w-full h-48 object-cover object-center transition-transform duration-500 group-hover:scale-110 select-none pointer-events-none"
-                        draggable="false"
-                        onError={(e) => {
-                          e.currentTarget.src = '/images/placeholder-blog.jpg';
-                        }}
+                        fill
+                        sizes="(max-width: 768px) 100vw, 50vw"
+                        className="object-cover object-center transition-transform duration-500 group-hover:scale-110"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                      <div className="absolute top-4 left-4">
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"></div>
+                      <div className="absolute top-4 left-4 z-20">
                         <span className="bg-[#9B4F96] text-white px-3 py-1 rounded-full text-sm font-medium">
                           Featured
                         </span>
@@ -279,7 +279,7 @@ const Blog: React.FC = () => {
             </div>
           )}
 
-          {/* ✅ Latest Posts — 3-column grid (updated from alternating layout) */}
+          {/* ✅ Latest Posts — 3-column grid */}
           {regularPosts.length > 0 && (
             <div className="container mx-auto px-4 mb-16">
               <h2 className="text-3xl font-bold text-[#9B4F96] mb-8"
@@ -297,19 +297,17 @@ const Blog: React.FC = () => {
                       }`}
                     onClick={() => navigateToBlog(post)}
                   >
-                    {/* Image */}
-                    <div className="relative overflow-hidden">
-                      <img
+                    {/* ✅ Grid card image — Next.js Image */}
+                    <div className="relative h-52 overflow-hidden">
+                      <Image
                         src={post.image}
                         alt={post.title}
-                        className="w-full h-52 object-cover object-center transition-transform duration-500 group-hover:scale-110 select-none pointer-events-none"
-                        draggable="false"
-                        onError={(e) => {
-                          e.currentTarget.src = '/images/placeholder-blog.jpg';
-                        }}
+                        fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                        className="object-cover object-center transition-transform duration-500 group-hover:scale-110"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                      <div className="absolute top-4 left-4">
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"></div>
+                      <div className="absolute top-4 left-4 z-20">
                         <span className="bg-[#9B4F96] text-white px-3 py-1 rounded-full text-xs font-medium">
                           {post.category}
                         </span>
@@ -318,7 +316,6 @@ const Blog: React.FC = () => {
 
                     {/* Content */}
                     <div className="p-5 flex flex-col flex-1">
-                      {/* Meta */}
                       <div className="flex items-center gap-3 text-xs text-gray-500 mb-3">
                         <div className="flex items-center gap-1">
                           <Calendar className="w-3.5 h-3.5" />
@@ -330,17 +327,14 @@ const Blog: React.FC = () => {
                         </div>
                       </div>
 
-                      {/* Title */}
                       <h3 className="text-base font-bold text-gray-800 mb-2 group-hover:text-[#9B4F96] transition-colors leading-snug line-clamp-2">
                         {post.title}
                       </h3>
 
-                      {/* Excerpt */}
                       <p className="text-sm text-gray-600 leading-relaxed line-clamp-3 mb-3 flex-1">
                         {post.excerpt}
                       </p>
 
-                      {/* Tags */}
                       {post.tags.length > 0 && (
                         <div className="flex flex-wrap gap-1 mb-4">
                           {post.tags.slice(0, 3).map((tag, tagIndex) => (
@@ -355,7 +349,6 @@ const Blog: React.FC = () => {
                         </div>
                       )}
 
-                      {/* Footer */}
                       <div className="flex items-center justify-between pt-3 border-t border-gray-100">
                         <div className="flex items-center gap-1.5 text-xs text-gray-500">
                           <User className="w-3.5 h-3.5" />
@@ -378,7 +371,7 @@ const Blog: React.FC = () => {
             </div>
           )}
 
-          {/* Pagination (unchanged) */}
+          {/* Pagination */}
           {pagination && pagination.pages > 1 && (
             <div className="container mx-auto px-4 mb-16">
               <div className="flex justify-center items-center gap-2">

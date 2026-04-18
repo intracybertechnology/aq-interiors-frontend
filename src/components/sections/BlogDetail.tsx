@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { Calendar, Clock, User, Tag, ArrowLeft, Share2, AlertCircle, Loader } from 'lucide-react';
 import { blogApi } from '@/services/blogApi';
 import { Blog } from '@/types/blog.types';
@@ -160,22 +161,25 @@ export default function BlogDetail({ id }: BlogDetailProps) {
             </div>
           </div>
         </div>
-
         <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-gradient-to-r from-[#9B4F96] to-[#c96bb3] rounded-full"></div>
       </div>
 
-      {/* Featured Image */}
+      {/* ✅ Featured Image — switched to Next.js Image */}
       <div className="container mx-auto px-4 -mt-8 mb-8">
         <div className="max-w-4xl mx-auto overflow-hidden rounded-xl shadow-xl">
-          <img
-            src={blog.image}
-            alt={`${blog.title} - ${blog.category}`}
-            className="w-full h-96 object-cover"
-            style={{ objectPosition: 'center' }}
-            onError={(e) => {
-              e.currentTarget.src = '/images/placeholder-blog.jpg';
-            }}
-          />
+          <div className="relative w-full h-96">
+            <Image
+              src={blog.image}
+              alt={`${blog.title} - ${blog.category}`}
+              fill
+              priority
+              sizes="(max-width: 768px) 100vw, 896px"
+              className="object-cover object-center"
+              onError={(e: any) => {
+                e.currentTarget.src = '/images/placeholder-blog.jpg';
+              }}
+            />
+          </div>
         </div>
       </div>
 
@@ -244,7 +248,7 @@ export default function BlogDetail({ id }: BlogDetailProps) {
             </div>
           )}
 
-          {/* Related Blogs */}
+          {/* ✅ Related Blogs — switched to Next.js Image */}
           {relatedBlogs.length > 0 && (
             <div>
               <h2
@@ -260,15 +264,19 @@ export default function BlogDetail({ id }: BlogDetailProps) {
                     onClick={() => router.push(`/blog/${relatedBlog.slug || relatedBlog._id}`)}
                     className="bg-white rounded-xl shadow-lg overflow-hidden cursor-pointer hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2"
                   >
-                    <img
-                      src={relatedBlog.image}
-                      alt={`${relatedBlog.title} - Related Article`}
-                      className="w-full h-48 object-cover"
-                      loading="lazy"
-                      onError={(e) => {
-                        e.currentTarget.src = '/images/placeholder-blog.jpg';
-                      }}
-                    />
+                    <div className="relative w-full h-48">
+                      <Image
+                        src={relatedBlog.image}
+                        alt={`${relatedBlog.title} - Related Article`}
+                        fill
+                        loading="lazy"
+                        sizes="(max-width: 768px) 100vw, 300px"
+                        className="object-cover object-center"
+                        onError={(e: any) => {
+                          e.currentTarget.src = '/images/placeholder-blog.jpg';
+                        }}
+                      />
+                    </div>
                     <div className="p-4">
                       <h3
                         className="font-bold text-gray-800 mb-2 line-clamp-2 hover:text-[#9B4F96] transition-colors"
@@ -306,11 +314,9 @@ export default function BlogDetail({ id }: BlogDetailProps) {
           -webkit-box-orient: vertical;
           overflow: hidden;
         }
-
         .prose p {
           margin-bottom: 1.5rem;
         }
-
         .prose p:last-child {
           margin-bottom: 0;
         }

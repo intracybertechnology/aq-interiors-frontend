@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import NextImage from 'next/image';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 import type { Project } from '../../types';
 
@@ -24,7 +25,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
       if (!isOpen || !project) return;
-      
+
       if (e.key === 'Escape') onClose();
       if (e.key === 'ArrowLeft') goToPrevious();
       if (e.key === 'ArrowRight') goToNext();
@@ -46,19 +47,19 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({
   if (!isOpen || !project || !project.images) return null;
 
   const goToNext = () => {
-    setCurrentImageIndex((prev) => 
+    setCurrentImageIndex((prev) =>
       prev === project.images.length - 1 ? 0 : prev + 1
     );
   };
 
   const goToPrevious = () => {
-    setCurrentImageIndex((prev) => 
+    setCurrentImageIndex((prev) =>
       prev === 0 ? project.images.length - 1 : prev - 1
     );
   };
 
   return (
-    <div 
+    <div
       className="fixed inset-0 z-50 bg-black bg-opacity-95 flex items-center justify-center"
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
@@ -98,30 +99,35 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({
         </>
       )}
 
-      {/* Main Image */}
-      <div className="max-w-[90vw] max-h-[80vh] flex items-center justify-center">
-        <img
+      {/* ✅ Main Image — Next.js Image */}
+      <div className="relative max-w-[90vw] max-h-[80vh] w-full h-full flex items-center justify-center">
+        <NextImage
           src={project.images[currentImageIndex]}
           alt={`${project.title} - Image ${currentImageIndex + 1}`}
-          className="max-w-full max-h-full object-contain"
+          fill
+          sizes="90vw"
+          className="object-contain"
+          priority
         />
       </div>
 
-      {/* Thumbnails */}
+      {/* ✅ Thumbnails — Next.js Image */}
       {project.images.length > 1 && (
         <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2 bg-black/50 p-2 rounded-lg">
           {project.images.map((image, index) => (
             <button
               key={index}
               onClick={() => setCurrentImageIndex(index)}
-              className={`w-12 h-12 rounded overflow-hidden border-2 transition-all ${
+              className={`relative w-12 h-12 rounded overflow-hidden border-2 transition-all ${
                 index === currentImageIndex ? 'border-white' : 'border-transparent opacity-60'
               }`}
             >
-              <img
+              <NextImage
                 src={image}
                 alt={`Thumbnail ${index + 1}`}
-                className="w-full h-full object-cover"
+                fill
+                sizes="48px"
+                className="object-cover"
               />
             </button>
           ))}

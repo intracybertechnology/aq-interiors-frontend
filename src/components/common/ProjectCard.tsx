@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import NextImage from 'next/image';
 import { Image, ExternalLink, Eye } from 'lucide-react';
 import Button from '../ui/Button';
 import Modal from '../ui/Modal';
@@ -49,10 +50,13 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
         {/* Project Image */}
         <div className="relative h-48 overflow-hidden">
           {!imageError ? (
-            <img
+            // ✅ Next.js Image — card
+            <NextImage
               src={image}
               alt={title}
-              className="w-full h-full object-cover transition-transform duration-300 hover:scale-110"
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              className="object-cover transition-transform duration-300 hover:scale-110"
               onError={handleImageError}
             />
           ) : (
@@ -60,16 +64,16 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
               <Image size={48} className="text-gray-400" />
             </div>
           )}
-          
-          {/* Category Badge - Updated with theme color */}
-          <div className="absolute top-4 left-4">
+
+          {/* Category Badge */}
+          <div className="absolute top-4 left-4 z-10">
             <span className="bg-gradient-to-r from-[#9B4F96] to-[#B86BB3] text-white px-3 py-1 rounded-full text-xs font-semibold">
               {category}
             </span>
           </div>
 
           {/* Overlay with Actions */}
-          <div className="absolute inset-0 bg-black/50 opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-center justify-center space-x-4">
+          <div className="absolute inset-0 bg-black/50 opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-center justify-center space-x-4 z-10">
             <button
               onClick={handleViewDetails}
               className="bg-white/20 backdrop-blur-md text-white p-2 rounded-full hover:bg-white/30 transition-all duration-200"
@@ -77,7 +81,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
             >
               <Eye size={20} />
             </button>
-            
+
             {projectUrl && (
               <button
                 onClick={() => handleExternalLink(projectUrl)}
@@ -92,11 +96,10 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
 
         {/* Project Content */}
         <div className="p-6">
-          {/* Title with theme color using Tailwind */}
           <h3 className="text-xl font-bold text-[#9B4F96] mb-2 line-clamp-2">
             {title}
           </h3>
-          
+
           <p className="text-gray-600 text-sm mb-4 line-clamp-3">
             {description}
           </p>
@@ -131,7 +134,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
             >
               View Details
             </Button>
-            
+
             {projectUrl && (
               <Button
                 onClick={() => handleExternalLink(projectUrl)}
@@ -148,13 +151,15 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
       {/* Modal for Project Details */}
       <Modal isOpen={isModalOpen} onClose={handleCloseModal} title={title}>
         <div className="space-y-4">
-          {/* Project Image in Modal */}
-          <div className="w-full h-64 overflow-hidden rounded-lg">
+          {/* ✅ Next.js Image — modal */}
+          <div className="relative w-full h-64 overflow-hidden rounded-lg">
             {!imageError ? (
-              <img
+              <NextImage
                 src={image}
                 alt={title}
-                className="w-full h-full object-cover"
+                fill
+                sizes="100vw"
+                className="object-cover"
                 onError={handleImageError}
               />
             ) : (
@@ -166,7 +171,6 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
 
           {/* Project Details */}
           <div>
-            {/* Modal headings with theme color using Tailwind */}
             <h4 className="text-lg font-semibold text-[#9B4F96] mb-2">Description</h4>
             <p className="text-gray-600">{description}</p>
           </div>
@@ -188,18 +192,21 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
             </div>
           )}
 
-          {/* Gallery if available */}
+          {/* ✅ Gallery — Next.js Image */}
           {gallery.length > 0 && (
             <div>
               <h4 className="text-lg font-semibold text-[#9B4F96] mb-2">Gallery</h4>
               <div className="grid grid-cols-2 gap-2">
                 {gallery.slice(0, 4).map((galleryImage, index) => (
-                  <img
-                    key={index}
-                    src={galleryImage}
-                    alt={`${title} - Image ${index + 1}`}
-                    className="w-full h-24 object-cover rounded-md"
-                  />
+                  <div key={index} className="relative w-full h-24">
+                    <NextImage
+                      src={galleryImage}
+                      alt={`${title} - Image ${index + 1}`}
+                      fill
+                      sizes="50vw"
+                      className="object-cover rounded-md"
+                    />
+                  </div>
                 ))}
               </div>
             </div>
@@ -217,7 +224,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
                 <span>Visit Project</span>
               </Button>
             )}
-            
+
             {githubUrl && (
               <Button
                 onClick={() => handleExternalLink(githubUrl)}

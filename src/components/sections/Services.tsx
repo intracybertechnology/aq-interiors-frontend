@@ -146,7 +146,7 @@ const Services: React.FC = () => {
                       What's Included:
                     </h4>
                     <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                      {service.features.map((feature, featureIndex) => (
+                     {service.features.map((feature: string, featureIndex: number) => (
                         <li key={featureIndex} className="flex items-start space-x-2">
                           <CheckCircle className="text-[#9B4F96] flex-shrink-0 mt-0.5" size={16} />
                           <span className="text-gray-600 text-sm"
